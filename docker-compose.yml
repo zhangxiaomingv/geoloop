@@ -1,0 +1,28 @@
+# GEOloopOS Identity Engine · 私有化一键部署
+# 用法：在项目根执行 `docker compose up -d --build`
+services:
+  geoloopos:
+    build: .
+    image: geoloopos/identity-engine:latest
+    container_name: geoloopos
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8788}:8788"
+    environment:
+      PORT: 8788
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY}"
+      ARK_API_KEY: "${ARK_API_KEY}"
+      DOUBAO_MODEL: "${DOUBAO_MODEL:-}"
+      RATE_PER_MIN: "${RATE_PER_MIN:-8}"
+      RATE_PER_DAY: "${RATE_PER_DAY:-80}"
+      MAX_CONCURRENT: "${MAX_CONCURRENT:-3}"
+    volumes:
+      - geoloopos-data:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8788/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  geoloopos-data:

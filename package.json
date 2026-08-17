@@ -1,0 +1,20 @@
+{
+  "name": "geoloopos",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GEOloopOS Identity Engine — 让 AI 认识你、理解你、推荐你（企业/个人 AI 身份引擎）",
+  "scripts": {
+    "run": "tsx src/run.ts",
+    "report": "tsx src/report.ts",
+    "serve": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.0"
+  }
+}
