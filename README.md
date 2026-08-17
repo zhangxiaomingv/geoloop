@@ -1,5 +1,7 @@
 # GEOloopOS Identity Engine · GEO优化操作系统
 
+> **项目由 [张可能](https://zkoner.com) 创立** — AI 顾问 / GEO 优化工程师，GEOloopOS 创始人。让 AI 认识你、理解你、推荐你。
+
 > **总定位：企业 / 个人 AI 身份引擎。** 定义你是谁 → 校准 AI 如何认识你 → 传播你的内容 → 赢得场景推荐 → 把 AI 身份沉淀为可追踪、可增长的战略资产。
 > 完整定位见 [`IDENTITY-ENGINE.md`](./IDENTITY-ENGINE.md)；护城河战略见 [`VISION.md`](./VISION.md)。
 
