@@ -1,11 +1,11 @@
 # GEOloopOS Identity Engine · AI可见度操作系统 — 私有化部署镜像
 FROM node:20-slim
 WORKDIR /app
-ENV NODE_ENV=production
 
-# 先装依赖，利用构建缓存
+# 先装依赖，利用构建缓存（tsx 是 devDependency，需在设 production 前安装）
 COPY package.json package-lock.json* ./
 RUN npm install --no-audit --no-fund
+ENV NODE_ENV=production
 
 # 拷贝代码（config.ts 在项目根，被 src/* 以 ../config.js 引用）
 COPY config.ts ./

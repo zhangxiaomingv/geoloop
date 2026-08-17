@@ -16,13 +16,11 @@ services:
       RATE_PER_MIN: "${RATE_PER_MIN:-8}"
       RATE_PER_DAY: "${RATE_PER_DAY:-80}"
       MAX_CONCURRENT: "${MAX_CONCURRENT:-3}"
+    # bind mount 到宿主 ./data：数据连续（迁移历史保留）、透明可备份
     volumes:
-      - geoloopos-data:/app/data
+      - ./data:/app/data
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:8788/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 5s
       retries: 3
-
-volumes:
-  geoloopos-data:
