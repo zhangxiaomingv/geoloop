@@ -7,7 +7,8 @@
   "scripts": {
     "run": "tsx src/run.ts",
     "report": "tsx src/report.ts",
-    "serve": "tsx src/server.ts"
+    "serve": "tsx src/server.ts",
+    "retest": "tsx src/retest.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5"
