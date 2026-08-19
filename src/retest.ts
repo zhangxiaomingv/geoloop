@@ -22,7 +22,10 @@ import { loadEntities, attachCheck } from "./entity.js";
 import { classify, runCheck } from "./check.js";
 
 const dry = process.argv.includes("--dry");
-const LOCK = "/tmp/geoloopos-retest.lock";
+// PID 锁文件。注意与 cron 外层的 flock 锁分开：
+//  flock 锁 = /tmp/geoloopos-retest.flock（常驻，绝不可被本脚本 unlink）
+//  PID  锁 = /tmp/geoloopos-retest.pid  （每次运行写入/清理）
+const LOCK = "/tmp/geoloopos-retest.pid";
 const LOG = "data/retest-log.jsonl";
 
 interface BatchItem {

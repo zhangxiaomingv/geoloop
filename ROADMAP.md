@@ -22,6 +22,10 @@
 - 🔲 **公网 HTTPS + 域名**：绑定独立域名，Caddy 自动 HTTPS（当前为 IP:端口 HTTP）
 - 🔲 **行业基准**：按行业聚合认知分位数 → 「你的行业 AI 认知基准」对比报告
 - 🔲 **品牌/域名档案合并映射**：`海底捞` 与 `haidilao.com` 归并到同一实体
+- 🔲 **AI 爬虫观测**（输入端 GEO 闭环，差异化：主攻中国 AI 爬虫）：
+  - P0.5 **robots.txt AI 审计**：抓域名 robots.txt → 逐 AI 爬虫判 allow/block + 「挡训练放检索」推荐（直接命中 Cloudflare robots 坑，免费钩子）
+  - P1 **爬虫日志观测**：读 nginx/Cloudflare 日志 → 被哪些 AI 爬过/是否被挡/读了哪些页面（= 引用候选）
+  - 方案见 [`docs/crawler-observation.md`](./docs/crawler-observation.md)
 
 ## P2 · 商业化
 
