@@ -1,140 +1,271 @@
-# GEOloopOS Identity Engine · GEO优化操作系统
+# GEOloopOS · GEO 优化操作系统
 
-> **项目由 [张可能](https://zkoner.com) 创立** — AI 顾问 / GEO 优化工程师，GEOloopOS 创始人。让 AI 认识你、理解你、推荐你。
+**Open-source AI identity engine — measure and grow how AI search engines know, describe, and recommend you.**
 
-> **总定位：企业 / 个人 AI 身份引擎。** 定义你是谁 → 校准 AI 如何认识你 → 传播你的内容 → 赢得场景推荐 → 把 AI 身份沉淀为可追踪、可增长的战略资产。
-> 完整定位见 [`IDENTITY-ENGINE.md`](./IDENTITY-ENGINE.md)；护城河战略见 [`VISION.md`](./VISION.md)。
+让 AI **认识你、理解你、推荐你**。企业 / 个人在 AI 搜索时代的数字身份基础设施。
 
-输入品牌名、网站域名或任意问题，同时询问 **DeepSeek** 与 **豆包**，自动评分「AI 眼中的你」：是否认识你、描述多完整、有没有给出来源。产品级通用工具，人人可用，无需配置。
+[![CI](https://github.com/zhangxiaomingv/geoloopos/actions/workflows/ci.yml/badge.svg)](https://github.com/zhangxiaomingv/geoloopos/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## 快速开始
+---
+
+## What is GEOloopOS?
+
+GEOloopOS is a **Generative Engine Optimization (GEO)** tool. It asks AI search
+engines and LLMs — currently **DeepSeek** and **豆包 (Doubao)** — what they know
+about a brand, a person, or a website, then scores that answer on a **0–100
+visibility scale** across three dimensions:
+
+| Dimension | Weight | Meaning |
+|---|---|---|
+| **Recognition** | 40 | Does the AI mention the entity at all? (认知) |
+| **Description depth** | 30 | How complete is the AI's description? (描述深度) |
+| **Source citation** | 30 | Does the AI cite a traceable source? (来源引用) |
+
+You paste a **brand name**, a **website domain**, or any **question** — GEOloopOS
+auto-classifies it, generates the right questions, queries both AI engines in
+parallel, and returns a report with a score, a verdict, and concrete
+optimization tips. It also **tracks the same entity over time**, accumulating a
+cognition curve that shows whether your AI visibility is actually improving.
+
+**Who it's for**: companies and individuals who want to be found, described, and
+recommended by AI — the channel people increasingly use to make decisions
+(which restaurant, which contractor, which SaaS tool, which advisor).
+
+Built by [张可能 / Kene Zhang](https://zkoner.com), GEOloopOS founder and AI
+consultant. Product site: **https://zkoner.com**.
+
+---
+
+## Features
+
+| Capability | What it does |
+|---|---|
+| **3-input auto-classify** | Brand name / website domain / free question — detected automatically, correct questions generated |
+| **Dual AI engine** | DeepSeek + Doubao answered in parallel via API — fast, stable, public-friendly (no crawler/browser) |
+| **3-dimension scoring** | Recognition 40 + Description 30 + Source 30 = 0–100, with verdict + optimization tips |
+| **Positioning anchor** | Fill in name/positioning/keywords/site once → auto-generates 3 unified bio versions (long/mid/short) to paste across platforms + a site-byline snippet — consistency enforced at generation |
+| **Article monitoring** | Track your articles → ask AI per topic → judge if your article is cited / site mentioned / content adopted — the ROI of content production |
+| **Domain tracking** | Add a domain → re-test AI cognition & citation periodically → trend line over time |
+| **Competitor comparison** | Your brand vs competitors, same-口径 detection → ranking, gap score, insight (who leads and why) |
+| **Scene intelligence** | Input a real user question (e.g. "深圳推荐一家装修公司") → exposure share per brand + 0-exposure root cause analysis |
+| **Unified entity archive** | Every check/re-test/competitor run lands in one entity profile (`data/entities.json`) — the cognition time-series foundation for an "enterprise AI cognition map" |
+| **Auto re-test** | Scheduled re-measurement of archived entities → cognition change curves accumulate automatically (the moat: data, not code) |
+| **Private deployment** | Single Node process, zero runtime dependencies, Docker one-command deploy, IP rate limiting |
+
+---
+
+## How the scoring works
+
+```
+Recognition 40 + Description 30 + Source 30 = 0–100
+```
+
+| Score | Verdict |
+|---|---|
+| ≥ 80 | AI 认知清晰 (clearly recognized) |
+| ≥ 60 | AI 有基础认知 (basic recognition) |
+| ≥ 40 | AI 认知模糊 (fuzzy recognition) |
+| < 40 | AI 尚未认知 (not yet recognized) |
+
+Refusal is detected only for **short** answers (< 80 chars) with explicit
+refusal phrasing — "cannot/无法" inside a normal long answer is never miscounted.
+
+### Input classification
+
+- **Brand** (e.g. `海底捞`) → asks "「海底捞」是什么？" and "提供哪些产品或服务？"
+- **Website** (e.g. `example.com`) → asks "「example.com」是什么网站？", plus checks whether the answer cites that domain
+- **Question** (e.g. `什么是 GEO？`) → asks it verbatim, scores answer quality, extracts mentioned brands/domains
+
+---
+
+## Quick start
 
 ```bash
 npm install
-cp .env.example .env      # 填入 DEEPSEEK_API_KEY、ARK_API_KEY（见下表）
-npm run serve             # 启动产品服务
+cp .env.example .env      # fill DEEPSEEK_API_KEY and ARK_API_KEY (see "Model sources")
+npm run serve             # start the product server
 ```
 
-打开 `http://localhost:8788` —— 在首页输入框键入品牌 / 域名 / 问句，点「检测」即可。
+Open `http://localhost:8788`, type a brand / domain / question, hit **检测**.
 
-## 产品能力
-
-| 能力 | 说明 |
-|---|---|
-| **三类输入自动识别** | 品牌名（含域名→网站模式）、网站域名、任意问句，自动分类并生成合适的问题集 |
-| **双 AI 源即时检测** | DeepSeek + 豆包 API 并行回答，无需任何爬虫/浏览器（快、稳、公网友好） |
-| **三维度评分** | 认知（40）+ 描述深度（30）+ 来源引用（30）= 0-100，输出结论 + 优化建议 |
-| **定位锚点** | 填一次名称/定位/关键词/官网 → 自动生成长/中/短三版统一口径简介（知乎/微博/抖音等全平台可复制）+ 站点署名代码片段，一致性靠生成时强制 |
-| **文章监测** | 维护文章库（标题/URL/主题）→ 按主题问 AI 推荐 → 判定文章被引用 / 站点被提及 / 内容被采用，回答「内容生产的 ROI」 |
-| **域名追踪** | 加入域名 → 周期性复测 AI 认知与引用 → 历史趋势折线（引用追踪子模块） |
-| **竞品对比** | 输入自己 + 竞品 → 对每个实体做同口径检测 → 横向排名 + 差距分 + 洞察（谁领先、赢在哪、怎么补） |
-| **竞品智能 · 场景认知** | 填用户真实问题（如「深圳推荐一家装修公司」）→ 统计各品牌在 AI 回答中的**曝光份额** + 0 曝光根因（缺案例 / FAQ / 行业实体关系） |
-| **统一实体档案** | 每次检测/复测/竞品自动归入品牌实体档案（`data/entities.json`），沉淀认知时间序列 |
-| **检测历史** | 每次检测落盘 `data/checks.jsonl`，页面可回看、点击加载 |
-| **公网安全** | 按 IP 限流（默认 8 次/分、80 次/天）+ 全局并发上限（3）+ 输入长度校验 |
-
-### 三类输入的检测逻辑
-
-- **品牌**（如 `海底捞`）→ 问「X 是什么？」「X 提供哪些产品或服务？」，判定回答是否提及品牌、描述是否完整、有无来源。
-- **网站**（如 `example.com`）→ 问「X 是什么网站？」，额外判定回答是否引用了该域名。
-- **问句**（如 `什么是 GEO？`）→ 原样问，按回答质量（描述深度 + 来源）评分，并提取回答中提到的网站/品牌。
-
-### 评分规则
-
-`认知 40 + 描述 30 + 来源 30 = 0-100`：
-
-| 分数 | 结论 |
-|---|---|
-| ≥ 80 | AI 认知清晰 |
-| ≥ 60 | AI 有基础认知 |
-| ≥ 40 | AI 认知模糊 |
-| < 40 | AI 尚未认知 |
-
-拒绝回答的判定要求**短回答 + 具体拒答措辞**（如「抱歉，我无法回答」），长回答里的「无法/不能」等正常用词不会误伤。
-
-## API（供第三方集成）
-
-| 端点 | 方法 | 说明 |
-|---|---|---|
-| `/api/check` | POST | body `{"query":"..."}` → 运行一次检测，落盘历史，返回完整报告 |
-| `/api/checks?limit=N` | GET | 最近 N 条检测历史（默认 20，上限 50），新的在前 |
-| `/api/anchor` | GET | 定位锚点 + 三版生成 + 平台清单 + 署名代码 |
-| `/api/anchor` | POST | body `{"anchor":{...}}` → 保存锚点，返回更新后的版本与代码 |
-| `/api/articles` | GET / POST | 文章库列表 / 添加 `{"title","url","topic"}` |
-| `/api/articles/:id` | DELETE | 删除文章 |
-| `/api/articles/check` | POST | 触发全部文章监测（串行跑，每篇约 15–40 秒） |
-| `/api/compare` | POST | body `{"self":"我的品牌","competitors":["竞品1","竞品2"]}` → 竞品对比排名 + 差距 + 洞察 |
-| `/api/cites` | GET / POST / DELETE | 域名追踪列表 / 添加 / 删除 |
-| `/api/cites/check` | POST | 复测全部追踪域名 |
-| `/api/entities` | GET | 统一实体档案全量 |
-| `/api/entities/stats` | GET | 档案统计（品牌/域名数、检测次数、场景份额、最高分榜） |
-
-## GEO 认知闭环（推荐工作流）
-
-```
-① 定位锚点：填一次「名称/定位/关键词/官网」→ 生成长/中/短三版统一简介 + 站点署名代码
-② 各平台统一复制：锚点简介贴到知乎/公众号/微博/小红书/抖音…（口径逐字一致，AI 学到的画像清晰）
-③ 站点署名：把署名代码贴进 CMS 模板，以后所有文章自动带 canonical/author/作者卡片
-④ 检测：输入品牌名/域名/问句，看 AI 眼中的你（认知/描述/来源三维度 + 分数）
-⑤ 文章监测：把常发文章加入监测，看哪些内容被 AI 真正采用（选题 ROI）
-⑥ 复测：执行建议后重新检测，看分数爬坡（历史趋势）
-```
-
-核心洞察：**AI 品牌认知 = 存在性 × 一致性 × 清晰度 × 权威性**。检测管「存在性」，锚点统一复制管「一致性」，署名/作者卡片管「清晰度」，官网可爬管「权威性」。
-
-## 模型源
-
-| 源 | 方式 | 需要什么 |
-|---|---|---|
-| `deepseek` | OpenAI 兼容 API | `DEEPSEEK_API_KEY`（platform.deepseek.com） |
-| `doubao`（豆包） | 火山方舟 ARK API | `ARK_API_KEY`（console.volcengine.com/ark） |
-
-> 豆包模型名默认 `doubao-seed-2-0-pro-260215`，可用环境变量 `DOUBAO_MODEL` 改为其它已开通模型名或接入点 ID（ep-xxx）。API key 只存在服务端 `.env`，页面用户无需任何配置。
-
-## 部署
-
-### 本机 / 私有化
+Re-test all archived entities without calling any API:
 
 ```bash
-bash deploy.sh        # 自动检测 Docker/Node，交互填 Key，一键启动
+npm run retest -- --dry
 ```
 
-或 Docker：
+---
+
+## API (REST, zero-dependency server)
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/check` | POST | body `{"query":"..."}` → run one check, persist history, return full report |
+| `/api/checks?limit=N` | GET | recent check history (default 20, max 50), newest first |
+| `/api/anchor` | GET / POST | positioning anchor + generated versions + platform list + site byline |
+| `/api/articles` | GET / POST | article library list / add `{"title","url","topic"}` |
+| `/api/articles/:id` | DELETE | remove an article |
+| `/api/articles/check` | POST | run article monitoring for all articles (serial, ~15–40 s each) |
+| `/api/compare` | POST | body `{"self":"我的品牌","competitors":["竞品1"]}` → comparison ranking + gap + insight |
+| `/api/cites` | GET / POST / DELETE | domain tracking list / add / remove |
+| `/api/cites/check` | POST | re-test all tracked domains |
+| `/api/entities` | GET | full unified entity archive |
+| `/api/entities/stats` | GET | archive stats (counts, check totals, scene shares, top scores) |
+
+Example — run a check:
 
 ```bash
-cp .env.example .env  # 填入两个 Key
-docker compose up -d --build
+curl -s -X POST localhost:8788/api/check \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"海底捞"}'
+# → { "ok": true, "report": { "type": "brand", "score": 70, "verdict": "AI 有基础认知", ... } }
 ```
 
-### 公网
+> Public-facing deployment is rate limited per IP (default 8/min, 80/day) with a
+> global concurrency cap (3) and input length validation. See `DEPLOY.md`.
 
-服务监听 `0.0.0.0:8788`，端口可用 `PORT` 修改。生产部署建议：
+---
 
-- **反向代理**：Nginx/Caddy 转发 `8788`，配置 HTTPS，同时按 `X-Forwarded-For` 透传真实 IP（服务端已按该头做 IP 限流）。
-- **进程守护**：`docker compose`（`restart: unless-stopped`）或 systemd。
-- **资源**：单 Node 进程，零外部依赖（除两个 API），轻量可放任意 VPS。
+## Data model — the cognition archive
 
-限流阈值环境变量：`RATE_PER_MIN`（默认 8）、`RATE_PER_DAY`（默认 80）、`MAX_CONCURRENT`（默认 3）。
+Every measurement lands in one normalized entity profile. This time-series is the
+project's core asset (the "enterprise AI cognition map" foundation).
 
-详见 [`DEPLOY.md`](./DEPLOY.md)。
-
-## 目录结构
-
-```
-config.ts          模型源配置（DeepSeek / 豆包）
-src/check.ts       检测引擎：输入分类 / 问题生成 / 评分 / 报告
-src/history.ts     历史存储（data/checks.jsonl，零依赖 JSONL）
-src/anchor.ts      定位锚点：统一口径版本生成 + 站点署名代码 + data/anchor.json
-src/articles.ts    文章监测：文章库 + 按主题问 AI 推荐 + 引用判定 + data/articles.json
-src/cite.ts        域名追踪：复测趋势 + data/cites.json
-src/compare.ts     竞品对比 / 竞品智能：排名 + 曝光份额 + 差距洞察
-src/entity.ts      统一实体档案：品牌/域名归一 + 认知时间序列 + data/entities.json
-src/server.ts      产品 API 服务（限流 / 并发 / 校验）
-src/providers.ts   API 查询（DeepSeek / 豆包，含重试与超时）
-src/web/           产品前端页（Hero 输入框 + 评分环 + 锚点工作台 + 引用追踪 + 竞品智能 + 历史）
-data/              运行时数据（gitignored）：检测历史 / 锚点 / 文章 / 域名 / 实体档案
+```ts
+EntityProfile {
+  key: string;            // normalized: lowercase, no protocol/www/whitespace
+  name: string;
+  kind: "brand" | "site";
+  industry?: string;      // set by industry checks
+  keywords: string[];
+  createdAt: string;
+  checks:     { at, score, verdict, mention, cited, sources }[];  // cognition curve
+  citations:  { at, source, kind }[];                             // who cited you
+  sceneShares:{ at, scene, share, rank, total }[];                // exposure per scene
+}
 ```
 
-## 路线图
+Archived in `data/entities.json` (gitignored — runtime data stays on the deploy
+host; the repo contains code, not customer data).
 
-下一阶段规划见 [`ROADMAP.md`](./ROADMAP.md)。
+---
+
+## Auto re-test — the cognition curve loop
+
+```bash
+npm run retest                    # re-measure all archived brand/site entities
+scripts/install-retest-cron.sh    # install weekly cron (Sun 03:30), flock-guarded
+```
+
+Each run appends a new snapshot to every entity's `checks` series and writes a
+batch log to `data/retest-log.jsonl`. This powers the monthly **AI cognition
+scorecard** workflow: re-test → update scorecard → publish → let AI discover the
+change → re-test again. The moat is the accumulated **data**, not the tool code.
+
+---
+
+## Directory layout
+
+```
+config.ts           Provider config (DeepSeek / Doubao)
+src/check.ts        Detection engine: classify → questions → scoring → report
+src/entity.ts       Unified entity archive: normalization + cognition time-series
+src/retest.ts       Auto re-test: re-measure archived entities, accumulate curves
+src/history.ts      Check history (data/checks.jsonl, zero-dep JSONL)
+src/anchor.ts       Positioning anchor: version generation + site byline
+src/articles.ts     Article monitoring: library + citation judgment
+src/cite.ts         Domain tracking: re-test trends
+src/compare.ts      Competitor comparison: ranking + exposure share + insights
+src/server.ts       Product API server (rate limit / concurrency / validation)
+src/providers.ts    API query layer (DeepSeek / Doubao, retry + timeout)
+src/web/            Product front-end (single index.html)
+data/               Runtime data (gitignored): checks, entities, anchors, articles, cites
+```
+
+---
+
+## Model sources
+
+| Source | Type | Requires |
+|---|---|---|
+| `deepseek` | OpenAI-compatible API | `DEEPSEEK_API_KEY` (platform.deepseek.com) |
+| `doubao` (豆包) | Volcano Ark API | `ARK_API_KEY` (console.volcengine.com/ark) |
+
+Doubao model defaults to `doubao-seed-2-0-pro-260215`, overridable via
+`DOUBAO_MODEL`. API keys live only in the server `.env` — page users need no
+configuration.
+
+---
+
+## Deployment
+
+```bash
+bash deploy.sh                 # auto-detects Docker/Node, asks for keys, one-command start
+# or Docker:
+docker compose up -d --build   # bind-mounts ./data → data continuity & transparent backup
+```
+
+Production notes: reverse proxy (Nginx/Caddy) for HTTPS + real-IP passthrough;
+process guard via `docker compose` (`restart: unless-stopped`); single Node
+process, lightweight enough for any VPS. Tuning via `RATE_PER_MIN`,
+`RATE_PER_DAY`, `MAX_CONCURRENT`. Full details in `DEPLOY.md`.
+
+---
+
+## FAQ
+
+**Q: Is GEO the same as SEO?**
+A: No. SEO optimizes for search-engine *results pages*; GEO (Generative Engine
+Optimization) optimizes for how AI *answers* — what it mentions, how it
+describes, and whether it cites a source. GEOloopOS measures the latter. / GEO
+针对 AI 如何「回答」，SEO 针对搜索引擎的「结果页」。GEOloopOS 测的是前者。
+
+**Q: Which AI engines does it check?**
+A: DeepSeek and Doubao (both OpenAI-compatible). Adding a source is a one-entry
+config change in `config.ts`. / 当前 DeepSeek + 豆包，可扩展。
+
+**Q: Does it need my API key as a user?**
+A: No — keys live on the server. You only type a brand / domain / question. /
+使用者无需配置任何 key。
+
+**Q: What does a score of 0 mean?**
+A: The AI gave no substantive answer (refusal) or did not mention the entity —
+typically because there is no crawlable, consistent public content about it.
+Optimization tips in the report address this directly.
+
+**Q: Can I use it for my competitors?**
+A: Yes. `/api/compare` runs the same detection on your brand + competitors and
+shows ranking, gap, and who leads — and why.
+
+**Q: Where does the data go?**
+A: All runtime data stays on your host in `data/` (gitignored). The repo
+contains code, not customer or brand data.
+
+**Q: Is it free / self-hostable?**
+A: MIT-licensed and self-hostable with one Docker command. You only pay the two
+AI engines' API usage.
+
+---
+
+## Roadmap & docs
+
+- `ROADMAP.md` — P0 auto re-test + industry templates; P1 public HTTPS/domain,
+  industry benchmarks, brand/domain mapping; P2 accounts, AI cognition map, AI
+  cognition reports.
+- `IDENTITY-ENGINE.md` — product positioning & the "AI identity engine" concept.
+- `VISION.md` — moat strategy (data assets > tool code).
+- `DEPLOY.md` — deployment & operations.
+- `AIAGENTS.md` — architecture & data-model guide for AI agents working in the repo.
+
+---
+
+## Author & license
+
+Built by **张可能 / Kene Zhang** — AI consultant, GEO engineer, GEOloopOS founder.
+Site: **https://zkoner.com** · GitHub: [zhangxiaomingv](https://github.com/zhangxiaomingv)
+
+Released under the **MIT License**. If you use or build on GEOloopOS, a citation
+(`CITATION.cff`) is appreciated.
+
+**GEOloopOS · GEO 优化操作系统** — 让 AI 认识你、理解你、推荐你。
