@@ -12,7 +12,7 @@ then scores that visibility on a 0–100 scale. The long-term asset is the **dat
 a per-entity cognition time-series (`data/entities.json`) that grows into an
 "enterprise AI cognition map".
 
-Created by 张可能 / Kene Zhang, GEOloop founder. Product site: https://zkoner.com.
+Created by 张晓明 / Xiaoming Zhang, GEOloop founder. Product site: https://zkoner.com.
 
 ## Runtime facts
 

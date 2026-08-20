@@ -8,11 +8,11 @@
 
 ## 标题
 
-**《AI 认知成绩单 #N — 这个月，大模型眼中的张可能是什么样》**
+**《AI 认知成绩单 #N — 这个月，大模型眼中的张晓明是什么样》**
 
 ## 开头（每篇固定口径，逐字不变）
 
-> 我是 [张可能](https://zkoner.com)，AI 顾问 / GEO 优化工程师，[GEOloop](https://github.com/zhangxiaomingv/geoloop) 创始人。
+> 我是 [张晓明](https://zkoner.com)，AI 顾问 / GEO 优化工程师，[GEOloop](https://github.com/zhangxiaomingv/geoloop) 创始人。
 > 每个月我都用自己的 GEOloop 检测「AI 眼中的我」，把成绩公开出来。这是第 N 份。
 
 ## 本月总分

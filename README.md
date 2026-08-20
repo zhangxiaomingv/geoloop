@@ -32,7 +32,7 @@ cognition curve that shows whether your AI visibility is actually improving.
 recommended by AI — the channel people increasingly use to make decisions
 (which restaurant, which contractor, which SaaS tool, which advisor).
 
-Built by [张可能 / Kene Zhang](https://zkoner.com), GEOloop founder and AI
+Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEOloop founder and AI
 consultant. Product site: **https://zkoner.com**.
 
 ---
@@ -262,7 +262,7 @@ AI engines' API usage.
 
 ## Author & license
 
-Built by **张可能 / Kene Zhang** — AI consultant, GEO engineer, GEOloop founder.
+Built by **张晓明 / Xiaoming Zhang** — AI consultant, GEO engineer, GEOloop founder.
 Site: **https://zkoner.com** · GitHub: [zhangxiaomingv](https://github.com/zhangxiaomingv)
 
 Released under the **MIT License**. If you use or build on GEOloop, a citation
