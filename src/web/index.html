@@ -260,6 +260,20 @@
   .tips li { color: var(--text-muted); font-size: 13px; padding: 3px 0 3px 20px; position: relative; }
   .tips li::before { content: "→"; position: absolute; left: 0; color: var(--warning); }
 
+  /* ---------- AI Citation Map 引用地图 ---------- */
+  .cmap { margin-top: 12px; background: var(--primary-soft); border: 1px solid rgba(76,141,255,.25); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .cmap h4 { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
+  .cmap-headline { font-size: 13.5px; color: var(--text); margin-bottom: 12px; line-height: 1.55; }
+  .cmap-bars { display: grid; gap: 7px; }
+  .cmap-row { display: grid; grid-template-columns: 56px 1fr 42px; align-items: center; gap: 9px; font-size: 12px; }
+  .cmap-row .cl { color: var(--text-muted); text-align: right; white-space: nowrap; }
+  .cmap-row .bar { height: 7px; background: rgba(255,255,255,.07); border-radius: 4px; overflow: hidden; }
+  .cmap-row .bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #2563eb, #4c8dff); transition: width .6s ease; }
+  .cmap-row .pct { color: var(--text-muted); font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .cmap-domains { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 6px; }
+  .cmap-domains .m { background: rgba(255,255,255,.05); border: 1px solid rgba(76,141,255,.22); color: var(--text-muted); font-size: 11px; padding: 3px 9px; border-radius: 20px; }
+  .cmap-domains .m b { color: var(--primary); font-family: var(--font-mono); font-weight: 600; }
+
   /* ---------- 回答卡片 ---------- */
   .answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-top: 12px; }
   .ans {
@@ -684,10 +698,33 @@ function renderReport(r){
     +   '</div>'
     + '</div>'
     + (r.tips && r.tips.length ? '<div class="tips"><h4>'+svgAlert()+' 优化建议</h4><ul>'+r.tips.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul></div>' : '')
+    + citationMapBlock(r.citationMap)
     + '<div class="answers">'+r.results.map(ansCard).join('')+'</div>'
     + '</div>';
 
   $('result').innerHTML = html;
+}
+
+function citationMapBlock(cm){
+  if (!cm) return '';
+  const icon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>';
+  if (!cm.total) {
+    return '<div class="cmap"><h4>'+icon+' AI 引用地图 · AI 相信谁</h4>'
+      + '<div class="cmap-headline">'+esc(cm.headline)+'</div></div>';
+  }
+  const bars = cm.categories.map(c =>
+    '<div class="cmap-row"><span class="cl">'+esc(c.category)+'</span>'
+    + '<span class="bar"><i style="width:'+c.pct+'%"></i></span>'
+    + '<span class="pct">'+c.pct+'%</span></div>'
+  ).join('');
+  const domains = cm.top.length
+    ? '<div class="cmap-domains">'+cm.top.map(t => '<span class="m">'+esc(t.domain)+' <b>'+t.pct+'%</b></span>').join('')+'</div>'
+    : '';
+  return '<div class="cmap"><h4>'+icon+' AI 引用地图 · AI 相信谁</h4>'
+    + '<div class="cmap-headline">'+esc(cm.headline)+'</div>'
+    + '<div class="cmap-bars">'+bars+'</div>'
+    + domains
+    + '</div>';
 }
 
 function questionMentions(r){

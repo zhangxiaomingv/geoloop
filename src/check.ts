@@ -24,6 +24,8 @@ export interface CheckResult {
   description: 0 | 15 | 30;
   /** 来源：是否引用了可追溯来源（站点模式=引用了该域名） */
   source: boolean;
+  /** AI Citation Map：回答里出现的全部引用域名 */
+  cites: string[];
   error?: string;
   score: number;
 }
@@ -43,6 +45,8 @@ export interface CheckReport {
   score: number;
   verdict: string;
   tips: string[];
+  /** AI Citation Map：回答引用来源聚合（占比 + 话术） */
+  citationMap: CitationMap;
 }
 
 /* ---------- 输入分类 ---------- */
@@ -134,6 +138,110 @@ export function extractMentions(results: CheckResult[]): string[] {
   return [...found].slice(0, 8);
 }
 
+/* ---------- AI Citation Map 引用地图 ---------- */
+
+export type CitationCategory = "知乎" | "百度" | "小红书" | "官网" | "媒体" | "其他";
+
+export interface CitationMapCategory {
+  category: CitationCategory;
+  count: number;
+  /** 占总引用百分比（四舍五入） */
+  pct: number;
+}
+
+export interface CitationMapItem {
+  domain: string;
+  category: CitationCategory;
+  count: number;
+  pct: number;
+}
+
+export interface CitationMap {
+  /** 回答里被引域名出现总次数 */
+  total: number;
+  /** 分类聚合（降序） */
+  categories: CitationMapCategory[];
+  /** 具体域名 Top（降序） */
+  top: CitationMapItem[];
+  /** 官网是否被引用 */
+  hasOwnSite: boolean;
+  /** 一句话话术 */
+  headline: string;
+}
+
+/** 媒体域名关键词（启发式，可扩展） */
+const MEDIA_RE =
+  /(?:sina|weibo|163\.com|netease|sohu|ifeng|thepaper|36kr|huxiu|jiemian|yicai|caixin|xinhuanet|people\.com|chinanews|cctv|eastmoney|cls\.cn|qq\.com|bbc|cnn|reuters|bloomberg|nytimes|guardian)/;
+
+/** 从回答文本抽取所有引用域名（子域/多级域都可识别，忽略 www） */
+export function extractCitedDomains(text: string): string[] {
+  return (
+    (text.toLowerCase().match(/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}/g) || [])
+      .map((d) => d.replace(/^www\./, ""))
+      .filter((d) => d.includes("."))
+  );
+}
+
+/** 域名 → 引用来源分类。entityDomain 用于把「自己的官网」识别出来（站点检测模式） */
+export function classifyCitationDomain(d: string, entityDomain?: string): CitationCategory {
+  if (entityDomain && (d === entityDomain || d.endsWith("." + entityDomain))) return "官网";
+  if (d === "zhihu.com" || d.endsWith(".zhihu.com")) return "知乎";
+  if (d === "baidu.com" || d.endsWith(".baidu.com")) return "百度";
+  if (d === "xiaohongshu.com" || d.endsWith(".xiaohongshu.com") || d === "xhslink.com") return "小红书";
+  if (MEDIA_RE.test(d)) return "媒体";
+  return "其他";
+}
+
+/** 聚合一次检测的引用地图 */
+export function buildCitationMap(results: CheckResult[], entityDomain?: string): CitationMap {
+  const domCounts = new Map<string, number>();
+  const catCounts = new Map<CitationCategory, number>();
+  let total = 0;
+
+  for (const r of results) {
+    for (const d of extractCitedDomains(r.answer)) {
+      domCounts.set(d, (domCounts.get(d) ?? 0) + 1);
+      const cat = classifyCitationDomain(d, entityDomain);
+      catCounts.set(cat, (catCounts.get(cat) ?? 0) + 1);
+      total++;
+    }
+  }
+
+  if (!total) {
+    return {
+      total: 0,
+      categories: [],
+      top: [],
+      hasOwnSite: false,
+      headline: "本次检测的回答没有引用任何外部来源——这是你最大的机会：让 AI 引用你。",
+    };
+  }
+
+  const categories: CitationMapCategory[] = [...catCounts.entries()]
+    .map(([category, count]) => ({ category, count, pct: Math.round((count / total) * 100) }))
+    .sort((a, b) => b.count - a.count);
+
+  const top: CitationMapItem[] = [...domCounts.entries()]
+    .map(([domain, count]) => ({
+      domain,
+      category: classifyCitationDomain(domain, entityDomain),
+      count,
+      pct: Math.round((count / total) * 100),
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+
+  const ownCount = catCounts.get("官网") ?? 0;
+  const hasOwnSite = ownCount > 0;
+  const ownPct = Math.round((ownCount / total) * 100);
+  const lead = categories[0];
+  const headline = hasOwnSite
+    ? `你的官网已被 AI 引用 ${ownCount}/${total}（${ownPct}%）。继续扩大官网可检索内容，把「主要信息源」地位坐实。`
+    : `你的网站明明写了，但 AI 根本没把你当成主要信息源——它优先相信「${lead?.category ?? "其他"}」等来源（${lead?.pct ?? 0}%）。`;
+
+  return { total, categories, top, hasOwnSite, headline };
+}
+
 /* ---------- 结论与建议 ---------- */
 
 export function verdictFor(score: number, type: InputType): string {
@@ -177,10 +285,10 @@ export async function runCheck(query: string): Promise<CheckReport> {
     questions.map(async (q): Promise<CheckResult> => {
       const r = await queryText(p, q);
       if (r.error) {
-        return { provider: p.id, providerLabel: p.label, question: q, answer: "", mention: false, description: 0, source: false, error: r.error, score: 0 };
+        return { provider: p.id, providerLabel: p.label, question: q, answer: "", mention: false, description: 0, source: false, cites: [], error: r.error, score: 0 };
       }
       const { mention, description, source, score } = scoreAnswer(entity, r.raw, type);
-      return { provider: p.id, providerLabel: p.label, question: q, answer: r.raw, mention, description, source, score };
+      return { provider: p.id, providerLabel: p.label, question: q, answer: r.raw, mention, description, source, cites: extractCitedDomains(r.raw), score };
     })
   );
   const results = await Promise.all(tasks);
@@ -204,5 +312,6 @@ export async function runCheck(query: string): Promise<CheckReport> {
     score,
     verdict: verdictFor(score, type),
     tips: tipsFor(type, mentionFailed, depthFailed, sourceFailed, score),
+    citationMap: buildCitationMap(results, type === "site" ? entity : undefined),
   };
 }

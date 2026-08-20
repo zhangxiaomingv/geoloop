@@ -8,7 +8,7 @@
 
 import { providers } from "../config.js";
 import { queryText } from "./providers.js";
-import { classify, scoreAnswer, verdictFor, InputType } from "./check.js";
+import { classify, scoreAnswer, verdictFor, extractCitedDomains, InputType } from "./check.js";
 import type { CheckResult } from "./check.js";
 
 export interface CompareEntity {
@@ -51,10 +51,10 @@ async function probeEntity(input: string): Promise<CompareEntity> {
     apiProviders.map(async (p): Promise<CheckResult> => {
       const r = await queryText(p, q0);
       if (r.error) {
-        return { provider: p.id, providerLabel: p.label, question: q0, answer: "", mention: false, description: 0, source: false, error: r.error, score: 0 };
+        return { provider: p.id, providerLabel: p.label, question: q0, answer: "", mention: false, description: 0, source: false, cites: [], error: r.error, score: 0 };
       }
       const s = scoreAnswer(entity, r.raw, type);
-      return { provider: p.id, providerLabel: p.label, question: q0, answer: r.raw, ...s };
+      return { provider: p.id, providerLabel: p.label, question: q0, answer: r.raw, ...s, cites: extractCitedDomains(r.raw) };
     })
   );
 
