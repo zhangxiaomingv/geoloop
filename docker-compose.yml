@@ -1,10 +1,10 @@
-# GEOloopOS Identity Engine · 私有化一键部署
+# GEOloop Identity Engine · 私有化一键部署
 # 用法：在项目根执行 `docker compose up -d --build`
 services:
-  geoloopos:
+  geoloop:
     build: .
-    image: geoloopos/identity-engine:latest
-    container_name: geoloopos
+    image: geoloop/identity-engine:latest
+    container_name: geoloop
     restart: unless-stopped
     ports:
       - "${PORT:-8788}:8788"

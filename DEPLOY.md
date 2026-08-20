@@ -1,6 +1,6 @@
-# GEOloopOS Identity Engine · 私有化部署手册
+# GEOloop Identity Engine · 私有化部署手册
 
-给企业客户在**自己的服务器**上部署 GEOloopOS（AI可见度操作系统）。数据保存在客户服务器本地，调用 DeepSeek/豆包 时只发送检测问题，客户自备 API Key。
+给企业客户在**自己的服务器**上部署 GEOloop（AI可见度操作系统）。数据保存在客户服务器本地，调用 DeepSeek/豆包 时只发送检测问题，客户自备 API Key。
 
 ## 环境要求
 
@@ -38,7 +38,7 @@ docker compose logs -f        # 看日志
 cp .env.example .env
 vim .env
 npm install
-nohup npx tsx src/server.ts > geoloopos.log 2>&1 &
+nohup npx tsx src/server.ts > geoloop.log 2>&1 &
 # 常驻：建议用 pm2 / systemd 守护，参考下方 systemd 示例
 ```
 
@@ -58,14 +58,14 @@ nohup npx tsx src/server.ts > geoloopos.log 2>&1 &
 
 ## 数据与备份
 
-全部数据在 `data/` 目录（Docker 下为命名卷 `geoloopos-data`）：
+全部数据在 `data/` 目录（Docker 下为命名卷 `geoloop-data`）：
 
 - `checks.jsonl` — 检测历史
 - `anchor.json` — 定位锚点（客户填写的品牌口径）
 - `articles.json` — 文章监测库
 - `cites.json` — 域名追踪与趋势
 
-**备份**：直接打包 `data/` 目录即可；恢复时覆盖回原位置。Docker 卷备份：`docker run --rm -v geoloopos-data:/data -v $(pwd):/backup alpine tar czf /backup/data-backup.tar.gz -C /data .`
+**备份**：直接打包 `data/` 目录即可；恢复时覆盖回原位置。Docker 卷备份：`docker run --rm -v geoloop-data:/data -v $(pwd):/backup alpine tar czf /backup/data-backup.tar.gz -C /data .`
 
 ## 升级
 
@@ -85,15 +85,15 @@ docker compose up -d --build
 
 ## systemd 守护（Node 模式）
 
-`/etc/systemd/system/geoloopos.service`：
+`/etc/systemd/system/geoloop.service`：
 
 ```ini
 [Unit]
-Description=GEOloopOS Identity Engine
+Description=GEOloop Identity Engine
 After=network.target
 
 [Service]
-WorkingDirectory=/opt/geoloopos
+WorkingDirectory=/opt/geoloop
 ExecStart=/usr/bin/npx tsx src/server.ts
 Restart=always
 
@@ -102,5 +102,5 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-sudo systemctl enable --now geoloopos
+sudo systemctl enable --now geoloop
 ```

@@ -1,5 +1,5 @@
 /**
- * GEOloopOS Identity Engine · 配置 — 模型源在此文件调整
+ * GEOloop Identity Engine · 配置 — 模型源在此文件调整
  * 产品端检测走 API 即时查询（DeepSeek / 豆包），无需固定问题集。
  */
 

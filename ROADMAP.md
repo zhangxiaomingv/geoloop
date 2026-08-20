@@ -1,4 +1,4 @@
-# GEOloopOS Roadmap
+# GEOloop Roadmap
 
 > 状态标记：🔲 待办 · 🚧 进行中 · ✅ 已完成
 

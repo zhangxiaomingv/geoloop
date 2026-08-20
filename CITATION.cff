@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "If you use GEOloopOS in research, an article, or a report, please cite it as below."
-title: "GEOloopOS — GEO 优化操作系统 / AI Identity Engine"
+message: "If you use GEOloop in research, an article, or a report, please cite it as below."
+title: "GEOloop — GEO 优化操作系统 / AI Identity Engine"
 abstract: >-
-  GEOloopOS is an open-source tool that measures how well AI search engines
+  GEOloop is an open-source tool that measures how well AI search engines
   and LLMs (DeepSeek, Doubao, and others) recognize, describe, and recommend a
   brand, a person, or a website — then turns that visibility into a trackable,
   growable digital identity asset. It is the identity engine behind the
@@ -21,4 +21,4 @@ keywords:
   - identity-engine
 date-released: 2026-08-17
 license: MIT
-repository-code: https://github.com/zhangxiaomingv/geoloopos
+repository-code: https://github.com/zhangxiaomingv/geoloop

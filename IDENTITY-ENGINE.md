@@ -1,7 +1,7 @@
-# GEOloopOS Identity Engine
+# GEOloop Identity Engine
 ### 企业 / 个人 AI 身份引擎 · 总定位
 
-> **GEOloopOS Identity Engine 是企业与个人在 AI 世界的「数字身份操作系统」。**
+> **GEOloop Identity Engine 是企业与个人在 AI 世界的「数字身份操作系统」。**
 >
 > 定义你是谁 → 校准 AI 如何认识你 → 传播你的内容 → 赢得场景推荐 → 把 AI 身份沉淀为可追踪、可增长的战略资产。
 
@@ -35,7 +35,7 @@
 
 - 副标语：**GEO优化操作系统**（命中用户搜索的品类词「GEO优化」；title/meta 同时覆盖「GEO优化」「AI可见度」双搜索线）
 - Hero：**让 AI 认识你、理解你、推荐你**
-- 价值主张：GEOloopOS 是企业在 AI 搜索时代的数字身份基础设施，让 AI 理解企业/个体、准确描述企业/个人，并持续增强企业/个体在 AI 决策链中的影响力。
+- 价值主张：GEOloop 是企业在 AI 搜索时代的数字身份基础设施，让 AI 理解企业/个体、准确描述企业/个人，并持续增强企业/个体在 AI 决策链中的影响力。
 
 ## 增长逻辑
 
