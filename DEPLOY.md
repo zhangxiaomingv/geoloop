@@ -1,6 +1,6 @@
 # GEOloop Identity Engine · 私有化部署手册
 
-给企业客户在**自己的服务器**上部署 GEOloop（AI可见度操作系统）。数据保存在客户服务器本地，调用 DeepSeek/豆包 时只发送检测问题，客户自备 API Key。
+给企业客户在**自己的服务器**上部署 GEOloop（AI 可见度基础设施）。数据保存在客户服务器本地，调用 DeepSeek/豆包 时只发送检测问题，客户自备 API Key。
 
 ## 环境要求
 

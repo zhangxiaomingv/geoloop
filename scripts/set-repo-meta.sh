@@ -16,7 +16,7 @@ set -euo pipefail
 REPO="zhangxiaomingv/geoloop"
 TOKEN="${GITHUB_TOKEN:-}"
 
-DESC='GEOloop · GEO优化操作系统 — 开源 AI 身份引擎。让 AI 认识你、理解你、推荐你。Measure & grow how AI search engines (DeepSeek, Doubao) recognize, describe & recommend a brand, person or website.'
+DESC='GEOloop · AI 可见度基础设施 — 开源 AI 身份引擎。让 AI 认识你、理解你、推荐你。Measure & grow how AI search engines (DeepSeek, Doubao) recognize, describe & recommend a brand, person or website.'
 HOMEURL='https://zkoner.com'
 TOPICS=(
   geo
