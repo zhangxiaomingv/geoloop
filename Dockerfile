@@ -1,4 +1,4 @@
-# GEOloop Identity Engine · AI 可见度基础设施 — 私有化部署镜像
+# GEOloopOS Identity Engine · AI 可见度基础设施 — 私有化部署镜像
 FROM node:20-slim
 WORKDIR /app
 

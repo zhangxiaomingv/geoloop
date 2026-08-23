@@ -1,9 +1,9 @@
 {
-  "name": "geoloop",
+  "name": "geoloopos",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "GEOloop Identity Engine — 让 AI 认识你、理解你、推荐你（企业/个人 AI 身份引擎）",
+  "description": "GEOloopOS Identity Engine — 让 AI 认识你、理解你、推荐你（企业/个人 AI 身份引擎）",
   "scripts": {
     "run": "tsx src/run.ts",
     "report": "tsx src/report.ts",

@@ -13,10 +13,10 @@
 # 或者：仓库页面 Settings → General 填 Description/Website，仓库首页点 Topics。
 
 set -euo pipefail
-REPO="zhangxiaomingv/geoloop"
+REPO="zhangxiaomingv/geoloopos"
 TOKEN="${GITHUB_TOKEN:-}"
 
-DESC='GEOloop · AI 可见度基础设施 — 开源 AI 身份引擎。让 AI 认识你、理解你、推荐你。Measure & grow how AI search engines (DeepSeek, Doubao) recognize, describe & recommend a brand, person or website.'
+DESC='GEOloopOS · AI 可见度基础设施 — 开源 AI 身份引擎。让 AI 认识你、理解你、推荐你。Measure & grow how AI search engines (DeepSeek, Doubao) recognize, describe & recommend a brand, person or website.'
 HOMEURL='https://zkoner.com'
 TOPICS=(
   geo

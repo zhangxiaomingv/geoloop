@@ -1,8 +1,8 @@
-# GEOloop Roadmap
+# GEOloopOS Roadmap
 
 > 状态标记：🔲 待办 · 🚧 进行中 · ✅ 已完成
 >
-> 2026-08-23 精简决策（马斯克五步法）：系统只保留 geoloop 产品 + zkoner.com 品牌站 + tunnel 入口 + GitHub。以下非核心待办全部冻结，不再投入。
+> 2026-08-23 精简决策（马斯克五步法）：系统只保留 geoloopos 产品 + zkoner.com 品牌站 + tunnel 入口 + GitHub。以下非核心待办全部冻结，不再投入。
 
 ## 已完成（1.0）
 

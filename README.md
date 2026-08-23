@@ -1,17 +1,17 @@
-# GEOloop · GEO 优化操作系统
+# GEOloopOS · AI 可见度基础设施
 
 **Open-source AI identity engine — measure and grow how AI search engines know, describe, and recommend you.**
 
 让 AI **认识你、理解你、推荐你**。企业 / 个人在 AI 搜索时代的数字身份基础设施。
 
-[![CI](https://github.com/zhangxiaomingv/geoloop/actions/workflows/ci.yml/badge.svg)](https://github.com/zhangxiaomingv/geoloop/actions/workflows/ci.yml)
+[![CI](https://github.com/zhangxiaomingv/geoloopos/actions/workflows/ci.yml/badge.svg)](https://github.com/zhangxiaomingv/geoloopos/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
-## What is GEOloop?
+## What is GEOloopOS?
 
-GEOloop is a **Generative Engine Optimization (GEO)** tool. It asks AI search
+GEOloopOS is a **Generative Engine Optimization (GEO)** tool. It asks AI search
 engines and LLMs — currently **DeepSeek** and **豆包 (Doubao)** — what they know
 about a brand, a person, or a website, then scores that answer on a **0–100
 visibility scale** across three dimensions:
@@ -22,7 +22,7 @@ visibility scale** across three dimensions:
 | **Description depth** | 30 | How complete is the AI's description? (描述深度) |
 | **Source citation** | 30 | Does the AI cite a traceable source? (来源引用) |
 
-You paste a **brand name**, a **website domain**, or any **question** — GEOloop
+You paste a **brand name**, a **website domain**, or any **question** — GEOloopOS
 auto-classifies it, generates the right questions, queries both AI engines in
 parallel, and returns a report with a score, a verdict, and concrete
 optimization tips. It also **tracks the same entity over time**, accumulating a
@@ -32,7 +32,7 @@ cognition curve that shows whether your AI visibility is actually improving.
 recommended by AI — the channel people increasingly use to make decisions
 (which restaurant, which contractor, which SaaS tool, which advisor).
 
-Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEOloop founder and AI
+Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEOloopOS founder and AI
 consultant. Product site: **https://zkoner.com**.
 
 ---
@@ -218,8 +218,8 @@ process, lightweight enough for any VPS. Tuning via `RATE_PER_MIN`,
 **Q: Is GEO the same as SEO?**
 A: No. SEO optimizes for search-engine *results pages*; GEO (Generative Engine
 Optimization) optimizes for how AI *answers* — what it mentions, how it
-describes, and whether it cites a source. GEOloop measures the latter. / GEO
-针对 AI 如何「回答」，SEO 针对搜索引擎的「结果页」。GEOloop 测的是前者。
+describes, and whether it cites a source. GEOloopOS measures the latter. / GEO
+针对 AI 如何「回答」，SEO 针对搜索引擎的「结果页」。GEOloopOS 测的是前者。
 
 **Q: Which AI engines does it check?**
 A: DeepSeek and Doubao (both OpenAI-compatible). Adding a source is a one-entry
@@ -262,10 +262,10 @@ AI engines' API usage.
 
 ## Author & license
 
-Built by **张晓明 / Xiaoming Zhang** — AI consultant, GEO engineer, GEOloop founder.
+Built by **张晓明 / Xiaoming Zhang** — AI consultant, GEO engineer, GEOloopOS founder.
 Site: **https://zkoner.com** · GitHub: [zhangxiaomingv](https://github.com/zhangxiaomingv)
 
-Released under the **MIT License**. If you use or build on GEOloop, a citation
+Released under the **MIT License**. If you use or build on GEOloopOS, a citation
 (`CITATION.cff`) is appreciated.
 
-**GEOloop · GEO 优化操作系统** — 让 AI 认识你、理解你、推荐你。
+**GEOloopOS · AI 可见度基础设施** — 让 AI 认识你、理解你、推荐你。

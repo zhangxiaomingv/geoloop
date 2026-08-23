@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =====================================================================
-# GEOloop Identity Engine · AI 可见度基础设施 — 一键私有化部署
+# GEOloopOS Identity Engine · AI 可见度基础设施 — 一键私有化部署
 # 自动检测环境：有 Docker 用 Docker，否则用 Node 直跑。
 # 用法： bash deploy.sh
 # =====================================================================
@@ -8,7 +8,7 @@ set -e
 cd "$(dirname "$0")"
 
 echo "=================================================="
-echo " GEOloop Identity Engine · 一键私有化部署"
+echo " GEOloopOS Identity Engine · 一键私有化部署"
 echo "=================================================="
 
 # ---------- 1. 配置 AI 模型 Key ----------
@@ -51,9 +51,9 @@ else
   if pgrep -f "tsx src/server.ts" >/dev/null 2>&1; then
     echo "  ✓ 服务已在运行"
   else
-    nohup npx tsx src/server.ts > /tmp/geoloop.log 2>&1 &
+    nohup npx tsx src/server.ts > /tmp/geoloopos.log 2>&1 &
     sleep 3
-    echo "  ✓ 已启动，日志: /tmp/geoloop.log"
+    echo "  ✓ 已启动，日志: /tmp/geoloopos.log"
   fi
   echo "  ✓ http://localhost:8788"
 fi
@@ -62,5 +62,5 @@ echo ""
 echo "=================================================="
 echo " 完成。数据保存在 ./data/（检测历史/锚点/引用追踪）"
 echo " 停止:   docker compose down   （Node 模式: pkill -f 'tsx src/server.ts'）"
-echo " 查看日志: docker compose logs -f （Node 模式: tail -f /tmp/geoloop.log）"
+echo " 查看日志: docker compose logs -f （Node 模式: tail -f /tmp/geoloopos.log）"
 echo "=================================================="

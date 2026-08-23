@@ -1,18 +1,18 @@
-# GEOloop — Guide for AI Agents
+# GEOloopOS — Guide for AI Agents
 
 Context for AI coding agents working in this repository. Read this before making
 changes. Humans: see `CONTRIBUTING.md` and `README.md`.
 
 ## What this project is
 
-**GEOloop** ("GEO 优化操作系统") is an open-source **AI identity engine**. It
+**GEOloopOS** ("AI 可见度基础设施") is an open-source **AI identity engine**. It
 measures how AI search engines and LLMs — currently **DeepSeek** and **豆包
 (Doubao)** — recognize, describe, and recommend a brand, a person, or a website,
 then scores that visibility on a 0–100 scale. The long-term asset is the **data**:
 a per-entity cognition time-series (`data/entities.json`) that grows into an
 "enterprise AI cognition map".
 
-Created by 张晓明 / Xiaoming Zhang, GEOloop founder. Product site: https://zkoner.com.
+Created by 张晓明 / Xiaoming Zhang, GEOloopOS founder. Product site: https://zkoner.com.
 
 ## Runtime facts
 

@@ -1,4 +1,4 @@
-# Contributing to GEOloop
+# Contributing to GEOloopOS
 
 Thanks for being here. This is a small, focused project — the fastest way to contribute is to open an issue or PR on the right area.
 
@@ -7,7 +7,7 @@ Thanks for being here. This is a small, focused project — the fastest way to c
 - **Zero-dependency philosophy**: the runtime uses only Node.js built-ins plus `dotenv`. No framework, no database. Keep it that way unless a dependency is unavoidable.
 - **ESM + strict TS**: `.ts` sources import with `../config.js`-style `.js` extensions (NodeNext). Run `npx tsc --noEmit` before pushing.
 - **Data lives in `data/`**: runtime data (`checks.jsonl`, `entities.json`, anchors, articles, cites) is gitignored and stays on the deploy host. Never commit real customer/brand data to the public repo.
-- **Bilingual docs**: README is the AI-facing fact card (English-first, Chinese inline). Product docs (`IDENTITY-ENGINE.md`, `VISION.md`) stay Chinese. Keep the author line: 张晓明 / GEOloop 创始人.
+- **Bilingual docs**: README is the AI-facing fact card (English-first, Chinese inline). Product docs (`IDENTITY-ENGINE.md`, `VISION.md`) stay Chinese. Keep the author line: 张晓明 / GEOloopOS 创始人.
 
 ## Get started
 
