@@ -121,6 +121,7 @@ npm run retest -- --dry
 | `/api/kb/{key}` | GET | one knowledge card by key (404 if none) |
 | `/api/kb` | POST | body `{"input":{"name":...,"facts":...,...}}` → AI-structured knowledge card (identity / positioning / offerings / facts / sources / faq / keywords / multi-length versions / JSON-LD) |
 | `/api/kb/gap` | POST | body `{"key":"..."}` → run a live AI check, compare the card's facts against what AI actually says → coverage score + missing/weak facts + AI's current impression |
+| `/deploy` | GET | standalone enterprise private-deployment page (HTML) — value props, customization flow, founder contact |
 
 Example — run a check:
 
@@ -189,7 +190,7 @@ src/compare.ts      Competitor comparison: ranking + exposure share + insights
 src/kb.ts           Knowledge base: AI-structured card + knowledge-gap analysis (data/kb.jsonl)
 src/server.ts       Product API server (rate limit / concurrency / validation)
 src/providers.ts    API query layer (DeepSeek / Doubao, retry + timeout)
-src/web/            Product front-end (index.html homepage + report.html standalone report page)
+src/web/            Product front-end (index.html homepage + report.html standalone report page + deploy.html private-deployment page)
 data/               Runtime data (gitignored): checks, entities, anchors, articles, cites
 ```
 

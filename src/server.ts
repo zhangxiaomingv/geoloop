@@ -43,6 +43,7 @@ const PORT = Number(process.env.PORT || 8788);
 const here = process.cwd();
 const pageFile = path.join(here, "src/web/index.html");
 const reportPageFile = path.join(here, "src/web/report.html");
+const deployPageFile = path.join(here, "src/web/deploy.html");
 
 /** 每 IP 限流：X 次 / 分钟，Y 次 / 天 */
 const PER_MIN = Number(process.env.RATE_PER_MIN || 8);
@@ -91,6 +92,13 @@ const server = createServer(async (req, res) => {
   if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
     res.end(readFileSync(pageFile, "utf-8"));
+    return;
+  }
+
+  // 企业私有部署定制页
+  if (req.method === "GET" && url.pathname === "/deploy") {
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(readFileSync(deployPageFile, "utf-8"));
     return;
   }
 

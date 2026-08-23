@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png?v=20260823" />
+<meta name="color-scheme" content="dark" />
+<meta name="description" content="GEOloopOS 企业私有部署定制：数据私有化、独立域名品牌、多模型接入、深度定制。联系人 张晓明（邮箱 243922774@qq.com · 微信 19136166195）。" />
+<title>企业私有部署 · GEOloopOS — 把 AI 可见度基础设施部署到你的内网</title>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #101013;
+    --surface-2: #16161a;
+    --surface-3: #1d1d24;
+    --border: rgba(255, 255, 255, .08);
+    --border-strong: rgba(255, 255, 255, .16);
+    --text: #f5f5f6;
+    --text-muted: #a1a1aa;
+    --text-faint: #76767f;
+    --primary: #4c8dff;
+    --primary-strong: #2563eb;
+    --primary-soft: rgba(76, 141, 255, .13);
+    --success: #34d399;
+    --success-soft: rgba(52, 211, 153, .13);
+    --warning: #fbbf24;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 10px 30px rgba(0,0,0,.38);
+    --font-sans: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-sans); font-size: 15px; line-height: 1.65;
+    min-height: 100dvh; -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(1000px 520px at 50% -200px, rgba(76,141,255,.14), transparent 62%),
+      radial-gradient(700px 360px at 88% 4%, rgba(124,92,252,.07), transparent 60%);
+  }
+  .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ---------- 顶栏 ---------- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0 8px; }
+  .logo { display: flex; align-items: center; gap: 10px; margin-left: -5px; text-decoration: none; color: inherit; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.15; font-weight: 650; font-size: 15px; letter-spacing: -.01em; }
+  .logo-sub { font-size: 11px; font-weight: 450; color: var(--text-faint); letter-spacing: 0; }
+  .logo-mark { width: 40px; height: 40px; display: grid; place-items: center; }
+  .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .nav-home {
+    flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+    border-radius: 999px; text-decoration: none; border: 1px solid var(--border-strong);
+    background: var(--surface-2); color: var(--text-muted); font-size: 12.5px; font-weight: 550;
+    transition: all .18s ease;
+  }
+  .nav-home:hover { border-color: rgba(76,141,255,.5); color: var(--primary); background: var(--primary-soft); }
+
+  /* ---------- Hero ---------- */
+  .hero { padding: 64px 0 40px; text-align: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; margin-bottom: 22px;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface); color: var(--text-muted); font-size: 12.5px;
+  }
+  .badge svg { flex: none; }
+  .badge b { color: var(--primary); font-weight: 650; }
+  h1 {
+    font-size: clamp(30px, 5vw, 46px); line-height: 1.2; font-weight: 700;
+    letter-spacing: -.02em; margin-bottom: 18px;
+  }
+  .hl { background: linear-gradient(120deg, var(--primary), #a78bfa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { max-width: 640px; margin: 0 auto; color: var(--text-muted); font-size: 15.5px; }
+
+  .cta-row { display: flex; justify-content: center; gap: 12px; margin-top: 30px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 12px;
+    font-size: 14.5px; font-weight: 600; text-decoration: none; border: 1px solid transparent;
+    transition: all .18s ease; cursor: pointer; font-family: inherit;
+  }
+  .btn-primary { background: var(--primary); color: #0a0a0b; }
+  .btn-primary:hover { background: #6ba2ff; transform: translateY(-1px); }
+  .btn-ghost { background: var(--surface-2); color: var(--text); border-color: var(--border-strong); }
+  .btn-ghost:hover { border-color: rgba(76,141,255,.5); color: var(--primary); background: var(--primary-soft); transform: translateY(-1px); }
+
+  /* ---------- 区块 ---------- */
+  .sec { padding: 30px 0 10px; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .sec-head h2 { font-size: 21px; font-weight: 700; letter-spacing: -.01em; }
+  .sec-head .cnt { color: var(--text-faint); font-size: 13px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px 20px; box-shadow: var(--shadow);
+  }
+  .card .ic {
+    width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 14px;
+    background: var(--primary-soft); color: var(--primary); border: 1px solid rgba(76,141,255,.22);
+  }
+  .card h3 { font-size: 15.5px; font-weight: 650; margin-bottom: 8px; }
+  .card p { color: var(--text-muted); font-size: 13.5px; line-height: 1.7; }
+
+  /* ---------- 部署清单 ---------- */
+  .panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 26px 26px 20px; box-shadow: var(--shadow);
+  }
+  .check-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 26px; }
+  .check-list li { display: flex; gap: 10px; align-items: flex-start; color: var(--text); font-size: 14px; }
+  .check-list svg { flex: none; margin-top: 3px; color: var(--success); }
+  .check-list small { display: block; color: var(--text-faint); font-size: 12.5px; margin-top: 2px; }
+
+  /* ---------- 流程 ---------- */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; counter-reset: step; }
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; }
+  .step::before {
+    counter-increment: step; content: counter(step, decimal-leading-zero);
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--primary);
+    display: block; margin-bottom: 10px;
+  }
+  .step h3 { font-size: 15px; font-weight: 650; margin-bottom: 6px; }
+  .step p { color: var(--text-muted); font-size: 13px; line-height: 1.65; }
+
+  /* ---------- 联系 ---------- */
+  .contact-card {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: center;
+    background: linear-gradient(150deg, rgba(76,141,255,.10), var(--surface) 46%);
+    border: 1px solid rgba(76,141,255,.25); border-radius: 22px; padding: 34px 34px 30px; box-shadow: var(--shadow);
+  }
+  .contact-card h2 { font-size: 24px; font-weight: 700; letter-spacing: -.01em; margin-bottom: 10px; }
+  .contact-card .cc-sub { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+  .c-line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px dashed var(--border); }
+  .c-line .k { color: var(--text-faint); font-size: 13px; flex: none; }
+  .c-line .v { color: var(--text); font-family: var(--font-mono); font-size: 14px; word-break: break-all; text-align: right; }
+  .c-line a.v { color: var(--primary); text-decoration: none; }
+  .c-line a.v:hover { text-decoration: underline; }
+  .copy {
+    flex: none; padding: 5px 10px; border-radius: 8px; font-size: 11.5px; cursor: pointer;
+    background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border-strong);
+    font-family: inherit; transition: all .15s ease;
+  }
+  .copy:hover { color: var(--primary); border-color: rgba(76,141,255,.5); }
+  .cc-actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .cc-note { margin-top: 16px; color: var(--text-faint); font-size: 12.5px; }
+
+  footer { margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--text-faint); font-size: 12px; }
+  footer a { color: var(--text-muted); text-decoration: none; }
+  footer a:hover { color: var(--primary); }
+
+  @media (max-width: 720px) {
+    .check-list { grid-template-columns: 1fr; }
+    .contact-card { grid-template-columns: 1fr; padding: 26px 22px; }
+    .hero { padding: 44px 0 26px; }
+    footer { flex-direction: column; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true"><img src="/logo.png?v=20260823" alt="" /></span>
+      <span class="logo-text">GEOloopOS<span class="logo-sub">企业私有部署</span></span>
+    </a>
+    <a class="nav-home" href="/">← 返回首页</a>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+      <b>GEOloopOS</b> · 企业私有部署定制
+    </span>
+    <h1>把 AI 可见度基础设施，<span class="hl">部署到你的内网</span></h1>
+    <p class="sub">检测数据、AI 认知档案、报告 —— 全部沉淀为企业自有资产。独立域名、独立品牌、按需定制，与企业现有系统无缝集成。</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:243922774@qq.com?subject=GEOloopOS%20私有部署咨询">邮箱联系</a>
+      <a class="btn btn-ghost" href="#contact">微信：19136166195</a>
+    </div>
+  </section>
+
+  <!-- 方案亮点 -->
+  <section class="sec">
+    <div class="sec-head"><h2>为什么私有部署</h2><span class="cnt">数据资产归你，而不是租用的数据</span></div>
+    <div class="cards">
+      <div class="card">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <h3>数据完全私有</h3>
+        <p>所有检测记录、AI 认知档案、报告与知识库只存在你的服务器。数据资产真正归企业，而不是租用第三方平台的数据。</p>
+      </div>
+      <div class="card">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/><path d="M2 12h20"/></svg></span>
+        <h3>独立域名与品牌</h3>
+        <p>用自己的域名、自己的品牌标识，部署在物理机 / 云服务器 / 企业内网任意位置，对外就是你自己的产品。</p>
+      </div>
+      <div class="card">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17 12 22l10-5"/><path d="M2 12l10 5 10-5"/></svg></span>
+        <h3>多模型接入</h3>
+        <p>DeepSeek、豆包、OpenAI、通义千问、本地模型……按合规与成本要求自由选配，检测引擎随模型生态持续升级。</p>
+      </div>
+      <div class="card">
+        <span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        <h3>深度定制</h3>
+        <p>行业问题库、报告模板、评分口径、权限体系、企业单点登录、与内部系统 / 工作流集成——按业务需要改到顺手。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 部署范围 -->
+  <section class="sec">
+    <div class="sec-head"><h2>部署交付范围</h2><span class="cnt">整套 AI 可见度增长闭环</span></div>
+    <div class="panel">
+      <ul class="check-list">
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>AI 可见度检测全套
+          <small>品牌名 / 网站 / 问句三模式，多引擎实时比对</small></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>企业 AI 认知档案库
+          <small>多实体持续监测，认知时间序列沉淀</small></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>知识库与知识缺口分析
+          <small>结构化知识卡 + 认知缺口诊断</small></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>竞品对比 · 行业榜单
+          <small>同口径检测、引用地图、360 行业榜</small></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>定时重测与趋势
+          <small>自动重测，认知变化曲线持续累积</small></li>
+        <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>管理后台与开放 API
+          <small>权限体系 + 数据导出 + 与企业系统对接</small></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 流程 -->
+  <section class="sec">
+    <div class="sec-head"><h2>定制流程</h2><span class="cnt">从沟通到交付，全程一对一</span></div>
+    <div class="steps">
+      <div class="step"><h3>需求沟通</h3><p>确认部署场景、规模、合规要求与定制范围。</p></div>
+      <div class="step"><h3>方案评估</h3><p>出具部署方案与报价，明确交付物与周期。</p></div>
+      <div class="step"><h3>交付部署</h3><p>远程 / 现场部署，配置、联调、验收测试。</p></div>
+      <div class="step"><h3>持续服务</h3><p>维护、升级、按需扩展，长期陪跑。</p></div>
+    </div>
+  </section>
+
+  <!-- 联系我们 -->
+  <section class="sec" id="contact">
+    <div class="contact-card">
+      <div>
+        <h2>联系我们，定制你的私有部署</h2>
+        <p class="cc-sub">直接联系创始人，需求沟通不转手。工作日尽快回复。</p>
+        <div class="c-line"><span class="k">联系人</span><span class="v" style="font-family:var(--font-sans);">张晓明 · GEOloopOS 创始人</span></div>
+        <div class="c-line"><span class="k">邮箱</span><span class="v"><a href="mailto:243922774@qq.com">243922774@qq.com</a></span><button class="copy" type="button" data-copy-text="243922774@qq.com">复制</button></div>
+        <div class="c-line"><span class="k">微信</span><span class="v">19136166195</span><button class="copy" type="button" data-copy-text="19136166195">复制</button></div>
+        <div class="cc-actions">
+          <a class="btn btn-primary" href="mailto:243922774@qq.com?subject=GEOloopOS%20私有部署咨询&amp;body=%E4%BC%81%E4%B8%9A%E5%90%8D%EF%BC%9A%0A%E9%83%A8%E7%BD%B2%E5%9C%BA%E6%99%AF%EF%BC%9A%0A%E8%81%94%E7%B3%BB%E6%96%B9%E5%BC%8F%EF%BC%9A">发邮件咨询</a>
+          <span class="btn btn-ghost" style="cursor:default;">微信添加：19136166195</span>
+        </div>
+        <div class="cc-note">添加微信请注明「GEOloopOS 私有部署」，附上企业名称与场景，沟通更高效。</div>
+      </div>
+      <div style="display:grid;gap:10px;">
+        <div class="card"><h3>交付周期</h3><p>标准部署 1–3 个工作日；深度定制按方案协商。</p></div>
+        <div class="card"><h3>部署环境</h3><p>物理机 / 云服务器 / 内网均可，支持 Docker 一键部署。</p></div>
+        <div class="card"><h3>服务承诺</h3><p>交付后提供维护与升级，长期可用。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>GEOloopOS · AI 可见度增长闭环系统 — 让 AI 认识你、理解你、推荐你</span>
+    <span><a href="/">产品首页</a> · 数据源 <code>DeepSeek</code> / <code>豆包</code></span>
+  </footer>
+</div>
+
+<script>
+// 复制到剪贴板（委托处理）
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-copy-text]');
+  if (!btn) return;
+  const text = btn.dataset.copyText;
+  const done = () => { const old = btn.textContent; btn.textContent = '已复制 ✓'; setTimeout(() => { btn.textContent = old; }, 1400); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(done);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch {}
+    document.body.removeChild(ta); done();
+  }
+});
+</script>
+</body>
+</html>
