@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png?v=20260823" />
+<meta name="color-scheme" content="dark" />
+<meta name="description" content="GEOloopOS · AI 可见度公示。品牌在 DeepSeek、豆包等 AI 引擎中的可见度实时排行——综合分、认知、引用、场景份额与趋势，数据来自 AI 实际回答的客观采样。" />
+<title>GEOloopOS · AI 可见度公示 — 品牌在 AI 引擎里的可见度排行</title>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #101013;
+    --surface-2: #16161a;
+    --surface-3: #1d1d24;
+    --border: rgba(255, 255, 255, .08);
+    --border-strong: rgba(255, 255, 255, .16);
+    --text: #f5f5f6;
+    --text-muted: #a1a1aa;
+    --text-faint: #76767f;
+    --primary: #4c8dff;
+    --primary-strong: #2563eb;
+    --primary-soft: rgba(76, 141, 255, .13);
+    --success: #34d399;
+    --success-soft: rgba(52, 211, 153, .13);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, .13);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, .13);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 10px 30px rgba(0,0,0,.38);
+    --font-sans: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-sans); font-size: 15px; line-height: 1.65;
+    min-height: 100dvh; -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(1000px 520px at 50% -200px, rgba(76,141,255,.14), transparent 62%),
+      radial-gradient(700px 360px at 88% 4%, rgba(124,92,252,.07), transparent 60%);
+  }
+  .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ---------- 顶栏 ---------- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0 8px; }
+  .logo { display: flex; align-items: center; gap: 10px; margin-left: -5px; text-decoration: none; color: inherit; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1.15; font-weight: 650; font-size: 15px; letter-spacing: -.01em; }
+  .logo-sub { font-size: 11px; font-weight: 450; color: var(--text-faint); letter-spacing: 0; }
+  .logo-mark { width: 40px; height: 40px; display: grid; place-items: center; }
+  .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .nav-chip {
+    font-size: 12px; color: var(--text-muted); text-decoration: none;
+    border: 1px solid var(--border); padding: 5px 13px; border-radius: 999px;
+    transition: color .18s ease, border-color .18s ease; white-space: nowrap;
+  }
+  .nav-chip:hover { color: var(--text); border-color: var(--border-strong); }
+  .nav-chip.on { color: var(--primary); border-color: rgba(76,141,255,.4); background: var(--primary-soft); }
+
+  /* ---------- Hero ---------- */
+  .hero { text-align: center; padding: 44px 0 26px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: var(--text-muted);
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 18px;
+  }
+  .badge b { color: var(--primary); font-weight: 600; }
+  h1 { font-size: clamp(28px, 4.6vw, 40px); letter-spacing: -.03em; line-height: 1.2; font-weight: 700; }
+  h1 .hl { color: var(--primary); }
+  .sub { max-width: 640px; margin: 14px auto 0; color: var(--text-muted); font-size: 14.5px; }
+  .cta-row { margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 600; text-decoration: none;
+    padding: 10px 20px; border-radius: 999px; border: 1px solid transparent;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 8px 24px rgba(76,141,255,.32); }
+  .btn-primary:hover { box-shadow: 0 10px 30px rgba(76,141,255,.42); }
+  .btn-ghost { color: var(--text); border-color: var(--border-strong); }
+  .btn-ghost:hover { border-color: var(--text-faint); }
+
+  /* ---------- 口径条 ---------- */
+  .meta-strip {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    margin: 22px 0 4px; font-size: 12px; color: var(--text-faint);
+  }
+  .meta-chip { border: 1px solid var(--border); background: var(--surface); padding: 4px 11px; border-radius: 999px; font-family: var(--font-mono); }
+
+  /* ---------- 榜单 ---------- */
+  .board-card {
+    margin-top: 22px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden;
+  }
+  .board-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  thead th {
+    text-align: left; font-size: 12px; font-weight: 550; color: var(--text-faint);
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    white-space: nowrap; letter-spacing: .02em;
+  }
+  thead th.num, tbody td.num { text-align: right; }
+  tbody td { padding: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background .15s ease; }
+  tbody tr:hover { background: rgba(255,255,255,.025); }
+
+  .rank {
+    font-family: var(--font-mono); font-weight: 700; font-size: 13px;
+    display: inline-grid; place-items: center; width: 26px; height: 26px;
+    border-radius: 8px; color: var(--text-muted); background: var(--surface-2);
+  }
+  .rank.r1 { color: #0a0a0b; background: linear-gradient(135deg, #f7d774, #e6b450); }
+  .rank.r2 { color: #0a0a0b; background: linear-gradient(135deg, #d4d7e0, #a9adbb); }
+  .rank.r3 { color: #0a0a0b; background: linear-gradient(135deg, #e5a678, #c07e4f); }
+
+  .bname { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 14.5px; }
+  .bkind {
+    font-size: 10px; font-weight: 500; letter-spacing: .05em; color: var(--text-faint);
+    border: 1px solid var(--border); padding: 1px 7px; border-radius: 999px; font-family: var(--font-mono);
+  }
+  .bkind.site { color: var(--primary); border-color: rgba(76,141,255,.35); }
+
+  .score-cell { display: flex; align-items: center; gap: 10px; }
+  .score-num { font-family: var(--font-mono); font-weight: 700; font-size: 16px; width: 34px; }
+  .score-bar { width: 72px; height: 5px; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+  .score-bar i { display: block; height: 100%; border-radius: 99px; }
+  .s-good { color: var(--success); } .s-good i { background: var(--success); }
+  .s-mid { color: var(--primary); } .s-mid i { background: var(--primary); }
+  .s-low { color: var(--warning); } .s-low i { background: var(--warning); }
+  .s-none { color: var(--danger); } .s-none i { background: var(--danger); }
+
+  .flag { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .flag.yes { color: var(--success); }
+  .flag.no { color: var(--text-faint); }
+  .share { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+  .share.zero { color: var(--text-faint); }
+
+  .trend { font-family: var(--font-mono); font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .trend.up { color: var(--success); }
+  .trend.down { color: var(--danger); }
+  .trend.flat { color: var(--text-faint); }
+
+  .verdict { font-size: 12.5px; color: var(--text-muted); white-space: nowrap; }
+
+  .board-foot {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 12px 16px; font-size: 12px; color: var(--text-faint); flex-wrap: wrap;
+  }
+  .board-foot code { font-family: var(--font-mono); color: var(--text-muted); }
+  .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--success); margin-right: 6px; box-shadow: 0 0 0 3px var(--success-soft); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+
+  /* ---------- 指标说明 ---------- */
+  .metrics { margin-top: 34px; }
+  .metrics h2 { font-size: 17px; letter-spacing: -.01em; margin-bottom: 14px; }
+  .metrics h2 span { color: var(--text-faint); font-size: 13px; font-weight: 450; margin-left: 8px; }
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+  .metric {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+  .metric b { display: block; font-size: 13px; font-weight: 650; margin-bottom: 4px; }
+  .metric p { font-size: 12.5px; color: var(--text-muted); line-height: 1.55; }
+
+  /* ---------- 上榜引导 ---------- */
+  .cta-card {
+    margin-top: 34px; text-align: center; padding: 34px 24px;
+    background: linear-gradient(160deg, var(--surface-2), var(--surface));
+    border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);
+  }
+  .cta-card h2 { font-size: 19px; letter-spacing: -.02em; }
+  .cta-card p { color: var(--text-muted); font-size: 13.5px; margin: 8px auto 20px; max-width: 460px; }
+
+  footer { margin-top: 46px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-faint); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  footer code { font-family: var(--font-mono); }
+
+  .empty { text-align: center; color: var(--text-faint); padding: 48px 0; font-size: 13.5px; }
+  @media (max-width: 640px) {
+    .board-foot { justify-content: center; }
+    .bkind { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true"><img src="/logo.png?v=20260823" alt="" /></span>
+      <span class="logo-text">
+        GEOloopOS
+        <span class="logo-sub">AI 可见度基础设施</span>
+      </span>
+    </a>
+    <nav class="nav-right">
+      <a class="nav-chip on" href="/board" aria-current="page">可见度公示</a>
+      <a class="nav-chip" href="/">返回产品</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="badge"><b>GEOloopOS</b> · AI 可见度公示</span>
+    <h1>谁在 AI 眼里<span class="hl">可见</span>，一榜看清</h1>
+    <p class="sub">品牌在 DeepSeek、豆包等 AI 引擎中的可见度实时排行。综合分、认知、引用、场景份额与趋势——数据来自 AI 实际回答的客观采样，非人工评分。</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="/">检测你的品牌</a>
+      <a class="btn btn-ghost" href="/#history">查看最近检测</a>
+    </div>
+    <div class="meta-strip" id="meta"></div>
+  </section>
+
+  <!-- 榜单 -->
+  <section class="board-card">
+    <div class="board-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:52px">#</th>
+            <th>品牌</th>
+            <th class="num" style="width:130px">综合分</th>
+            <th class="num" style="width:70px">认知</th>
+            <th class="num" style="width:70px">引用</th>
+            <th class="num" style="width:86px">场景份额</th>
+            <th class="num" style="width:64px">趋势</th>
+            <th>判定</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="board-foot">
+      <span><i class="live-dot"></i>实时数据 · 做一次检测即可上榜</span>
+      <span>数据源 <code>DeepSeek</code> / <code>豆包</code> · 上次更新 <code id="updated">…</code></span>
+    </div>
+  </section>
+
+  <!-- 指标说明 -->
+  <section class="metrics">
+    <h2>指标口径<span>每个数字怎么来的</span></h2>
+    <div class="metric-grid">
+      <div class="metric"><b>综合分 0–100</b><p>单次检测多引擎均分 = 认知 40 + 描述 30 + 来源 30。≥80 认知清晰 · ≥60 基础认知 · ≥40 认知模糊 · &lt;40 尚未认知。</p></div>
+      <div class="metric"><b>认知</b><p>AI 的回答是否提及了你。未提及 = 你在 AI 的「信息池」里还没有存在感。</p></div>
+      <div class="metric"><b>引用</b><p>回答是否引用了可追溯来源。被引用，才说明你的内容进入了 AI 的信息链。</p></div>
+      <div class="metric"><b>场景份额</b><p>在决策问句（如「推荐一家火锅店」）中，你被 AI 提及的次数占比。这是离成交最近的指标。</p></div>
+      <div class="metric"><b>趋势</b><p>最近两次检测的综合分差值。一次检测暂无趋势，随时间累积自动出现。</p></div>
+      <div class="metric"><b>数据口径</b><p>榜单仅收录 GEOloopOS 实际检测过的实体，不做人工排序、不接受付费上榜。行业分榜随数据累积开放。</p></div>
+    </div>
+  </section>
+
+  <!-- 上榜引导 -->
+  <section class="cta-card">
+    <h2>榜单上没有你？检测一次就上榜</h2>
+    <p>输入你的品牌名、网站或域名，立即生成可见度报告，并自动进入公示榜。重复检测，趋势线会替你说话。</p>
+    <a class="btn btn-primary" href="/">开始检测 →</a>
+  </section>
+
+  <footer>
+    <span>GEOloopOS · AI 可见度基础设施 — 让 AI 认识你、理解你、推荐你</span>
+    <span>结果来自模型实时回答，仅供参考</span>
+  </footer>
+</div>
+
+<script>
+const PCOLOR = { deepseek: '#4c8dff', doubao: '#38c0b8' };
+
+async function load() {
+  try {
+    const r = await fetch('/api/leaderboard');
+    const data = await r.json();
+    if (!data.ok) throw new Error('bad response');
+    render(data.board);
+  } catch (e) {
+    document.getElementById('rows').innerHTML = '<tr><td colspan="8" class="empty">榜单加载失败，请稍后刷新</td></tr>';
+  }
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function flag(v) {
+  return v ? '<span class="flag yes">✓</span>' : '<span class="flag no">✗</span>';
+}
+
+function trendCell(t) {
+  if (t === null) return '<span class="trend flat">· 新</span>';
+  if (t > 0) return `<span class="trend up">▲ +${t}</span>`;
+  if (t < 0) return `<span class="trend down">▼ ${t}</span>`;
+  return '<span class="trend flat">→ 0</span>';
+}
+
+function scoreClass(s) {
+  if (s >= 80) return 's-good';
+  if (s >= 60) return 's-mid';
+  if (s >= 40) return 's-low';
+  return 's-none';
+}
+
+function render(board) {
+  const tbody = document.getElementById('rows');
+  if (!board.rows.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty">暂无上榜实体 · 去首页做第一次检测</td></tr>';
+  } else {
+    tbody.innerHTML = board.rows.map((row, i) => {
+      const rankCls = i === 0 ? ' r1' : i === 1 ? ' r2' : i === 2 ? ' r3' : '';
+      const kindCls = row.kind === 'site' ? ' site' : '';
+      const share = row.sceneShare === null
+        ? '<span class="share zero">—</span>'
+        : `<span class="share${row.sceneShare === 0 ? ' zero' : ''}">${row.sceneShare}%</span>`;
+      return `<tr>
+        <td><span class="rank${rankCls}">${row.rank}</span></td>
+        <td><span class="bname">${esc(row.name)}<span class="bkind${kindCls}">${row.kind === 'site' ? '网站' : '品牌'}</span></span></td>
+        <td class="num"><span class="score-cell"><span class="score-num ${scoreClass(row.score)}">${row.score}</span><span class="score-bar ${scoreClass(row.score)}"><i style="width:${Math.max(row.score, 2)}%"></i></span></span></td>
+        <td class="num">${flag(row.mention)}</td>
+        <td class="num">${flag(row.cited)}</td>
+        <td class="num">${share}</td>
+        <td class="num">${trendCell(row.trend)}</td>
+        <td class="verdict">${esc(row.verdict)}</td>
+      </tr>`;
+    }).join('');
+  }
+  document.getElementById('updated').textContent = new Date(board.updatedAt).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const meta = document.getElementById('meta');
+  meta.innerHTML = board.engines.map((e) => `<span class="meta-chip">${e}</span>`).join('')
+    + `<span class="meta-chip">已收录 ${board.total} 个实体</span>`;
+}
+
+load();
+</script>
+</body>
+</html>

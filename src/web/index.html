@@ -58,6 +58,13 @@
   .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .logo { cursor: pointer; }
   .top-right { color: var(--text-faint); font-size: 12px; font-family: var(--font-mono); }
+  .nav-right { display: flex; align-items: center; gap: 10px; }
+  .nav-chip {
+    font-size: 12px; color: var(--text-muted); text-decoration: none;
+    border: 1px solid var(--border); padding: 5px 13px; border-radius: 999px;
+    transition: color .18s ease, border-color .18s ease; white-space: nowrap;
+  }
+  .nav-chip:hover { color: var(--text); border-color: var(--border-strong); }
 
   /* ---------- logo 原图 lightbox ---------- */
   .lb {
@@ -470,6 +477,9 @@
         <span class="logo-sub">AI 可见度基础设施</span>
       </span>
     </div>
+    <nav class="nav-right">
+      <a class="nav-chip" href="/board">可见度公示</a>
+    </nav>
   </header>
 
   <!-- Hero -->
