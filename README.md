@@ -1,4 +1,4 @@
-# GEOloopOS · AI 可见度基础设施
+# GEOloopOS · AI 可见度增长闭环系统
 
 **Open-source AI identity engine — measure and grow how AI search engines know, describe, and recommend you.**
 
@@ -268,4 +268,4 @@ Site: **https://zkoner.com** · GitHub: [zhangxiaomingv](https://github.com/zhan
 Released under the **MIT License**. If you use or build on GEOloopOS, a citation
 (`CITATION.cff`) is appreciated.
 
-**GEOloopOS · AI 可见度基础设施** — 让 AI 认识你、理解你、推荐你。
+**GEOloopOS · AI 可见度增长闭环系统** — 让 AI 认识你、理解你、推荐你。

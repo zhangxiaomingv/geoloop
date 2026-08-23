@@ -5,7 +5,7 @@ changes. Humans: see `CONTRIBUTING.md` and `README.md`.
 
 ## What this project is
 
-**GEOloopOS** ("AI 可见度基础设施") is an open-source **AI identity engine**. It
+**GEOloopOS** ("AI 可见度增长闭环系统") is an open-source **AI identity engine**. It
 measures how AI search engines and LLMs — currently **DeepSeek** and **豆包
 (Doubao)** — recognize, describe, and recommend a brand, a person, or a website,
 then scores that visibility on a 0–100 scale. The long-term asset is the **data**:

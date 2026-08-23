@@ -451,7 +451,7 @@ function readBody(req: import("node:http").IncomingMessage): Promise<string> {
 }
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log("\n========== GEOloopOS · AI 可见度基础设施 ==========");
+  console.log("\n========== GEOloopOS · AI 可见度增长闭环系统 ==========");
   console.log(`  本机访问:   http://localhost:${PORT}`);
   console.log(`  局域网访问: http://${lanIP()}:${PORT}`);
   console.log("  API：POST /api/check · GET /api/checks");
