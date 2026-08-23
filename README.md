@@ -33,7 +33,8 @@ recommended by AI — the channel people increasingly use to make decisions
 (which restaurant, which contractor, which SaaS tool, which advisor).
 
 Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEOloopOS founder and AI
-consultant. Product site: **https://zkoner.com**.
+consultant. Product site: **https://zkoner.com** · Enterprise private deployment
+customization: **https://geoloopos.com/deploy**.
 
 ---
 
@@ -54,7 +55,7 @@ consultant. Product site: **https://zkoner.com**.
 | **Citation traceability** | In-answer source extraction (prompt-guided) → 3-level trust (AI-cited / AI-mentioned / suspected-fabrication), citation share (Profound formula) and "does AI believe your site?" judgment in every report. Engine-cited mode (Perplexity) ready in config — enable with `PPLX_API_KEY` |
 | **Unified entity archive** | Every check/re-test/competitor run lands in one entity profile (`data/entities.json`) — the cognition time-series foundation for an "enterprise AI cognition map" |
 | **Auto re-test** | Scheduled re-measurement of archived entities → cognition change curves accumulate automatically (the moat: data, not code) |
-| **Private deployment** | Single Node process, zero runtime dependencies, Docker one-command deploy, IP rate limiting |
+| **Private deployment** | Single Node process, zero runtime dependencies, Docker one-command deploy, IP rate limiting — [enterprise customization →](https://geoloopos.com/deploy) |
 
 ---
 
