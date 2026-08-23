@@ -318,84 +318,11 @@
   .loading .dots i:nth-child(3) { animation-delay: .3s; }
   @keyframes pulse { 0%,100% { opacity:.25; transform: scale(.85);} 50% { opacity:1; transform: scale(1.1);} }
 
-  /* ---------- 报告 ---------- */
-  .report { margin-top: 12px; }
-  .rep-head {
-    display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 22px 24px; box-shadow: var(--shadow);
-  }
-  .ring-wrap { flex: none; }
-  .rep-info { flex: 1; min-width: 240px; }
-  .rep-info .q { font-size: 19px; font-weight: 650; letter-spacing: -.01em; word-break: break-word; }
-  .rep-meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 6px; }
+  /* ---------- 检测类型标签（搜索历史用；报告渲染已移至独立页 /report/{id}） ---------- */
   .t-type { padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 500; }
   .t-type.brand { background: var(--primary-soft); color: var(--primary); }
   .t-type.site { background: var(--success-soft); color: var(--success); }
   .t-type.question { background: var(--warning-soft); color: var(--warning); }
-  .t-time { color: var(--text-faint); font-size: 12px; font-family: var(--font-mono); }
-  .verdict { font-size: 14px; color: var(--text); margin-top: 4px; }
-  .verdict b { color: var(--primary); }
-
-  .mentions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; font-size: 12.5px; color: var(--text-muted); }
-  .mentions .m { font-family: var(--font-mono); padding: 1px 9px; border-radius: 7px; background: var(--surface-3); color: var(--primary); }
-
-  .tips {
-    margin-top: 12px; background: var(--warning-soft); border: 1px solid rgba(251,191,36,.22);
-    border-radius: var(--radius); padding: 16px 20px;
-  }
-  .tips h4 { font-size: 13px; color: var(--warning); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
-  .tips ul { list-style: none; }
-  .tips li { color: var(--text-muted); font-size: 13px; padding: 3px 0 3px 20px; position: relative; }
-  .tips li::before { content: "→"; position: absolute; left: 0; color: var(--warning); }
-
-  /* ---------- AI Citation Map 引用地图 ---------- */
-  .cmap { margin-top: 12px; background: var(--primary-soft); border: 1px solid rgba(76,141,255,.25); border-radius: var(--radius-sm); padding: 14px 16px; }
-  .cmap h4 { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
-  .cmap-headline { font-size: 13.5px; color: var(--text); margin-bottom: 12px; line-height: 1.55; }
-  .cmap-bars { display: grid; gap: 7px; }
-  .cmap-row { display: grid; grid-template-columns: 56px 1fr 42px; align-items: center; gap: 9px; font-size: 12px; }
-  .cmap-row .cl { color: var(--text-muted); text-align: right; white-space: nowrap; }
-  .cmap-row .bar { height: 7px; background: rgba(255,255,255,.07); border-radius: 4px; overflow: hidden; }
-  .cmap-row .bar i { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #2563eb, #4c8dff); transition: width .6s ease; }
-  .cmap-row .pct { color: var(--text-muted); font-family: var(--font-mono); font-variant-numeric: tabular-nums; text-align: right; }
-  .cmap-domains { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 6px; }
-  .cmap-domains .m { background: rgba(255,255,255,.05); border: 1px solid rgba(76,141,255,.22); color: var(--text-muted); font-size: 11px; padding: 3px 9px; border-radius: 20px; }
-  .cmap-domains .m b { color: var(--primary); font-family: var(--font-mono); font-weight: 600; }
-  .cmap-legend { font-size: 10.5px; color: var(--text-faint); font-weight: 500; margin-left: auto; }
-  .cmap-sub-t { font-size: 11.5px; color: var(--text-muted); font-weight: 650; margin: 12px 0 7px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.1); }
-  .cmap-cites { display: grid; gap: 5px; }
-  .cmap-cite { display: flex; align-items: baseline; gap: 8px; font-size: 11.5px; }
-  .cmap-cite a { color: var(--primary); text-decoration: none; word-break: break-all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
-  .cmap-cite a:hover { text-decoration: underline; }
-  .cmap-cite .cc { flex: none; color: var(--text-faint); font-size: 10px; }
-  .cmap-cite .cp { flex: none; color: var(--text-faint); font-size: 10px; font-family: var(--font-mono); }
-  .trust-tag { font-size: 10px; padding: 1px 6px; border-radius: 999px; font-weight: 600; flex: none; display: inline-block; vertical-align: 1px; }
-  .trust-tag.engine { color: var(--success); background: var(--success-soft); }
-  .trust-tag.mentioned { color: var(--text-faint); background: var(--surface-2); }
-  .trust-tag.suspected { color: #f59e0b; background: rgba(245,158,11,.12); }
-  .cmap-share .bar i { background: linear-gradient(90deg, #059669, #34d399); }
-
-  /* ---------- 回答卡片 ---------- */
-  .answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-top: 12px; }
-  .ans {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 18px 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 10px;
-  }
-  .ans .head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-  .ans .prov { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 13.5px; }
-  .ans .dotp { width: 10px; height: 10px; border-radius: 50%; }
-  .ans .qname { color: var(--text-muted); font-size: 12.5px; }
-  .ans .flags { display: flex; gap: 6px; flex-wrap: wrap; }
-  .flag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 7px; }
-  .flag.ok { background: var(--success-soft); color: var(--success); }
-  .flag.no { background: var(--danger-soft); color: var(--danger); }
-  .flag.warn { background: var(--warning-soft); color: var(--warning); }
-  .ans .body { color: var(--text-muted); font-size: 13px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
-  .ans .body.trunc { max-height: 150px; overflow: hidden; -webkit-mask-image: linear-gradient(#000 55%, transparent); mask-image: linear-gradient(#000 55%, transparent); }
-  .ans .more { border: 0; background: none; color: var(--primary); cursor: pointer; font-size: 12.5px; padding: 0; align-self: flex-start; }
-  .ans.err { border-color: rgba(248,113,113,.35); }
-  .ans .errnote { color: var(--warning); font-size: 12.5px; display: flex; align-items: center; gap: 7px; }
 
   /* ---------- 历史 ---------- */
   .hist-head { display: flex; align-items: center; justify-content: space-between; margin: 44px 0 14px; }
@@ -554,8 +481,6 @@
     .hero { padding-top: 36px; }
     .search-form { flex-direction: column; }
     .btn-detect { height: 52px; justify-content: center; }
-    .answers { grid-template-columns: 1fr; }
-    .rep-head { padding: 18px; }
     .art-main { flex-wrap: wrap; }
   }
 
@@ -613,9 +538,6 @@
 
   <!-- 状态条 -->
   <div id="status" role="status" aria-live="polite" style="min-height:0;"></div>
-
-  <!-- 结果区 -->
-  <section id="result" class="hidden"></section>
 
   <!-- 定位锚点 -->
   <section id="anchor-sec">
@@ -756,7 +678,6 @@
   </div>
 </div>
 <script>
-const PCOLOR = { deepseek: '#4c8dff', doubao: '#38c0b8' };
 const TYPE_LABEL = { brand: '品牌', site: '网站', question: '问句' };
 
 const $ = id => document.getElementById(id);
@@ -787,10 +708,8 @@ async function check(query){
     flash(data.message || '检测失败，请稍后再试');
     return;
   }
-  renderReport(data.report);
-  renderHistory(); // 新报告已入历史，刷新列表
-  setLoading(false);
-  $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // 报告渲染在独立页 /report/{id}
+  location.href = '/report/' + data.report.id;
 }
 
 function setLoading(on){
@@ -802,143 +721,12 @@ function setLoading(on){
   st.innerHTML = on
     ? '<div class="loading"><div class="ring"></div>报告生成中，请稍等...<span>AI 正在思考</span><span class="dots"><i></i><i></i><i></i></span></div>'
     : '';
-  if (!on && $('result').classList.contains('hidden')) st.innerHTML = '';
 }
 
 function flash(msg){
   const st = $('status');
   st.innerHTML = '<div style="margin-top:14px;padding:12px 16px;border-radius:12px;background:var(--danger-soft);border:1px solid rgba(248,113,113,.3);color:var(--danger);font-size:13px;">'+esc(msg)+'</div>';
 }
-
-/* ============ 渲染报告 ============ */
-function renderReport(r){
-  $('result').classList.remove('hidden');
-  const typeCls = 't-type '+r.type;
-  const ring = scoreRing(r.score);
-
-  let html = '<div class="report">'
-    + '<div class="rep-head">'
-    +   '<div class="ring-wrap">'+ring+'</div>'
-    +   '<div class="rep-info">'
-    +     '<div class="q">'+esc(r.query)+'</div>'
-    +     '<div class="rep-meta"><span class="'+typeCls+'">'+TYPE_LABEL[r.type]+'</span><span class="t-time">'+fmtTime(r.createdAt)+' · '+esc(r.questions.length)+' 问 × 2 源</span></div>'
-    +     '<div class="verdict">'+esc(r.verdict)+' <b>'+r.score+' 分</b></div>'
-    +     (r.type==='question' ? questionMentions(r) : '')
-    +   '</div>'
-    + '</div>'
-    + (r.tips && r.tips.length ? '<div class="tips"><h4>'+svgAlert()+' 优化建议</h4><ul>'+r.tips.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul></div>' : '')
-    + citationMapBlock(r.citationMap)
-    + '<div class="answers">'+r.results.map(ansCard).join('')+'</div>'
-    + '</div>';
-
-  $('result').innerHTML = html;
-}
-
-function trustTag(t){
-  const m = { engine: ['AI 引用','engine'], mentioned: ['AI 提及','mentioned'], suspected: ['疑似编造','suspected'] }[t] || ['提及','mentioned'];
-  return '<span class="trust-tag '+m[1]+'">'+m[0]+'</span>';
-}
-function shortUrl(u){ return u.length > 56 ? u.slice(0, 53)+'…' : u; }
-
-function citationMapBlock(cm){
-  if (!cm) return '';
-  const icon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>';
-  const legend = '<span class="cmap-legend">🟢AI引用 · ⚪AI提及 · ⚠️疑似编造</span>';
-  if (!cm.total) {
-    return '<div class="cmap"><h4>'+icon+' AI 溯源 · AI 相信谁'+legend+'</h4>'
-      + '<div class="cmap-headline">'+esc(cm.headline)+'</div></div>';
-  }
-  // 引擎级真引用（Perplexity citations，可点击）
-  const cites = cm.citations && cm.citations.length
-    ? '<div class="cmap-sub-t">引擎级真引用（'+cm.citations.length+'）— AI 搜索明确给出的来源</div>'
-      + '<div class="cmap-cites">'+cm.citations.map(c =>
-          '<div class="cmap-cite"><a href="'+esc(c.url)+'" target="_blank" rel="noopener" title="'+esc(c.url)+'">'+esc(shortUrl(c.url))+'</a>'
-          + '<span class="cc">'+esc(c.category)+'</span><span class="cp">'+esc(c.providerLabel)+'</span></div>'
-        ).join('')+'</div>'
-    : '';
-  // 引用份额（真引用口径，Profound 公式）
-  const share = cm.share && cm.share.length
-    ? '<div class="cmap-sub-t">引用份额 — AI 引用池里，谁占得多</div>'
-      + '<div class="cmap-bars cmap-share">'+cm.share.map(s =>
-          '<div class="cmap-row"><span class="cl">'+esc(s.domain)+'</span>'
-          + '<span class="bar"><i style="width:'+s.pct+'%"></i></span>'
-          + '<span class="pct">'+s.pct+'%</span></div>'
-        ).join('')+'</div>'
-    : '';
-  // 来源分类占比（全部引用）
-  const bars = cm.categories.length
-    ? '<div class="cmap-sub-t">来源分类占比</div>'
-      + '<div class="cmap-bars">'+cm.categories.map(c =>
-          '<div class="cmap-row"><span class="cl">'+esc(c.category)+'</span>'
-          + '<span class="bar"><i style="width:'+c.pct+'%"></i></span>'
-          + '<span class="pct">'+c.pct+'%</span></div>'
-        ).join('')+'</div>'
-    : '';
-  // 域名 Top（带可信度标签）
-  const domains = cm.top.length
-    ? '<div class="cmap-domains">'+cm.top.map(t => '<span class="m">'+trustTag(t.trust)+' '+esc(t.domain)+' <b>'+t.pct+'%</b></span>').join('')+'</div>'
-    : '';
-  return '<div class="cmap"><h4>'+icon+' AI 溯源 · AI 相信谁'+legend+'</h4>'
-    + '<div class="cmap-headline">'+esc(cm.headline)+'</div>'
-    + cites
-    + share
-    + bars
-    + domains
-    + '</div>';
-}
-
-function questionMentions(r){
-  const found = {};
-  r.results.forEach(x => {
-    if (!x.answer) return;
-    const doms = x.answer.match(/(?:https?:\/\/)?(?:www\.)?([a-zA-Z0-9][a-zA-Z0-9-]*\.[a-zA-Z]{2,})/g) || [];
-    doms.forEach(d => { const k = d.replace(/^https?:\/\/(www\.)?/i,''); found[k] = 1; });
-  });
-  const keys = Object.keys(found).slice(0, 8);
-  if (!keys.length) return '';
-  return '<div class="mentions">回答中提到的网站/品牌：'+keys.map(k=>'<span class="m">'+esc(k)+'</span>').join('')+'</div>';
-}
-
-function scoreRing(score){
-  const r = 40, c = 2 * Math.PI * r, off = c * (1 - score / 100);
-  const color = score >= 80 ? '#34d399' : score >= 60 ? '#4c8dff' : score >= 40 ? '#fbbf24' : '#f87171';
-  return '<svg viewBox="0 0 100 100" width="104" height="104" role="img" aria-label="可见度得分 '+score+' 分">'
-    + '<circle cx="50" cy="50" r="'+r+'" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="9"/>'
-    + '<circle cx="50" cy="50" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+off+'" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset .8s ease"/>'
-    + '<text x="50" y="49" text-anchor="middle" fill="'+color+'" font-size="26" font-weight="700" font-family="var(--font-mono)">'+score+'</text>'
-    + '<text x="50" y="63" text-anchor="middle" fill="var(--text-faint)" font-size="9" font-family="var(--font-mono)">/ 100</text>'
-    + '</svg>';
-}
-
-function ansCard(r){
-  const c = PCOLOR[r.provider] || '#a1a1aa';
-  if (r.error) {
-    return '<div class="ans err"><div class="head"><span class="prov"><span class="dotp" style="background:'+c+'"></span>'+esc(r.providerLabel)+'</span></div>'
-      + '<div class="qname">'+esc(r.question)+'</div><div class="errnote">'+svgAlert()+' '+esc(r.error)+'</div></div>';
-  }
-  const desc = r.description === 30 ? '完整' : r.description === 15 ? '简略' : '无';
-  const scCls = r.score >= 60 ? 'ok' : r.score >= 40 ? 'warn' : 'bad';
-  const bodyId = 'b'+Math.random().toString(36).slice(2,7);
-  const long = r.answer.length > 180;
-  return '<div class="ans">'
-    + '<div class="head"><span class="prov"><span class="dotp" style="background:'+c+'"></span>'+esc(r.providerLabel)
-    +   '<span class="sc '+scCls+'">'+r.score+'</span></span>'
-    +   '<span class="flags">'
-    +     '<span class="flag '+(r.mention?'ok':'no')+'">认知 '+(r.mention?'✓':'✕')+'</span>'
-    +     '<span class="flag '+(r.description?'ok':'no')+'">描述 '+desc+'</span>'
-    +     '<span class="flag '+(r.source?'ok':'no')+'">来源 '+(r.source?'✓':'✕')+'</span>'
-    +   '</span></div>'
-    + '<div class="qname">'+esc(r.question)+'</div>'
-    + '<div class="body'+(long?' trunc':'')+'" id="'+bodyId+'">'+esc(r.answer)+'</div>'
-    + (long ? '<button class="more" onclick="toggleBody(\''+bodyId+'\')">展开全文</button>' : '')
-    + '</div>';
-}
-function toggleBody(id){
-  const el = document.getElementById(id);
-  el.classList.toggle('trunc');
-  el.nextElementSibling.textContent = el.classList.contains('trunc') ? '展开全文' : '收起';
-}
-function svgAlert(){ return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>'; }
 
 /* ============ 历史 ============ */
 async function renderHistory(){

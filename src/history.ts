@@ -28,3 +28,18 @@ export function listChecks(limit = 30): CheckReport[] {
   }
   return reports;
 }
+
+/** 按 id 读取单条历史（独立报告页用） */
+export function getCheck(id: string): CheckReport | null {
+  if (!existsSync(file)) return null;
+  const lines = readFileSync(file, "utf-8").split("\n").filter(Boolean);
+  for (let i = lines.length - 1; i >= 0; i--) {
+    try {
+      const r = JSON.parse(lines[i]) as CheckReport;
+      if (r.id === id) return r;
+    } catch {
+      /* 跳过损坏行 */
+    }
+  }
+  return null;
+}

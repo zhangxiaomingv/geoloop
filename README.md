@@ -104,7 +104,9 @@ npm run retest -- --dry
 | Endpoint | Method | Purpose |
 |---|---|---|
 | `/api/check` | POST | body `{"query":"..."}` → run one check, persist history, return full report |
+| `/report/{id}` | GET | standalone report page (HTML) — the app redirects here after each check |
 | `/api/checks?limit=N` | GET | recent check history (default 20, max 50), newest first |
+| `/api/checks/{id}` | GET | one stored check report by id (404 if not found / expired) |
 | `/api/anchor` | GET / POST | positioning anchor + generated versions + platform list + site byline |
 | `/api/articles` | GET / POST | article library list / add `{"title","url","topic"}` |
 | `/api/articles/:id` | DELETE | remove an article |
@@ -181,7 +183,7 @@ src/cite.ts         Domain tracking: re-test trends
 src/compare.ts      Competitor comparison: ranking + exposure share + insights
 src/server.ts       Product API server (rate limit / concurrency / validation)
 src/providers.ts    API query layer (DeepSeek / Doubao, retry + timeout)
-src/web/            Product front-end (single index.html)
+src/web/            Product front-end (index.html homepage + report.html standalone report page)
 data/               Runtime data (gitignored): checks, entities, anchors, articles, cites
 ```
 

@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { runCheck } from "./check.js";
-import { appendCheck, listChecks } from "./history.js";
+import { appendCheck, listChecks, getCheck } from "./history.js";
 import {
   Anchor,
   PLATFORMS,
@@ -41,6 +41,7 @@ import { listBoards, loadBoard } from "./boards.js";
 const PORT = Number(process.env.PORT || 8788);
 const here = process.cwd();
 const pageFile = path.join(here, "src/web/index.html");
+const reportPageFile = path.join(here, "src/web/report.html");
 
 /** 每 IP 限流：X 次 / 分钟，Y 次 / 天 */
 const PER_MIN = Number(process.env.RATE_PER_MIN || 8);
@@ -92,6 +93,20 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // 独立报告页（/report/{id}，从历史读出）
+  const reportMatch = url.pathname.match(/^\/report\/([a-z0-9]+)$/i);
+  if (req.method === "GET" && reportMatch) {
+    const id = reportMatch[1];
+    if (!getCheck(id)) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("报告不存在或已过期");
+      return;
+    }
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.end(readFileSync(reportPageFile, "utf-8"));
+    return;
+  }
+
   // 品牌 logo（桌面 logo 文件夹定稿：SVG 矢量 + PNG 透明）
   if (req.method === "GET" && (url.pathname === "/logo.svg" || url.pathname === "/logo.png" || url.pathname === "/logo-final.png")) {
     const isSvg = url.pathname.endsWith(".svg");
@@ -136,6 +151,18 @@ const server = createServer(async (req, res) => {
   if (req.method === "GET" && url.pathname === "/api/checks") {
     const limit = Math.min(Number(url.searchParams.get("limit") || 20), 50);
     json(res, 200, { ok: true, checks: listChecks(limit) });
+    return;
+  }
+
+  // 单条检测报告（独立报告页数据）
+  const checkMatch = url.pathname.match(/^\/api\/checks\/([a-z0-9]+)$/i);
+  if (req.method === "GET" && checkMatch) {
+    const report = getCheck(checkMatch[1]);
+    if (!report) {
+      json(res, 404, { ok: false, message: "报告不存在或已过期" });
+      return;
+    }
+    json(res, 200, { ok: true, report });
     return;
   }
 
