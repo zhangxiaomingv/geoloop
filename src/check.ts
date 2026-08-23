@@ -22,10 +22,12 @@ export interface CheckResult {
   mention: boolean;
   /** 描述深度：0 无 / 15 简略 / 30 较完整 */
   description: 0 | 15 | 30;
-  /** 来源：是否引用了可追溯来源（站点模式=引用了该域名） */
+  /** 来源：是否引用了可追溯来源（引擎真引用 或 站点模式=引用了该域名） */
   source: boolean;
-  /** AI Citation Map：回答里出现的全部引用域名 */
+  /** AI Citation Map：回答里出现的全部引用域名（文本抽取） */
   cites: string[];
+  /** 溯源：引擎级真引用 URL（Perplexity 等带 citations 元数据的源）；纯文本源无 */
+  citations?: string[];
   error?: string;
   score: number;
 }
@@ -102,7 +104,7 @@ function sourceForSite(text: string, domain: string): boolean {
 /** 品牌/问句模式：答案是否出现任何可追溯来源（URL 或常见顶级域） */
 const ANY_SOURCE_RE = /https?:\/\/|www\.|[a-zA-Z0-9-]+\.(com|cn|net|org|io|co|me|ai|dev|gov|edu)(\/|\s|$|[，。;])/;
 
-export function scoreAnswer(entity: string, answer: string, type: InputType): { mention: boolean; description: 0 | 15 | 30; source: boolean; score: number } {
+export function scoreAnswer(entity: string, answer: string, type: InputType, citations?: string[]): { mention: boolean; description: 0 | 15 | 30; source: boolean; score: number } {
   const text = answer.trim();
 
   // 问句模式没有固定实体，认知维度不计（把权重让给描述与来源）
@@ -121,7 +123,8 @@ export function scoreAnswer(entity: string, answer: string, type: InputType): { 
   // 描述深度：按有效字符数启发式
   const description: 0 | 15 | 30 = len >= 80 ? 30 : len >= 30 ? 15 : 0;
 
-  const source = type === "site" ? sourceForSite(text, entity) : ANY_SOURCE_RE.test(text);
+  // 来源：引擎真引用（Perplexity citations）直接算「有可追溯来源」；否则回退文本判定
+  const source = citations && citations.length > 0 ? true : type === "site" ? sourceForSite(text, entity) : ANY_SOURCE_RE.test(text);
 
   const score = Math.round((mention ? 40 : 0) + description + (source ? 30 : 0));
   return { mention, description, source, score };
@@ -138,9 +141,12 @@ export function extractMentions(results: CheckResult[]): string[] {
   return [...found].slice(0, 8);
 }
 
-/* ---------- AI Citation Map 引用地图 ---------- */
+/* ---------- AI Citation Map 引用地图（溯源） ---------- */
 
 export type CitationCategory = "知乎" | "百度" | "小红书" | "官网" | "媒体" | "其他";
+
+/** 引用可信度：engine=引擎真引用（Perplexity citations） / mentioned=回答提及（文本抽取，可能编造） / suspected=疑似编造 */
+export type CitationTrust = "engine" | "mentioned" | "suspected";
 
 export interface CitationMapCategory {
   category: CitationCategory;
@@ -154,32 +160,66 @@ export interface CitationMapItem {
   category: CitationCategory;
   count: number;
   pct: number;
+  /** 引用可信度（同域多来源时取最高优先级 engine > mentioned > suspected） */
+  trust: CitationTrust;
+  /** 引擎真引用的可点击 URL（trust=engine 时） */
+  urls?: string[];
+}
+
+/** 引擎级真引用原始记录（溯源明细） */
+export interface CitationRecord {
+  url: string;
+  domain: string;
+  category: CitationCategory;
+  provider: string;
+  providerLabel: string;
 }
 
 export interface CitationMap {
-  /** 回答里被引域名出现总次数 */
+  /** 回答里被引域名出现总次数（mentioned + engine） */
   total: number;
   /** 分类聚合（降序） */
   categories: CitationMapCategory[];
-  /** 具体域名 Top（降序） */
+  /** 具体域名 Top（降序，带可信度） */
   top: CitationMapItem[];
   /** 官网是否被引用 */
   hasOwnSite: boolean;
   /** 一句话话术 */
   headline: string;
+  /** 溯源：引擎级真引用明细（Perplexity citations），可点击 */
+  citations: CitationRecord[];
+  /** 引用份额（Profound 口径）：仅引擎真引用域名，count/total 归一 */
+  share: CitationMapItem[];
+  /** 可信度分布：真引用 / 提及 / 疑似编造 计数 */
+  trustSummary: { engine: number; mentioned: number; suspected: number };
 }
 
 /** 媒体域名关键词（启发式，可扩展） */
 const MEDIA_RE =
   /(?:sina|weibo|163\.com|netease|sohu|ifeng|thepaper|36kr|huxiu|jiemian|yicai|caixin|xinhuanet|people\.com|chinanews|cctv|eastmoney|cls\.cn|qq\.com|bbc|cnn|reuters|bloomberg|nytimes|guardian)/;
 
-/** 从回答文本抽取所有引用域名（子域/多级域都可识别，忽略 www） */
+/** 疑似编造/占位域名特征（AI 幻觉引用常见：xxx、example、test、placeholder、纯随机长域） */
+const SUSPECT_DOMAIN_RE = /(?:^|\.)(xxx|example|test|placeholder|domain|sample)(?:\.|$)/i;
+
+/** 从回答文本抽取所有引用域名（子域/多级域都可识别，忽略 www；纯数字主体如 06862.hk 是股票代码/代号，非引用来源） */
 export function extractCitedDomains(text: string): string[] {
   return (
     (text.toLowerCase().match(/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}/g) || [])
       .map((d) => d.replace(/^www\./, ""))
       .filter((d) => d.includes("."))
+      .filter((d) => !/^\d+\.[a-z]/.test(d))
   );
+}
+
+/** 完整 URL → 根域名（忽略 www，去 query/hash） */
+export function extractUrlDomain(url: string): string | null {
+  try {
+    const u = new URL(url);
+    return u.hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    const m = url.toLowerCase().match(/^(?:https?:\/\/)?(?:www\.)?([a-z0-9-]+(?:\.[a-z0-9-]+)+)/);
+    return m ? m[1] : null;
+  }
 }
 
 /** 域名 → 引用来源分类。entityDomain 用于把「自己的官网」识别出来（站点检测模式） */
@@ -192,18 +232,49 @@ export function classifyCitationDomain(d: string, entityDomain?: string): Citati
   return "其他";
 }
 
-/** 聚合一次检测的引用地图 */
+/** 域名 → 可信度：engine 真引用传 true；文本提及看是否疑似编造 */
+function trustFor(domain: string, fromEngine: boolean): CitationTrust {
+  if (fromEngine) return "engine";
+  return SUSPECT_DOMAIN_RE.test(domain) ? "suspected" : "mentioned";
+}
+
+const TRUST_RANK: Record<CitationTrust, number> = { engine: 3, mentioned: 2, suspected: 1 };
+
+/** 聚合一次检测的引用地图（溯源：真引用 + 提及 + 份额） */
 export function buildCitationMap(results: CheckResult[], entityDomain?: string): CitationMap {
-  const domCounts = new Map<string, number>();
+  const domMap = new Map<string, { count: number; trust: CitationTrust; urls: string[] }>();
   const catCounts = new Map<CitationCategory, number>();
+  const citations: CitationRecord[] = [];
+  const trustSummary = { engine: 0, mentioned: 0, suspected: 0 };
   let total = 0;
 
+  /** 域名 key 的计数入口：同域多来源合并，trust 取最高优先级，urls 收集真引用 */
+  function addDomain(domain: string, trust: CitationTrust, url?: string, provider?: string, providerLabel?: string) {
+    const cur = domMap.get(domain);
+    if (cur) {
+      cur.count++;
+      if (TRUST_RANK[trust] > TRUST_RANK[cur.trust]) cur.trust = trust;
+      if (url) cur.urls.push(url);
+    } else {
+      domMap.set(domain, { count: 1, trust, urls: url ? [url] : [] });
+    }
+    trustSummary[trust]++;
+    total++;
+    const cat = classifyCitationDomain(domain, entityDomain);
+    catCounts.set(cat, (catCounts.get(cat) ?? 0) + 1);
+    if (url) citations.push({ url, domain, category: cat, provider: provider ?? "", providerLabel: providerLabel ?? "" });
+  }
+
   for (const r of results) {
+    if (r.error) continue;
+    // 引擎级真引用（Perplexity citations）→ trust=engine，可点击
+    for (const url of r.citations ?? []) {
+      const domain = extractUrlDomain(url);
+      if (domain) addDomain(domain, "engine", url, r.provider, r.providerLabel);
+    }
+    // 文本提及（DeepSeek/豆包 回答里抽出的域名）→ mentioned / suspected
     for (const d of extractCitedDomains(r.answer)) {
-      domCounts.set(d, (domCounts.get(d) ?? 0) + 1);
-      const cat = classifyCitationDomain(d, entityDomain);
-      catCounts.set(cat, (catCounts.get(cat) ?? 0) + 1);
-      total++;
+      addDomain(d, trustFor(d, false));
     }
   }
 
@@ -214,6 +285,9 @@ export function buildCitationMap(results: CheckResult[], entityDomain?: string):
       top: [],
       hasOwnSite: false,
       headline: "本次检测的回答没有引用任何外部来源——这是你最大的机会：让 AI 引用你。",
+      citations: [],
+      share: [],
+      trustSummary,
     };
   }
 
@@ -221,25 +295,54 @@ export function buildCitationMap(results: CheckResult[], entityDomain?: string):
     .map(([category, count]) => ({ category, count, pct: Math.round((count / total) * 100) }))
     .sort((a, b) => b.count - a.count);
 
-  const top: CitationMapItem[] = [...domCounts.entries()]
-    .map(([domain, count]) => ({
+  const top: CitationMapItem[] = [...domMap.entries()]
+    .map(([domain, v]) => ({
       domain,
       category: classifyCitationDomain(domain, entityDomain),
-      count,
-      pct: Math.round((count / total) * 100),
+      count: v.count,
+      pct: Math.round((v.count / total) * 100),
+      trust: v.trust,
+      urls: v.urls.length ? v.urls : undefined,
     }))
-    .sort((a, b) => b.count - a.count)
+    .sort((a, b) => b.count - a.count || TRUST_RANK[b.trust] - TRUST_RANK[a.trust])
     .slice(0, 8);
+
+  // 引用份额（Profound 口径）：仅引擎真引用域名，count/total 归一
+  const shareTotal = domMap.size
+    ? [...domMap.entries()].reduce((s, [, v]) => s + (v.trust === "engine" ? v.count : 0), 0)
+    : 0;
+  const share: CitationMapItem[] = shareTotal
+    ? [...domMap.entries()]
+        .filter(([, v]) => v.trust === "engine")
+        .map(([domain, v]) => ({
+          domain,
+          category: classifyCitationDomain(domain, entityDomain),
+          count: v.count,
+          pct: Math.round((v.count / shareTotal) * 100),
+          trust: "engine" as const,
+          urls: v.urls,
+        }))
+        .sort((a, b) => b.count - a.count)
+    : [];
 
   const ownCount = catCounts.get("官网") ?? 0;
   const hasOwnSite = ownCount > 0;
   const ownPct = Math.round((ownCount / total) * 100);
   const lead = categories[0];
-  const headline = hasOwnSite
-    ? `你的官网已被 AI 引用 ${ownCount}/${total}（${ownPct}%）。继续扩大官网可检索内容，把「主要信息源」地位坐实。`
-    : `你的网站明明写了，但 AI 根本没把你当成主要信息源——它优先相信「${lead?.category ?? "其他"}」等来源（${lead?.pct ?? 0}%）。`;
+  // 真引用口径下官网份额（share 只含引擎真引用）
+  const ownSharePct = share.find((s) => s.category === "官网")?.pct ?? 0;
 
-  return { total, categories, top, hasOwnSite, headline };
+  const headline = citations.length
+    ? ownSharePct > 0
+      ? `溯源：AI 搜索引擎引用了 ${citations.length} 个真实来源，你的官网占引用份额 ${ownSharePct}%。把「官网」在 AI 引用池里的份额做起来。`
+      : `溯源：AI 搜索引擎引用了 ${citations.length} 个真实来源，但没引用你的官网——它优先相信「${lead?.category ?? "其他"}」等来源（${lead?.pct ?? 0}%）。`
+    : hasOwnSite
+      ? `你的官网已被 AI 提及 ${ownCount}/${total}（${ownPct}%）。继续扩大官网可检索内容，把「主要信息源」地位坐实。`
+      : entityDomain
+        ? `你的网站明明写了，但 AI 根本没把你当成主要信息源——它优先相信「${lead?.category ?? "其他"}」等来源（${lead?.pct ?? 0}%）。`
+        : `溯源：AI 回答提到了 ${total} 个来源域名，「${lead?.category ?? "其他"}」类占 ${lead?.pct ?? 0}%。要让 AI 引用你，先让官网与内容可被检索。`;
+
+  return { total, categories, top, hasOwnSite, headline, citations, share, trustSummary };
 }
 
 /* ---------- 结论与建议 ---------- */
@@ -277,18 +380,21 @@ function tipsFor(type: InputType, mentionFailed: boolean, depthFailed: boolean, 
 
 /* ---------- 执行一次检测 ---------- */
 
+/** B 方案溯源：附带给引擎的来源引导（让纯文本引擎尽量给出可追踪来源；报告仍存原问题） */
+const SOURCE_PROMPT = "（回答时如涉及信息来源，请给出真实来源链接或平台名称；不确定来源时请勿编造链接）";
+
 export async function runCheck(query: string): Promise<CheckReport> {
   const { type, entity, entityLabel, questions } = classify(query);
   const apiProviders = providers.filter((p) => p.kind === "api");
 
   const tasks = apiProviders.flatMap((p) =>
     questions.map(async (q): Promise<CheckResult> => {
-      const r = await queryText(p, q);
+      const r = await queryText(p, q + SOURCE_PROMPT);
       if (r.error) {
         return { provider: p.id, providerLabel: p.label, question: q, answer: "", mention: false, description: 0, source: false, cites: [], error: r.error, score: 0 };
       }
-      const { mention, description, source, score } = scoreAnswer(entity, r.raw, type);
-      return { provider: p.id, providerLabel: p.label, question: q, answer: r.raw, mention, description, source, cites: extractCitedDomains(r.raw), score };
+      const { mention, description, source, score } = scoreAnswer(entity, r.raw, type, r.citations);
+      return { provider: p.id, providerLabel: p.label, question: q, answer: r.raw, mention, description, source, cites: extractCitedDomains(r.raw), citations: r.citations, score };
     })
   );
   const results = await Promise.all(tasks);

@@ -22,6 +22,11 @@ export interface Provider {
   apiKeyEnv?: string;
   /** 浏览器专用：{query} 会被替换 */
   urlTemplate?: string;
+  /**
+   * 排除出「行业榜批量采样」（boards.ts 的 generateBoard）。
+   * 置 true 的源（如付费/带引用的 Perplexity）只进产品检测，不拖累 360 行业批量生成。
+   */
+  excludeFromSampling?: boolean;
 }
 
 /**
@@ -46,4 +51,17 @@ export const providers: Provider[] = [
     model: process.env.DOUBAO_MODEL || "doubao-seed-2-0-pro-260215",
     apiKeyEnv: "ARK_API_KEY",
   },
+  // ── 真引用引擎（可选，默认未启用）──────────────────────────────
+  // 溯源模块当前走「B 方案」：纯文本抽取 + prompt 引导，仅 DeepSeek/豆包。
+  // 以后有条件接入带 citations 元数据的引擎（如 Perplexity），
+  // 把下面这段取消注释 + .env 配 PPLX_API_KEY 即启用真引用路径。
+  // {
+  //   id: "perplexity",
+  //   label: "Perplexity",
+  //   kind: "api",
+  //   baseUrl: "https://api.perplexity.ai/chat/completions",
+  //   model: process.env.PERPLEXITY_MODEL || "sonar",
+  //   apiKeyEnv: "PPLX_API_KEY",
+  //   excludeFromSampling: true,
+  // },
 ];

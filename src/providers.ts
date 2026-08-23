@@ -9,6 +9,11 @@ const execFileAsync = promisify(execFile);
 export interface QueryResult {
   raw: string;
   error?: string;
+  /**
+   * 引擎级真引用（Perplexity 等带 citations 元数据的源返回）。
+   * URL 数组；纯文本源（DeepSeek/豆包）无此字段，引用只能靠从 raw 里抽取。
+   */
+  citations?: string[];
 }
 
 /** 按 provider.kind 分发查询 */
@@ -51,12 +56,21 @@ async function queryApi(provider: Provider, text: string): Promise<QueryResult> 
           model: provider.model,
           messages: [{ role: "user", content: text }],
           temperature: 0.2,
+          // Perplexity：显式要求返回 citations（默认也回，兜底旧接口行为）
+          ...(provider.id === "perplexity" ? { return_citations: true } : {}),
         }),
         signal: AbortSignal.timeout(120000),
       });
       if (!res.ok) return { raw: "", error: `API ${res.status}: ${(await res.text()).slice(0, 200)}` };
-      const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-      return { raw: data.choices?.[0]?.message?.content?.trim() ?? "" };
+      const data = (await res.json()) as {
+        choices?: { message?: { content?: string } }[];
+        /** Perplexity 等带 citations 元数据的源 */
+        citations?: string[];
+      };
+      const raw = data.choices?.[0]?.message?.content?.trim() ?? "";
+      // 有 citations 的源（Perplexity）→ 引擎真引用；其余源 raw 非空但无 citations（显式引用靠文本抽取）
+      const citations = Array.isArray(data.citations) ? data.citations.filter((u): u is string => typeof u === "string" && u.startsWith("http")) : undefined;
+      return { raw, citations: citations?.length ? citations : undefined };
     } catch (e) {
       if (attempt === 2) return { raw: "", error: `API 异常: ${(e as Error).message}` };
       await new Promise((r) => setTimeout(r, 1500)); // 首次失败短暂等待后重试
