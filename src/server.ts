@@ -98,6 +98,13 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // logo 原图（1254px 高清，点击放大 lightbox 用）
+  if (req.method === "GET" && url.pathname === "/logo-original.png") {
+    res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "public, max-age=3600" });
+    res.end(readFileSync(path.join(here, "src/web/logo-original.png")));
+    return;
+  }
+
   // 检测历史
   if (req.method === "GET" && url.pathname === "/api/checks") {
     const limit = Math.min(Number(url.searchParams.get("limit") || 20), 50);

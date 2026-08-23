@@ -56,7 +56,34 @@
   .logo-sub { font-size: 11px; font-weight: 450; color: var(--text-faint); letter-spacing: 0; }
   .logo-mark { width: 40px; height: 40px; display: grid; place-items: center; }
   .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .logo { cursor: pointer; }
   .top-right { color: var(--text-faint); font-size: 12px; font-family: var(--font-mono); }
+
+  /* ---------- logo 原图 lightbox ---------- */
+  .lb {
+    position: fixed; inset: 0; z-index: 999;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.82); opacity: 0; pointer-events: none;
+    transition: opacity .22s ease; padding: 24px;
+  }
+  .lb.open { opacity: 1; pointer-events: auto; }
+  .lb img {
+    max-width: min(920px, 92vw); max-height: 88vh; width: auto; height: auto;
+    border-radius: 16px; box-shadow: 0 24px 80px rgba(0,0,0,.6);
+    transform: scale(.94); transition: transform .22s ease;
+  }
+  .lb.open img { transform: scale(1); }
+  .lb-close {
+    position: absolute; top: 18px; right: 22px;
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.08);
+    color: #fff; font-size: 19px; line-height: 1; cursor: pointer;
+    display: grid; place-items: center; transition: background .18s ease;
+  }
+  .lb-close:hover { background: rgba(255,255,255,.18); }
+  @media (max-width: 640px) {
+    .lb img { max-width: 94vw; max-height: 82vh; }
+  }
 
   /* ---------- Hero ---------- */
   .hero { text-align: center; padding: 56px 0 30px; position: relative; isolation: isolate; }
@@ -583,6 +610,10 @@
   </footer>
 </div>
 
+<div id="lb" class="lb" role="dialog" aria-modal="true" aria-label="GEOloopOS 标志原图">
+  <button class="lb-close" aria-label="关闭">✕</button>
+  <img src="/logo-original.png" alt="GEOloopOS 标志原图" />
+</div>
 <script>
 const PCOLOR = { deepseek: '#4c8dff', doubao: '#38c0b8' };
 const TYPE_LABEL = { brand: '品牌', site: '网站', question: '问句' };
@@ -1147,6 +1178,19 @@ loadAnchor();
 loadArticles();
 loadSites();
 renderHistory();
+
+// logo 点击 → 弹出原图 lightbox
+const lbEl = document.getElementById('lb');
+function openLb() { lbEl.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeLb() { lbEl.classList.remove('open'); document.body.style.overflow = ''; }
+document.querySelector('.logo').addEventListener('click', (e) => {
+  e.preventDefault();
+  openLb();
+});
+lbEl.addEventListener('click', (e) => {
+  if (e.target === lbEl || e.target.closest('.lb-close')) closeLb();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
 </script>
 </body>
 </html>
