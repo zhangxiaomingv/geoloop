@@ -49,6 +49,8 @@ consultant. Product site: **https://zkoner.com**.
 | **Domain tracking** | Add a domain → re-test AI cognition & citation periodically → trend line over time |
 | **Competitor comparison** | Your brand vs competitors, same-口径 detection → ranking, gap score, insight (who leads and why) |
 | **Scene intelligence** | Input a real user question (e.g. "深圳推荐一家装修公司") → exposure share per brand + 0-exposure root cause analysis |
+| **360 industry boards** | 360 industries × one scene question ("成都最好的精品酒店有哪些？") asked to both engines → merged AI-recommendation leaderboard per industry, searchable in the homepage popup |
+| **Citation traceability** | In-answer source extraction (prompt-guided) → 3-level trust (AI-cited / AI-mentioned / suspected-fabrication), citation share (Profound formula) and "does AI believe your site?" judgment in every report. Engine-cited mode (Perplexity) ready in config — enable with `PPLX_API_KEY` |
 | **Unified entity archive** | Every check/re-test/competitor run lands in one entity profile (`data/entities.json`) — the cognition time-series foundation for an "enterprise AI cognition map" |
 | **Auto re-test** | Scheduled re-measurement of archived entities → cognition change curves accumulate automatically (the moat: data, not code) |
 | **Private deployment** | Single Node process, zero runtime dependencies, Docker one-command deploy, IP rate limiting |

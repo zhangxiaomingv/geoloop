@@ -24,7 +24,7 @@ import { runCompare, runSceneCompare, type SceneCompareReport } from "./compare.
 import { attachCheck, attachCiteCitation, attachSceneShares, entityStats, loadEntities } from "./entity.js";
 import { checkCites, loadCites, saveCites, type CiteSite } from "./cite.js";
 import { buildLeaderboard } from "./leaderboard.js";
-import { loadBoards } from "./boards.js";
+import { listBoards, loadBoard } from "./boards.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -113,14 +113,22 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 行业 AI 可见度榜（hero 弹窗数据）
+  // 行业 AI 可见度榜 · 360 全行业索引（含生成状态，供搜索/列表）
   if (req.method === "GET" && url.pathname === "/api/boards") {
-    const boards = loadBoards();
-    if (!boards) {
-      json(res, 200, { ok: true, city: "成都", updatedAt: null, industries: [] });
+    json(res, 200, { ok: true, ...listBoards() });
+    return;
+  }
+
+  // 行业 AI 可见度榜 · 单个行业榜单（/api/boards/{id}）
+  const boardMatch = url.pathname.match(/^\/api\/boards\/(\d{1,3})$/);
+  if (req.method === "GET" && boardMatch) {
+    const id = Number(boardMatch[1]);
+    const board = loadBoard(id);
+    if (!board) {
+      json(res, 404, { ok: false, message: `该行业榜尚未生成（id=${id}）` });
       return;
     }
-    json(res, 200, { ok: true, ...boards });
+    json(res, 200, { ok: true, board });
     return;
   }
 

@@ -169,14 +169,44 @@
   .bm-title { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
   .bm-title .bm-city { font-size: 12px; color: var(--primary); margin-left: 6px; font-weight: 600; }
   .bm-sub { font-size: 12px; color: var(--text-faint); margin: 4px 0 14px; }
-  .bm-tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
-  .bm-tab {
-    font-size: 12.5px; color: var(--text-muted); padding: 5px 13px;
-    border-radius: 999px; border: 1px solid var(--border); background: transparent;
-    cursor: pointer; transition: all .15s ease; font-family: var(--font-sans);
+  .bm-body { display: flex; gap: 14px; min-height: 0; }
+  .bm-side { width: 208px; flex: none; display: flex; flex-direction: column; gap: 8px; }
+  .bm-search-wrap {
+    display: flex; align-items: center; gap: 8px; padding: 0 11px;
+    background: var(--surface-2); border: 1px solid var(--border-strong);
+    border-radius: 10px; min-height: 36px;
+    transition: border-color .18s ease, box-shadow .18s ease;
   }
-  .bm-tab:hover { color: var(--text); border-color: var(--border-strong); }
-  .bm-tab.on { color: #fff; background: var(--primary); border-color: var(--primary); }
+  .bm-search-wrap:focus-within { border-color: rgba(76,141,255,.7); box-shadow: 0 0 0 3px rgba(76,141,255,.15); }
+  .bm-search-wrap svg { width: 14px; height: 14px; color: var(--text-faint); flex: none; }
+  .bm-search-wrap input {
+    flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text);
+    font: inherit; font-size: 13px; height: 34px;
+  }
+  .bm-search-wrap input::placeholder { color: var(--text-faint); }
+  .bm-pick {
+    flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3px; align-content: start; padding-right: 6px; max-height: 50vh;
+    scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
+  }
+  .bm-pick-btn {
+    font-size: 12px; color: var(--text-muted); padding: 5px 9px;
+    border-radius: 8px; border: 1px solid transparent; background: transparent;
+    cursor: pointer; text-align: left; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis; transition: all .13s ease; font-family: var(--font-sans);
+  }
+  .bm-pick-btn:hover { color: var(--text); background: rgba(255,255,255,.05); }
+  .bm-pick-btn.on { color: #fff; background: rgba(76,141,255,.16); border-color: rgba(76,141,255,.5); }
+  .bm-pick-btn .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 5px; vertical-align: 1.5px; background: var(--text-faint); opacity: .5; }
+  .bm-pick-btn.ready .dot { background: var(--success); opacity: 1; }
+  .bm-pick-btn.ready { color: var(--text); }
+  .bm-main { flex: 1; min-width: 0; overflow-y: auto; max-height: 56vh; padding-right: 6px; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+  .bm-empty { font-size: 13px; color: var(--text-faint); text-align: center; padding: 30px 0; }
+  @media (max-width: 560px) {
+    .bm-body { flex-direction: column; }
+    .bm-side { width: auto; }
+    .bm-pick { max-height: 22vh; grid-template-columns: 1fr 1fr 1fr; }
+  }
   .bm-q {
     font-size: 12px; color: var(--text-faint); font-family: var(--font-mono);
     background: var(--surface-2); border: 1px dashed var(--border-strong);
@@ -332,6 +362,19 @@
   .cmap-domains { margin-top: 12px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 6px; }
   .cmap-domains .m { background: rgba(255,255,255,.05); border: 1px solid rgba(76,141,255,.22); color: var(--text-muted); font-size: 11px; padding: 3px 9px; border-radius: 20px; }
   .cmap-domains .m b { color: var(--primary); font-family: var(--font-mono); font-weight: 600; }
+  .cmap-legend { font-size: 10.5px; color: var(--text-faint); font-weight: 500; margin-left: auto; }
+  .cmap-sub-t { font-size: 11.5px; color: var(--text-muted); font-weight: 650; margin: 12px 0 7px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,.1); }
+  .cmap-cites { display: grid; gap: 5px; }
+  .cmap-cite { display: flex; align-items: baseline; gap: 8px; font-size: 11.5px; }
+  .cmap-cite a { color: var(--primary); text-decoration: none; word-break: break-all; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; }
+  .cmap-cite a:hover { text-decoration: underline; }
+  .cmap-cite .cc { flex: none; color: var(--text-faint); font-size: 10px; }
+  .cmap-cite .cp { flex: none; color: var(--text-faint); font-size: 10px; font-family: var(--font-mono); }
+  .trust-tag { font-size: 10px; padding: 1px 6px; border-radius: 999px; font-weight: 600; flex: none; display: inline-block; vertical-align: 1px; }
+  .trust-tag.engine { color: var(--success); background: var(--success-soft); }
+  .trust-tag.mentioned { color: var(--text-faint); background: var(--surface-2); }
+  .trust-tag.suspected { color: #f59e0b; background: rgba(245,158,11,.12); }
+  .cmap-share .bar i { background: linear-gradient(90deg, #059669, #34d399); }
 
   /* ---------- 回答卡片 ---------- */
   .answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-top: 12px; }
@@ -690,11 +733,22 @@
 <div id="boardModal" class="lb" role="dialog" aria-modal="true" aria-label="行业 AI 可见度榜">
   <button class="lb-close" aria-label="关闭">✕</button>
   <div class="bm">
-    <div class="bm-title">行业 AI 可见度榜<span class="bm-city">成都</span></div>
+    <div class="bm-title">行业 AI 可见度榜<span class="bm-city" id="bmCity">成都</span></div>
     <div class="bm-sub">问 AI「哪家好」，看它推荐谁 —— 数据来自 DeepSeek / 豆包 实时回答</div>
-    <div class="bm-tabs" id="bmTabs"></div>
-    <div class="bm-q" id="bmQ"></div>
-    <ol class="bm-list" id="bmList"></ol>
+    <div class="bm-body">
+      <div class="bm-side">
+        <div class="bm-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="bmSearch" type="text" placeholder="搜索 360 行业…" autocomplete="off" />
+        </div>
+        <div class="bm-pick" id="bmPick"></div>
+      </div>
+      <div class="bm-main">
+        <div class="bm-q" id="bmQ"></div>
+        <ol class="bm-list" id="bmList"></ol>
+        <div class="bm-empty" id="bmEmpty" hidden>榜单生成中，稍后再来逛逛 ✨</div>
+      </div>
+    </div>
     <div class="bm-foot">
       <span>品牌上榜了？把「AI 首推」变成稳定可见</span>
       <a class="bm-cta" href="#form">检测你的品牌 →</a>
@@ -780,24 +834,55 @@ function renderReport(r){
   $('result').innerHTML = html;
 }
 
+function trustTag(t){
+  const m = { engine: ['AI 引用','engine'], mentioned: ['AI 提及','mentioned'], suspected: ['疑似编造','suspected'] }[t] || ['提及','mentioned'];
+  return '<span class="trust-tag '+m[1]+'">'+m[0]+'</span>';
+}
+function shortUrl(u){ return u.length > 56 ? u.slice(0, 53)+'…' : u; }
+
 function citationMapBlock(cm){
   if (!cm) return '';
   const icon = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg>';
+  const legend = '<span class="cmap-legend">🟢AI引用 · ⚪AI提及 · ⚠️疑似编造</span>';
   if (!cm.total) {
-    return '<div class="cmap"><h4>'+icon+' AI 引用地图 · AI 相信谁</h4>'
+    return '<div class="cmap"><h4>'+icon+' AI 溯源 · AI 相信谁'+legend+'</h4>'
       + '<div class="cmap-headline">'+esc(cm.headline)+'</div></div>';
   }
-  const bars = cm.categories.map(c =>
-    '<div class="cmap-row"><span class="cl">'+esc(c.category)+'</span>'
-    + '<span class="bar"><i style="width:'+c.pct+'%"></i></span>'
-    + '<span class="pct">'+c.pct+'%</span></div>'
-  ).join('');
-  const domains = cm.top.length
-    ? '<div class="cmap-domains">'+cm.top.map(t => '<span class="m">'+esc(t.domain)+' <b>'+t.pct+'%</b></span>').join('')+'</div>'
+  // 引擎级真引用（Perplexity citations，可点击）
+  const cites = cm.citations && cm.citations.length
+    ? '<div class="cmap-sub-t">引擎级真引用（'+cm.citations.length+'）— AI 搜索明确给出的来源</div>'
+      + '<div class="cmap-cites">'+cm.citations.map(c =>
+          '<div class="cmap-cite"><a href="'+esc(c.url)+'" target="_blank" rel="noopener" title="'+esc(c.url)+'">'+esc(shortUrl(c.url))+'</a>'
+          + '<span class="cc">'+esc(c.category)+'</span><span class="cp">'+esc(c.providerLabel)+'</span></div>'
+        ).join('')+'</div>'
     : '';
-  return '<div class="cmap"><h4>'+icon+' AI 引用地图 · AI 相信谁</h4>'
+  // 引用份额（真引用口径，Profound 公式）
+  const share = cm.share && cm.share.length
+    ? '<div class="cmap-sub-t">引用份额 — AI 引用池里，谁占得多</div>'
+      + '<div class="cmap-bars cmap-share">'+cm.share.map(s =>
+          '<div class="cmap-row"><span class="cl">'+esc(s.domain)+'</span>'
+          + '<span class="bar"><i style="width:'+s.pct+'%"></i></span>'
+          + '<span class="pct">'+s.pct+'%</span></div>'
+        ).join('')+'</div>'
+    : '';
+  // 来源分类占比（全部引用）
+  const bars = cm.categories.length
+    ? '<div class="cmap-sub-t">来源分类占比</div>'
+      + '<div class="cmap-bars">'+cm.categories.map(c =>
+          '<div class="cmap-row"><span class="cl">'+esc(c.category)+'</span>'
+          + '<span class="bar"><i style="width:'+c.pct+'%"></i></span>'
+          + '<span class="pct">'+c.pct+'%</span></div>'
+        ).join('')+'</div>'
+    : '';
+  // 域名 Top（带可信度标签）
+  const domains = cm.top.length
+    ? '<div class="cmap-domains">'+cm.top.map(t => '<span class="m">'+trustTag(t.trust)+' '+esc(t.domain)+' <b>'+t.pct+'%</b></span>').join('')+'</div>'
+    : '';
+  return '<div class="cmap"><h4>'+icon+' AI 溯源 · AI 相信谁'+legend+'</h4>'
     + '<div class="cmap-headline">'+esc(cm.headline)+'</div>'
-    + '<div class="cmap-bars">'+bars+'</div>'
+    + cites
+    + share
+    + bars
     + domains
     + '</div>';
 }
@@ -1277,64 +1362,102 @@ document.querySelector('.logo').addEventListener('click', (e) => {
 lbEl.addEventListener('click', (e) => {
   if (e.target === lbEl || e.target.closest('.lb-close')) closeLb();
 });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeLb(); closeBoardModal(); } });
 
-// ---------- 行业 AI 可见度榜（hero 卡片 + 弹窗） ----------
+// ---------- 行业 AI 可见度榜（hero 卡片 + 弹窗：搜索 + 360 行业选择） ----------
 const boardTeaser = document.getElementById('boardTeaser');
 const boardModal = document.getElementById('boardModal');
-const bmTabs = document.getElementById('bmTabs');
+const btTop3 = document.getElementById('btTop3');
+const btCity = document.getElementById('btCity');
+const bmCity = document.getElementById('bmCity');
+const bmSearch = document.getElementById('bmSearch');
+const bmPick = document.getElementById('bmPick');
 const bmQ = document.getElementById('bmQ');
 const bmList = document.getElementById('bmList');
-let boardsData = null;
+const bmEmpty = document.getElementById('bmEmpty');
+
+/** hero 卡片默认展示的行业（精品酒店） */
+const DEFAULT_ID = 193;
+let boardsIndex = null; // { city, total, industries: [{id,name,ask,ready,count,updatedAt}] }
+let currentId = null;
 
 async function loadBoards() {
   try {
     const r = await fetch('/api/boards');
     const d = await r.json();
     if (!d.ok || !d.industries.length) { btTop3.textContent = '行业榜生成中…'; return; }
-    boardsData = d;
+    boardsIndex = d;
     renderTeaser();
-    renderTabs();
-    selectBoard(0);
+    renderPick();
+    // 默认选中：优先 DEFAULT_ID（若已就绪），否则第一个就绪的行业
+    const first = d.industries.find(i => i.ready && i.id === DEFAULT_ID)
+      || d.industries.find(i => i.ready)
+      || d.industries[0];
+    selectIndustry(first.id);
   } catch (e) {
     btTop3.textContent = '行业榜暂时不可用';
   }
 }
 
 function renderTeaser() {
-  const ind = boardsData.industries[0];
+  const ind = boardsIndex.industries.find(i => i.ready && i.id === DEFAULT_ID)
+    || boardsIndex.industries.find(i => i.ready);
+  if (!ind) { btTop3.textContent = '榜单生成中…'; return; }
+  btCity.textContent = `${boardsIndex.city} · ${ind.name}`;
   const medals = ['🥇', '🥈', '🥉'];
-  btTop3.innerHTML = ind.merged.slice(0, 3)
-    .map((m, i) => `<span class="m${i + 1}">${medals[i]} ${esc(m.name)}</span>`)
-    .join('');
-  btCity.textContent = `${boardsData.city} · ${ind.name}`;
+  fetch(`/api/boards/${ind.id}`).then(r => r.json()).then(d => {
+    if (!d.ok || !d.board) return;
+    btTop3.innerHTML = d.board.merged.slice(0, 3)
+      .map((m, i) => `<span class="m${i + 1}">${medals[i]} ${esc(m.name)}</span>`)
+      .join('');
+  }).catch(() => { btTop3.textContent = '榜单生成中…'; });
 }
 
-function renderTabs() {
-  bmTabs.innerHTML = boardsData.industries
-    .map((ind, i) => `<button class="bm-tab" data-i="${i}">${esc(ind.name)}</button>`)
-    .join('');
-  bmTabs.querySelectorAll('.bm-tab').forEach((b) => b.addEventListener('click', () => selectBoard(+b.dataset.i)));
+function renderPick(filter) {
+  const kw = (filter || '').trim().toLowerCase();
+  const list = boardsIndex.industries.filter(i => !kw || i.name.toLowerCase().includes(kw));
+  const readyCount = boardsIndex.industries.filter(i => i.ready).length;
+  bmCity.textContent = `${boardsIndex.city} · ${boardsIndex.total} 行业 · 已生成 ${readyCount}`;
+  bmPick.innerHTML = list.map(i =>
+    `<button class="bm-pick-btn${i.ready ? ' ready' : ''}${i.id === currentId ? ' on' : ''}" data-id="${i.id}" title="${esc(i.name)}${i.ready ? '（已生成）' : ''}">
+      <span class="dot"></span>${esc(i.name)}
+    </button>`
+  ).join('');
+  bmPick.querySelectorAll('.bm-pick-btn').forEach(b => b.addEventListener('click', () => selectIndustry(+b.dataset.id)));
 }
 
-function selectBoard(i) {
-  bmTabs.querySelectorAll('.bm-tab').forEach((b, idx) => b.classList.toggle('on', idx === i));
-  const ind = boardsData.industries[i];
-  bmQ.textContent = ind.ask;
-  bmList.innerHTML = ind.merged.map((m, idx) => {
-    const eng = m.engineCount === 2
-      ? '<span class="bm-eng dual">双引擎推荐</span>'
-      : `<span class="bm-eng single">${esc(m.engines[0])}</span>`;
-    return `<li class="bm-row">
-      <span class="bm-rank">${idx + 1}</span>
-      <div>
-        <div class="bm-name">${esc(m.name)}</div>
-        <div class="bm-reason">${esc(m.reason)}</div>
-      </div>
-      ${eng}
-    </li>`;
-  }).join('');
+async function selectIndustry(id) {
+  currentId = id;
+  renderPick(bmSearch.value);
+  bmQ.textContent = '';
+  bmList.innerHTML = '';
+  bmEmpty.hidden = true;
+  const on = bmPick.querySelector('.on');
+  if (on) on.scrollIntoView({ block: 'nearest' });
+  try {
+    const r = await fetch(`/api/boards/${id}`);
+    const d = await r.json();
+    if (!d.ok || !d.board || !d.board.merged.length) { bmEmpty.hidden = false; return; }
+    bmQ.textContent = d.board.ask;
+    bmList.innerHTML = d.board.merged.map((m, idx) => {
+      const eng = m.engineCount === 2
+        ? '<span class="bm-eng dual">双引擎推荐</span>'
+        : `<span class="bm-eng single">${esc(m.engines[0])}</span>`;
+      return `<li class="bm-row">
+        <span class="bm-rank">${idx + 1}</span>
+        <div>
+          <div class="bm-name">${esc(m.name)}</div>
+          <div class="bm-reason">${esc(m.reason)}</div>
+        </div>
+        ${eng}
+      </li>`;
+    }).join('');
+  } catch (e) {
+    bmEmpty.hidden = false;
+  }
 }
+
+bmSearch.addEventListener('input', () => renderPick(bmSearch.value));
 
 function openBoardModal() { boardModal.classList.add('open'); document.body.style.overflow = 'hidden'; }
 function closeBoardModal() { boardModal.classList.remove('open'); document.body.style.overflow = ''; }
