@@ -58,13 +58,6 @@
   .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .logo { cursor: pointer; }
   .top-right { color: var(--text-faint); font-size: 12px; font-family: var(--font-mono); }
-  .nav-right { display: flex; align-items: center; gap: 10px; }
-  .nav-chip {
-    font-size: 12px; color: var(--text-muted); text-decoration: none;
-    border: 1px solid var(--border); padding: 5px 13px; border-radius: 999px;
-    transition: color .18s ease, border-color .18s ease; white-space: nowrap;
-  }
-  .nav-chip:hover { color: var(--text); border-color: var(--border-strong); }
 
   /* ---------- logo 原图 lightbox ---------- */
   .lb {
@@ -145,6 +138,70 @@
 
   /* ---------- 搜索表单 ---------- */
   .search-box { position: relative; max-width: 640px; margin: 38px auto 0; }
+
+  /* ---------- 行业 AI 可见度榜卡片（hero 入口） ---------- */
+  .board-teaser {
+    max-width: 640px; margin: 16px auto 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    background: rgba(16,16,19,.72); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px 18px; cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, transform .15s ease;
+    text-align: left; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .board-teaser:hover { border-color: rgba(76,141,255,.45); background: rgba(16,16,19,.92); transform: translateY(-1px); }
+  .bt-left { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+  .bt-label { font-size: 12.5px; font-weight: 650; color: var(--text); }
+  .bt-city { font-size: 10.5px; color: var(--text-faint); font-family: var(--font-mono); }
+  .bt-top3 { flex: 1; display: flex; gap: 10px; flex-wrap: wrap; min-width: 0; font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+  .bt-top3 .m1 { color: var(--text); font-weight: 600; }
+  .bt-top3 .m2, .bt-top3 .m3 { color: var(--text-faint); }
+  .bt-more { flex-shrink: 0; font-size: 12px; color: var(--primary); font-weight: 600; white-space: nowrap; }
+  @media (max-width: 520px) { .board-teaser { flex-wrap: wrap; } .bt-more { display: none; } }
+
+  /* ---------- 行业榜弹窗 ---------- */
+  .bm {
+    width: min(600px, 94vw); max-height: 84vh; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 22px 22px 18px; box-shadow: var(--shadow);
+    transform: scale(.96); transition: transform .22s ease;
+  }
+  .lb.open .bm { transform: scale(1); }
+  .bm-title { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+  .bm-title .bm-city { font-size: 12px; color: var(--primary); margin-left: 6px; font-weight: 600; }
+  .bm-sub { font-size: 12px; color: var(--text-faint); margin: 4px 0 14px; }
+  .bm-tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+  .bm-tab {
+    font-size: 12.5px; color: var(--text-muted); padding: 5px 13px;
+    border-radius: 999px; border: 1px solid var(--border); background: transparent;
+    cursor: pointer; transition: all .15s ease; font-family: var(--font-sans);
+  }
+  .bm-tab:hover { color: var(--text); border-color: var(--border-strong); }
+  .bm-tab.on { color: #fff; background: var(--primary); border-color: var(--primary); }
+  .bm-q {
+    font-size: 12px; color: var(--text-faint); font-family: var(--font-mono);
+    background: var(--surface-2); border: 1px dashed var(--border-strong);
+    border-radius: 10px; padding: 8px 12px; margin-bottom: 12px;
+  }
+  .bm-list { list-style: none; margin: 0; padding: 0; }
+  .bm-row {
+    display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: baseline;
+    padding: 9px 10px; border-radius: 10px; transition: background .13s ease;
+  }
+  .bm-row:hover { background: rgba(255,255,255,.03); }
+  .bm-rank { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); font-weight: 700; text-align: center; }
+  .bm-row:nth-child(-n+3) .bm-rank { color: var(--primary); }
+  .bm-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .bm-reason { font-size: 12px; color: var(--text-faint); margin-top: 1px; line-height: 1.5; }
+  .bm-eng { font-size: 10px; font-weight: 600; white-space: nowrap; padding: 2px 8px; border-radius: 999px; }
+  .bm-eng.dual { color: var(--success); background: var(--success-soft); border: 1px solid rgba(52,211,153,.3); }
+  .bm-eng.single { color: var(--text-faint); background: var(--surface-2); border: 1px solid var(--border); }
+  .bm-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-faint); flex-wrap: wrap;
+  }
+  .bm-cta { color: var(--primary); font-weight: 650; text-decoration: none; font-size: 12.5px; }
+  .bm-cta:hover { text-decoration: underline; }
   .search-box::before {
     content: ""; position: absolute; inset: -10px -16px; z-index: -1; border-radius: 28px;
     background: linear-gradient(120deg, rgba(76,141,255,.15), rgba(124,92,252,.14), transparent 62%);
@@ -477,9 +534,6 @@
         <span class="logo-sub">AI 可见度基础设施</span>
       </span>
     </div>
-    <nav class="nav-right">
-      <a class="nav-chip" href="/board">可见度公示</a>
-    </nav>
   </header>
 
   <!-- Hero -->
@@ -503,6 +557,16 @@
         </button>
       </form>
       <div class="search-drop" id="searchDrop" hidden></div>
+    </div>
+
+    <!-- 行业 AI 可见度榜入口 -->
+    <div class="board-teaser" id="boardTeaser" role="button" tabindex="0" aria-haspopup="dialog" aria-label="查看行业 AI 可见度榜">
+      <div class="bt-left">
+        <span class="bt-label">行业 AI 可见度榜</span>
+        <span class="bt-city" id="btCity">成都</span>
+      </div>
+      <div class="bt-top3" id="btTop3">加载中…</div>
+      <span class="bt-more">查看完整榜 →</span>
     </div>
 
   </section>
@@ -623,6 +687,22 @@
 <div id="lb" class="lb" role="dialog" aria-modal="true" aria-label="GEOloopOS 标志原图">
   <button class="lb-close" aria-label="关闭">✕</button>
   <img src="/logo-original.png" alt="GEOloopOS 标志原图" />
+</div>
+
+<!-- 行业 AI 可见度榜弹窗 -->
+<div id="boardModal" class="lb" role="dialog" aria-modal="true" aria-label="行业 AI 可见度榜">
+  <button class="lb-close" aria-label="关闭">✕</button>
+  <div class="bm">
+    <div class="bm-title">行业 AI 可见度榜<span class="bm-city">成都</span></div>
+    <div class="bm-sub">问 AI「哪家好」，看它推荐谁 —— 数据来自 DeepSeek / 豆包 实时回答</div>
+    <div class="bm-tabs" id="bmTabs"></div>
+    <div class="bm-q" id="bmQ"></div>
+    <ol class="bm-list" id="bmList"></ol>
+    <div class="bm-foot">
+      <span>品牌上榜了？把「AI 首推」变成稳定可见</span>
+      <a class="bm-cta" href="#form">检测你的品牌 →</a>
+    </div>
+  </div>
 </div>
 <script>
 const PCOLOR = { deepseek: '#4c8dff', doubao: '#38c0b8' };
@@ -1201,6 +1281,72 @@ lbEl.addEventListener('click', (e) => {
   if (e.target === lbEl || e.target.closest('.lb-close')) closeLb();
 });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
+
+// ---------- 行业 AI 可见度榜（hero 卡片 + 弹窗） ----------
+const boardTeaser = document.getElementById('boardTeaser');
+const boardModal = document.getElementById('boardModal');
+const bmTabs = document.getElementById('bmTabs');
+const bmQ = document.getElementById('bmQ');
+const bmList = document.getElementById('bmList');
+let boardsData = null;
+
+async function loadBoards() {
+  try {
+    const r = await fetch('/api/boards');
+    const d = await r.json();
+    if (!d.ok || !d.industries.length) { btTop3.textContent = '行业榜生成中…'; return; }
+    boardsData = d;
+    renderTeaser();
+    renderTabs();
+    selectBoard(0);
+  } catch (e) {
+    btTop3.textContent = '行业榜暂时不可用';
+  }
+}
+
+function renderTeaser() {
+  const ind = boardsData.industries[0];
+  const medals = ['🥇', '🥈', '🥉'];
+  btTop3.innerHTML = ind.merged.slice(0, 3)
+    .map((m, i) => `<span class="m${i + 1}">${medals[i]} ${esc(m.name)}</span>`)
+    .join('');
+  btCity.textContent = `${boardsData.city} · ${ind.name}`;
+}
+
+function renderTabs() {
+  bmTabs.innerHTML = boardsData.industries
+    .map((ind, i) => `<button class="bm-tab" data-i="${i}">${esc(ind.name)}</button>`)
+    .join('');
+  bmTabs.querySelectorAll('.bm-tab').forEach((b) => b.addEventListener('click', () => selectBoard(+b.dataset.i)));
+}
+
+function selectBoard(i) {
+  bmTabs.querySelectorAll('.bm-tab').forEach((b, idx) => b.classList.toggle('on', idx === i));
+  const ind = boardsData.industries[i];
+  bmQ.textContent = ind.ask;
+  bmList.innerHTML = ind.merged.map((m, idx) => {
+    const eng = m.engineCount === 2
+      ? '<span class="bm-eng dual">双引擎推荐</span>'
+      : `<span class="bm-eng single">${esc(m.engines[0])}</span>`;
+    return `<li class="bm-row">
+      <span class="bm-rank">${idx + 1}</span>
+      <div>
+        <div class="bm-name">${esc(m.name)}</div>
+        <div class="bm-reason">${esc(m.reason)}</div>
+      </div>
+      ${eng}
+    </li>`;
+  }).join('');
+}
+
+function openBoardModal() { boardModal.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeBoardModal() { boardModal.classList.remove('open'); document.body.style.overflow = ''; }
+boardTeaser.addEventListener('click', openBoardModal);
+boardTeaser.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBoardModal(); } });
+boardModal.addEventListener('click', (e) => {
+  if (e.target === boardModal || e.target.closest('.lb-close')) closeBoardModal();
+});
+loadBoards();
 </script>
 </body>
 </html>

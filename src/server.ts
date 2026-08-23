@@ -24,6 +24,7 @@ import { runCompare, runSceneCompare, type SceneCompareReport } from "./compare.
 import { attachCheck, attachCiteCitation, attachSceneShares, entityStats, loadEntities } from "./entity.js";
 import { checkCites, loadCites, saveCites, type CiteSite } from "./cite.js";
 import { buildLeaderboard } from "./leaderboard.js";
+import { loadBoards } from "./boards.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -106,16 +107,20 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 可见度公示 · 公开榜单页
-  if (req.method === "GET" && (url.pathname === "/board" || url.pathname === "/board.html")) {
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(readFileSync(path.join(here, "src/web/board.html"), "utf-8"));
+  // 可见度公示 · 实体可见度数据（内部聚合，供 hero 榜卡片引用）
+  if (req.method === "GET" && url.pathname === "/api/leaderboard") {
+    json(res, 200, { ok: true, board: buildLeaderboard() });
     return;
   }
 
-  // 可见度公示 · 榜单数据
-  if (req.method === "GET" && url.pathname === "/api/leaderboard") {
-    json(res, 200, { ok: true, board: buildLeaderboard() });
+  // 行业 AI 可见度榜（hero 弹窗数据）
+  if (req.method === "GET" && url.pathname === "/api/boards") {
+    const boards = loadBoards();
+    if (!boards) {
+      json(res, 200, { ok: true, city: "成都", updatedAt: null, industries: [] });
+      return;
+    }
+    json(res, 200, { ok: true, ...boards });
     return;
   }
 
