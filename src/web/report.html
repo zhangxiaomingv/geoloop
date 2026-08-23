@@ -57,7 +57,15 @@
   .logo-mark { width: 40px; height: 40px; display: grid; place-items: center; }
   .logo-mark img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .logo:hover .logo-text { color: var(--primary); }
-  .top-right { color: var(--text-faint); font-size: 12px; font-family: var(--font-mono); }
+  .nav-home {
+    flex: none; display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 999px; text-decoration: none;
+    border: 1px solid var(--border-strong); background: var(--surface-2);
+    color: var(--text-muted); font-size: 12.5px; font-weight: 550;
+    transition: all .18s ease;
+  }
+  .nav-home:hover { border-color: rgba(76,141,255,.5); color: var(--primary); background: var(--primary-soft); }
+  .nav-home:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
   /* ---------- 搜索（新报告页内直接复检） ---------- */
   .search-form { display: flex; gap: 10px; margin: 10px 0 4px; }
@@ -211,7 +219,7 @@
     .btn-detect { height: 52px; justify-content: center; }
     .answers { grid-template-columns: 1fr; }
     .rep-head { padding: 18px; }
-    .top-right { display: none; }
+    .nav-home { padding: 7px 12px; font-size: 11.5px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -229,7 +237,10 @@
       <span class="logo-mark" aria-hidden="true"><img src="/logo.png?v=20260823" alt="" /></span>
       <span class="logo-text">GEOloopOS<span class="logo-sub">AI 可见度增长闭环系统</span></span>
     </a>
-    <div class="top-right">检测报告</div>
+    <a class="nav-home" href="/" aria-label="返回首页">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      返回首页
+    </a>
   </header>
 
   <!-- 搜索：报告页内直接复检 -->

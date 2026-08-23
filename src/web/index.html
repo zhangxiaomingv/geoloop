@@ -461,6 +461,43 @@
   .cmp-tips li { color: var(--text-muted); font-size: 13px; padding: 3px 0 3px 20px; position: relative; }
   .cmp-tips li::before { content: "→"; position: absolute; left: 0; color: var(--warning); }
 
+  /* ---------- 知识库 · 结构化信息生成 ---------- */
+  .kb-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .kb-chip .sc { font-family: var(--font-mono); font-size: 10.5px; color: var(--success); font-weight: 650; }
+  .fgroup {
+    grid-column: 1 / -1; margin: 6px 0 2px; padding-top: 12px; border-top: 1px dashed var(--border);
+    font-size: 12px; font-weight: 650; color: var(--primary); letter-spacing: .03em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .fgroup:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+  .fgroup .fn { color: var(--text-faint); font-weight: 500; font-size: 10.5px; letter-spacing: .05em; font-family: var(--font-mono); }
+  .kb-preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+  .kb-pv b { display: block; font-size: 11.5px; color: var(--text-faint); margin-bottom: 4px; letter-spacing: .02em; }
+  .kb-pv .v { color: var(--text); font-size: 13px; line-height: 1.7; word-break: break-word; }
+  .kb-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kb-tag { font-size: 11px; padding: 2px 9px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); }
+  .kb-offer { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+  .kb-offer b { color: var(--text); font-size: 12.5px; }
+  .gap-card { margin-top: 14px; border-top: 1px dashed var(--border); padding-top: 14px; }
+  .gap-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .gap-score { font-family: var(--font-mono); font-size: 30px; font-weight: 750; font-variant-numeric: tabular-nums; }
+  .gap-score.ok { color: var(--success); } .gap-score.warn { color: var(--warning); } .gap-score.bad { color: var(--danger); }
+  .gap-meta { color: var(--text-muted); font-size: 12.5px; line-height: 1.6; }
+  .gap-ai {
+    margin-top: 8px; font-size: 12.5px; color: var(--warning); line-height: 1.6;
+    background: var(--warning-soft); border: 1px solid rgba(251,191,36,.2); border-radius: 10px; padding: 10px 14px;
+  }
+  .gap-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .gap-list h5 { font-size: 12.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .gap-list.miss h5 { color: var(--danger); }
+  .gap-list.weak h5 { color: var(--warning); }
+  .gap-list ul { list-style: none; }
+  .gap-list li { font-size: 12.5px; color: var(--text-muted); padding: 3px 0 3px 18px; position: relative; line-height: 1.55; }
+  .gap-list.miss li::before { content: "✕"; position: absolute; left: 0; color: var(--danger); }
+  .gap-list.weak li::before { content: "△"; position: absolute; left: 0; color: var(--warning); }
+  .gap-note { margin-top: 12px; font-size: 12.5px; color: var(--text-muted); }
+  @media (max-width: 760px) { .kb-preview-grid, .gap-lists { grid-template-columns: 1fr; } }
+
   /* ---------- 页脚 ---------- */
   footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-faint); font-size: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
   footer code { font-family: var(--font-mono); }
@@ -568,6 +605,51 @@
         <span class="hint">把这段放进文章页模板：head 加 canonical/author 标签，正文底部渲染作者卡片</span>
       </div>
     </div>
+  </section>
+
+  <!-- 知识库 · 结构化信息生成 -->
+  <section id="kb-sec">
+    <div class="sec-head">
+      <h2>知识库 <span class="en">Knowledge Base</span></h2>
+      <span class="cnt">填一次企业信息 → AI 生成标准知识卡 + 多版本 + 知识缺口</span>
+    </div>
+    <div class="panel">
+      <div class="kb-list" id="kbList"><div class="hint">还没生成知识卡，先填下面表单。</div></div>
+      <form id="kbForm" class="agrid" autocomplete="off">
+        <div class="fgroup">基础识别 <span class="fn">IDENTITY</span></div>
+        <label class="full">名称 *<input id="kbName" type="text" maxlength="40" placeholder="品牌名 / 个人名" /></label>
+        <label>别名（逗号分隔）<input id="kbAliases" type="text" maxlength="100" placeholder="公司全称、英文名…" /></label>
+        <label>官网<input id="kbSite" type="text" maxlength="120" placeholder="https://example.com" /></label>
+        <label>所在地<input id="kbLoc" type="text" maxlength="40" placeholder="成都" /></label>
+        <label>成立时间<input id="kbFounded" type="text" maxlength="30" placeholder="2015年" /></label>
+        <label>规模<input id="kbScale" type="text" maxlength="30" placeholder="120人 / 30家门店" /></label>
+        <label>认证 / 资质（逗号分隔）<input id="kbCert" type="text" maxlength="120" placeholder="高新技术企业, ISO9001" /></label>
+
+        <div class="fgroup">定位主张 <span class="fn">POSITIONING</span></div>
+        <label class="full">一句话定位<input id="kbTag" type="text" maxlength="120" placeholder="专注企业级 AI 智能客服的 SaaS 服务商" /></label>
+        <label class="full">差异化价值（每行一条）<textarea id="kbUvp" rows="3" maxlength="300" placeholder="私有化部署&#10;工单+客服一体化"></textarea></label>
+        <label class="full">目标客户（每行一条）<textarea id="kbCust" rows="2" maxlength="200" placeholder="中大型企业&#10;连锁品牌"></textarea></label>
+
+        <div class="fgroup">产品与服务 <span class="fn">OFFERINGS</span></div>
+        <label class="full">产品/服务（每行「名称：说明」）<textarea id="kbOffer" rows="3" maxlength="500" placeholder="智能客服：7x24 自动应答&#10;知识库训练：用企业文档训练专属 AI"></textarea></label>
+
+        <div class="fgroup">关键事实 <span class="fn">FACTS · 知识缺口分析用</span></div>
+        <label class="full">可验证事实（每行一条，写成 AI 能复述的短句）<textarea id="kbFacts" rows="4" maxlength="600" placeholder="成立于2015年&#10;已服务300+家企业&#10;获得高新技术企业认证"></textarea></label>
+
+        <div class="fgroup">官方信源 & FAQ <span class="fn">SOURCES</span></div>
+        <label class="full">官方信源 URL（每行「URL｜主题」）<textarea id="kbSources" rows="2" maxlength="400" placeholder="https://example.com/about｜关于我们"></textarea></label>
+        <label class="full">FAQ（每行「问题：答案」）<textarea id="kbFaq" rows="3" maxlength="500" placeholder="产品支持私有化部署吗？支持，可本地或专有云部署"></textarea></label>
+
+        <div class="fgroup">关键词 <span class="fn">KEYWORDS</span></div>
+        <label class="full">核心关键词（逗号分隔）<input id="kbKw" type="text" maxlength="160" placeholder="智能客服, AI客服, 企业知识库" /></label>
+
+        <div class="a-actions">
+          <button class="btn-detect sm" type="submit" id="kbGen">生成知识卡</button>
+          <span class="hint">AI 结构化整理 · 失败自动回退确定性组装</span>
+        </div>
+      </form>
+    </div>
+    <div class="panel hidden" id="kbPreview"></div>
   </section>
 
   <!-- 引用追踪（总模块） -->
@@ -819,6 +901,187 @@ anchorForm.addEventListener('submit', async (e) => {
     } else flash(d.message || '保存失败');
   } catch { flash('保存失败，请重试'); }
 });
+
+/* ============ 知识库 · 结构化信息生成 ============ */
+const kbForm = $('kbForm');
+let kbCurrent = null; // 当前生成/加载的知识卡
+
+/** 表单字段：id → 提交字段名 */
+const KB_FIELDS = [
+  ['kbName', 'name'], ['kbAliases', 'aliases'], ['kbSite', 'site'], ['kbLoc', 'location'], ['kbFounded', 'founded'],
+  ['kbScale', 'scale'], ['kbCert', 'certifications'], ['kbTag', 'tagline'], ['kbUvp', 'uvps'], ['kbCust', 'targetCustomers'],
+  ['kbOffer', 'offerings'], ['kbFacts', 'facts'], ['kbSources', 'sources'], ['kbFaq', 'faq'], ['kbKw', 'keywords'],
+];
+
+function collectKB(){
+  const input = {};
+  KB_FIELDS.forEach(([id, k]) => { input[k] = $(id).value.trim(); });
+  return input;
+}
+function fillKB(kb){
+  KB_FIELDS.forEach(([id, k]) => {
+    const v = k === 'name' ? kb.name
+      : k === 'aliases' ? (kb.identity.aliases || []).join(', ')
+      : k === 'site' ? kb.identity.site
+      : k === 'location' ? kb.identity.location
+      : k === 'founded' ? kb.identity.founded
+      : k === 'scale' ? kb.identity.scale
+      : k === 'certifications' ? (kb.identity.certifications || []).join(', ')
+      : k === 'tagline' ? kb.positioning.tagline
+      : k === 'uvps' ? (kb.positioning.uvps || []).join('\n')
+      : k === 'targetCustomers' ? (kb.positioning.targetCustomers || []).join('\n')
+      : k === 'offerings' ? (kb.offerings || []).map(o => o.name + (o.blurb ? '：' + o.blurb : '')).join('\n')
+      : k === 'facts' ? (kb.facts || []).map(f => f.claim + (f.source ? '｜' + f.source : '')).join('\n')
+      : k === 'sources' ? (kb.sources || []).map(s => s.url + (s.topic ? '｜' + s.topic : '')).join('\n')
+      : k === 'faq' ? (kb.faq || []).map(f => f.q + '：' + f.a).join('\n')
+      : k === 'keywords' ? (kb.keywords || []).join(', ')
+      : '';
+    $(id).value = v || '';
+  });
+  kbCurrent = kb;
+}
+
+async function loadKBList(){
+  try {
+    const res = await fetch('/api/kb', { cache: 'no-store' });
+    const d = await res.json();
+    const box = $('kbList');
+    const list = d.kbs || [];
+    if (!list.length) { box.innerHTML = '<div class="hint">还没生成知识卡，先填下面表单。</div>'; return; }
+    box.innerHTML = list.map(k => '<button class="chip kb-chip" type="button" data-key="'+esc(k.key)+'">'+esc(k.name)
+      + (k.gap ? ' <span class="sc">'+k.gap.score+'%</span>' : '') + '</button>').join('');
+  } catch { /* 静默 */ }
+}
+
+async function loadKB(key){
+  try {
+    const res = await fetch('/api/kb/' + encodeURIComponent(key), { cache: 'no-store' });
+    const d = await res.json();
+    if (!d.ok || !d.kb) return;
+    fillKB(d.kb);
+    renderKBPreview(d.kb);
+    $('kbPreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch { /* 静默 */ }
+}
+
+$('kbList').addEventListener('click', (e) => {
+  const chip = e.target.closest('.kb-chip');
+  if (chip) loadKB(chip.dataset.key);
+});
+
+kbForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = collectKB();
+  if (!input.name) { flash('名称必填'); return; }
+  const btn = $('kbGen');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>生成中…';
+  try {
+    const res = await fetch('/api/kb', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input })
+    });
+    const d = await res.json();
+    if (d.ok) {
+      fillKB(d.kb);
+      renderKBPreview(d.kb);
+      loadKBList();
+      $('kbPreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else flash(d.message || '生成失败');
+  } catch { flash('生成失败，请重试'); }
+  btn.disabled = false; btn.innerHTML = '生成知识卡';
+});
+
+function renderKBPreview(k){
+  const box = $('kbPreview');
+  box.classList.remove('hidden');
+  const ver = (label, v) => '<div class="ver-card"><div class="v-head"><b>'+label+'</b>'
+    + '<button class="chip copy" type="button" data-copy-text="'+esc(v)+'">复制</button></div>'
+    + '<div class="v-text">'+esc(v)+'</div></div>';
+
+  const tags = (arr) => arr && arr.length ? '<div class="kb-tags">'+arr.map(x => '<span class="kb-tag">'+esc(x)+'</span>').join('')+'</div>' : '<span class="hint">—</span>';
+
+  const offerHtml = (k.offerings || []).map(o =>
+    '<div class="kb-offer"><b>'+esc(o.name)+'</b>'+(o.blurb ? ' — '+esc(o.blurb) : '')+(o.audience ? '（'+esc(o.audience)+'）' : '')+'</div>').join('') || '<span class="hint">—</span>';
+
+  const factHtml = (k.facts || []).map(f => '<div class="kb-offer"><b>'+esc(f.claim)+'</b>'+(f.type ? ' <span class="kb-tag">'+esc(f.type)+'</span>' : '')+(f.source ? ' <span class="hint">'+esc(f.source)+'</span>' : '')+'</div>').join('') || '<span class="hint">—</span>';
+
+  const faqHtml = (k.faq || []).map(f => '<div class="kb-offer"><b>'+esc(f.q)+'</b><div class="hint" style="margin-top:2px;">'+esc(f.a)+'</div></div>').join('') || '<span class="hint">—</span>';
+
+  const srcHtml = (k.sources || []).map(s => '<div class="kb-offer"><b>'+esc(s.topic || '信源')+'</b> <a href="'+esc(s.url)+'" target="_blank" rel="noopener" style="color:var(--primary);">'+esc(s.url)+'</a></div>').join('') || '<span class="hint">—</span>';
+
+  box.innerHTML =
+    '<h3 style="font-size:14.5px;font-weight:650;margin-bottom:12px;">已生成 · '+esc(k.name)+'</h3>'
+    + '<div class="versions">'
+    +   ver('长简介', k.versions.long) + ver('中简介', k.versions.medium) + ver('短简介', k.versions.short)
+    + '</div>'
+    + '<div class="snippet" style="margin-top:12px;">'
+    +   '<h3>站点署名（复制进文章底部模板）</h3>'
+    +   '<pre id="kbByline">'+esc(k.versions.byline)+'</pre>'
+    +   '<div class="a-actions"><button class="chip copy" type="button" data-copy-src="kbByline">复制署名</button></div>'
+    + '</div>'
+    + '<div class="kb-preview-grid" style="margin-top:16px;">'
+    +   '<div class="kb-pv"><b>定位主张</b><div class="v">'+esc(k.positioning.tagline)+'</div></div>'
+    +   '<div class="kb-pv"><b>差异化价值</b>'+tags(k.positioning.uvps)+'</div>'
+    +   '<div class="kb-pv"><b>目标客户</b>'+tags(k.positioning.targetCustomers)+'</div>'
+    +   '<div class="kb-pv"><b>认证资质</b>'+tags(k.identity.certifications)+'</div>'
+    +   '<div class="kb-pv"><b>基础识别</b><div class="v">'+[k.identity.location, k.identity.founded, k.identity.scale, k.identity.site].filter(Boolean).join(' · ')+'</div></div>'
+    +   '<div class="kb-pv"><b>关键词</b>'+tags(k.keywords)+'</div>'
+    +   '<div class="kb-pv"><b>产品与服务</b>'+offerHtml+'</div>'
+    +   '<div class="kb-pv"><b>关键事实</b>'+factHtml+'</div>'
+    +   '<div class="kb-pv"><b>官方信源</b>'+srcHtml+'</div>'
+    +   '<div class="kb-pv"><b>FAQ</b>'+faqHtml+'</div>'
+    + '</div>'
+    + '<div class="snippet" style="margin-top:16px;">'
+    +   '<h3>JSON-LD（schema.org Organization，植入官网 head）</h3>'
+    +   '<pre id="kbLd">'+esc(k.ldJson)+'</pre>'
+    +   '<div class="a-actions"><button class="chip copy" type="button" data-copy-src="kbLd">复制代码</button></div>'
+    + '</div>'
+    + '<div class="a-actions" style="margin-top:16px;">'
+    +   '<button class="btn-detect sm" type="button" id="kbGapBtn">检测知识缺口</button>'
+    +   '<span class="hint">跑一次 AI 检测（约 15–60 秒），比对 AI 知道你的几成事实</span>'
+    + '</div>'
+    + '<div class="gap-card" id="kbGapResult"></div>';
+
+  renderKBGap(k.gap);
+}
+
+function renderKBGap(g){
+  const box = $('kbGapResult');
+  if (!g) { box.innerHTML = ''; return; }
+  const cls = g.score >= 80 ? 'ok' : g.score >= 50 ? 'warn' : 'bad';
+  const miss = g.missing && g.missing.length;
+  const weak = g.weakList && g.weakList.length;
+  box.innerHTML =
+    '<div class="gap-top"><span class="gap-score '+cls+'">'+g.score+'<span style="font-size:14px;color:var(--text-faint);"> / 100</span></span>'
+    + '<div class="gap-meta">认知完整度 · 关键事实 '+g.covered+'/'+g.total+' 被 AI 提及'+(g.weak ? '，部分提及 '+g.weak : '')+'</div></div>'
+    + '<div class="gap-ai"><b style="color:var(--warning);">AI 现在把你看成：</b> '+esc(g.aiSummary||'（无有效回答）')+'</div>'
+    + (miss || weak ? '<div class="gap-lists">'
+      + (miss ? '<div class="gap-list miss"><h5>✕ AI 没提到的事实（'+g.missing.length+'）</h5><ul>'+g.missing.map(m=>'<li>'+esc(m)+'</li>').join('')+'</ul></div>' : '')
+      + (weak ? '<div class="gap-list weak"><h5>△ AI 只提到一部分</h5><ul>'+g.weakList.map(m=>'<li>'+esc(m)+'</li>').join('')+'</ul></div>' : '')
+      + '</div>' : '')
+    + '<div class="gap-note">'+esc(g.scoreNote)+'</div>';
+
+  const btn = $('kbGapBtn');
+  if (btn) { btn.disabled = false; btn.innerHTML = '重新检测知识缺口'; }
+}
+
+$('kbPreview').addEventListener('click', async (e) => {
+  const btn = e.target.closest('#kbGapBtn');
+  if (!btn) return;
+  if (!kbCurrent) { flash('先生成知识卡'); return; }
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>检测中（约 15–60 秒）…';
+  try {
+    const res = await fetch('/api/kb/gap', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: kbCurrent.key })
+    });
+    const d = await res.json();
+    if (d.ok) { kbCurrent = d.kb; renderKBGap(d.gap); loadKBList(); }
+    else { flash(d.message || '缺口分析失败'); btn.disabled = false; btn.innerHTML = '重新检测知识缺口'; }
+  } catch { flash('缺口分析失败，请重试'); btn.disabled = false; btn.innerHTML = '重新检测知识缺口'; }
+});
+
+loadKBList();
 
 /* ============ 文章监测 ============ */
 const artForm = $('artForm');

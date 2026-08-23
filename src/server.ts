@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { runCheck } from "./check.js";
 import { appendCheck, listChecks, getCheck } from "./history.js";
+import { generateKB, getKB, saveKB, listKBs, runGapAnalysis, type KBInput } from "./kb.js";
 import {
   Anchor,
   PLATFORMS,
@@ -250,6 +251,92 @@ const server = createServer(async (req, res) => {
       versions: generateVersions(next),
       snippet: siteSnippet(next),
     });
+    return;
+  }
+
+  // ============ 知识库 · 结构化信息生成 ============
+  if (req.method === "GET" && url.pathname === "/api/kb") {
+    json(res, 200, { ok: true, kbs: listKBs() });
+    return;
+  }
+
+  const kbGetMatch = url.pathname.match(/^\/api\/kb\/([^/]+)$/);
+  if (req.method === "GET" && kbGetMatch) {
+    const kb = getKB(decodeURIComponent(kbGetMatch[1]));
+    if (!kb) {
+      json(res, 404, { ok: false, message: "知识库条目不存在" });
+      return;
+    }
+    json(res, 200, { ok: true, kb });
+    return;
+  }
+
+  // 生成/保存知识卡（LLM 结构化整理，失败自动回退确定性组装）
+  if (req.method === "POST" && url.pathname === "/api/kb") {
+    let body: { input?: Partial<KBInput> };
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      json(res, 400, { ok: false, message: "请求体不是合法 JSON" });
+      return;
+    }
+    const input = body.input || {};
+    const name = String(input.name ?? "").trim();
+    if (!name) {
+      json(res, 400, { ok: false, message: "名称必填" });
+      return;
+    }
+    if (name.length > 40) {
+      json(res, 400, { ok: false, message: "名称过长（最多 40 字）" });
+      return;
+    }
+    const kb = await generateKB(input as KBInput);
+    saveKB(kb);
+    json(res, 200, { ok: true, kb });
+    return;
+  }
+
+  // 知识缺口分析：跑一次检测，把知识卡事实与 AI 认知比对
+  if (req.method === "POST" && url.pathname === "/api/kb/gap") {
+    let body: { key?: string };
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      json(res, 400, { ok: false, message: "请求体不是合法 JSON" });
+      return;
+    }
+    const key = String(body.key ?? "").trim();
+    const kb = getKB(key);
+    if (!kb) {
+      json(res, 404, { ok: false, message: "知识库条目不存在，请先生成" });
+      return;
+    }
+    if (kb.facts.length === 0) {
+      json(res, 400, { ok: false, message: "知识卡还没有「关键事实」，先在表单里填几行事实" });
+      return;
+    }
+    const ip = clientIP(req);
+    const lim = allow(ip);
+    if (!lim.ok) {
+      json(res, 429, { ok: false, message: `请求太频繁，请 ${lim.retryAfterSec} 秒后再试`, retryAfterSec: lim.retryAfterSec });
+      return;
+    }
+    if (runningChecks >= MAX_CONCURRENT) {
+      json(res, 429, { ok: false, message: "当前检测人数较多，请稍后再试" });
+      return;
+    }
+    runningChecks++;
+    try {
+      const gap = await runGapAnalysis(kb);
+      const fresh = { ...kb, gap };
+      saveKB(fresh);
+      json(res, 200, { ok: true, gap, kb: fresh });
+    } catch (e) {
+      console.error("[知识缺口] 运行失败：", e);
+      json(res, 500, { ok: false, message: "缺口分析暂时不可用，请稍后再试" });
+    } finally {
+      runningChecks--;
+    }
     return;
   }
 

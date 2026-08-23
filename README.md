@@ -48,6 +48,7 @@ consultant. Product site: **https://zkoner.com**.
 | **Article monitoring** | Track your articles → ask AI per topic → judge if your article is cited / site mentioned / content adopted — the ROI of content production |
 | **Domain tracking** | Add a domain → re-test AI cognition & citation periodically → trend line over time |
 | **Competitor comparison** | Your brand vs competitors, same-口径 detection → ranking, gap score, insight (who leads and why) |
+| **Knowledge base** | Fill your info once → AI structures it into a standard card (identity / positioning / offerings / facts / sources / FAQ / keywords) + multi-length unified bios + JSON-LD. Then run a **knowledge gap** check: live AI check vs your facts → coverage score, which facts AI never mentions, and "what AI currently thinks you are" — the fill-the-gap punchlist |
 | **Scene intelligence** | Input a real user question (e.g. "深圳推荐一家装修公司") → exposure share per brand + 0-exposure root cause analysis |
 | **360 industry boards** | 360 industries × one scene question ("成都最好的精品酒店有哪些？") asked to both engines → merged AI-recommendation leaderboard per industry, searchable in the homepage popup |
 | **Citation traceability** | In-answer source extraction (prompt-guided) → 3-level trust (AI-cited / AI-mentioned / suspected-fabrication), citation share (Profound formula) and "does AI believe your site?" judgment in every report. Engine-cited mode (Perplexity) ready in config — enable with `PPLX_API_KEY` |
@@ -116,6 +117,10 @@ npm run retest -- --dry
 | `/api/cites/check` | POST | re-test all tracked domains |
 | `/api/entities` | GET | full unified entity archive |
 | `/api/entities/stats` | GET | archive stats (counts, check totals, scene shares, top scores) |
+| `/api/kb` | GET | list knowledge cards (deduped by key, newest wins) |
+| `/api/kb/{key}` | GET | one knowledge card by key (404 if none) |
+| `/api/kb` | POST | body `{"input":{"name":...,"facts":...,...}}` → AI-structured knowledge card (identity / positioning / offerings / facts / sources / faq / keywords / multi-length versions / JSON-LD) |
+| `/api/kb/gap` | POST | body `{"key":"..."}` → run a live AI check, compare the card's facts against what AI actually says → coverage score + missing/weak facts + AI's current impression |
 
 Example — run a check:
 
@@ -181,6 +186,7 @@ src/anchor.ts       Positioning anchor: version generation + site byline
 src/articles.ts     Article monitoring: library + citation judgment
 src/cite.ts         Domain tracking: re-test trends
 src/compare.ts      Competitor comparison: ranking + exposure share + insights
+src/kb.ts           Knowledge base: AI-structured card + knowledge-gap analysis (data/kb.jsonl)
 src/server.ts       Product API server (rate limit / concurrency / validation)
 src/providers.ts    API query layer (DeepSeek / Doubao, retry + timeout)
 src/web/            Product front-end (index.html homepage + report.html standalone report page)
