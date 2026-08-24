@@ -24,15 +24,3 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-
-  # geoloopos.com 前端 —— 营销站静态托管 + /api 反代到检测服务
-  # 站点文件挂载 ./site（改站不用重建/重启检测服务）；nginx 由 cloudflared 隧道按容器名访问
-  geoloopos-site:
-    image: nginx:alpine
-    container_name: geoloopos-site
-    restart: unless-stopped
-    depends_on:
-      - geoloopos
-    volumes:
-      - ./site:/usr/share/nginx/html:ro
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
