@@ -71,7 +71,7 @@
       认知、描述与引用，与竞品对比，持续追踪——把 AI 可见度沉淀为战略资产。
     </p>
 
-    <!-- 检测演示（占位：在线检测公网 API 上线后激活） -->
+    <!-- 检测演示（公网检测 API：Cloudflare Pages Function /api/check） -->
     <div class="demo">
       <div class="demo-form">
         <div class="demo-input">
@@ -80,11 +80,8 @@
         </div>
         <button class="btn" id="demoBtn" type="button">检测</button>
       </div>
-      <div class="demo-note">支持品牌名 / 网站域名 / 自然语言问题</div>
-      <div id="demoSoon" class="soon hidden">
-        在线检测即将开放 —— GEOloopOS 正在接入公网检测 API。
-        在此之前，欢迎访问 <a href="https://zkoner.com" target="_blank" rel="noopener">zkoner.com 实验站</a> 或联系创始人预约检测。
-      </div>
+      <div class="demo-note">支持品牌名 / 网站域名 / 自然语言问题 · 由 AI 模型实时回答打分</div>
+      <div id="demoResult" class="demo-result hidden" aria-live="polite"></div>
     </div>
 
     <!-- 增长流程 -->
@@ -210,7 +207,7 @@
       </details>
       <details>
         <summary>检测一次要多长时间？</summary>
-        <p>一次检测通常 30–60 秒：系统并行调用多个 AI 模型，等待各模型的完整回答后统一汇总打分。同 IP 有频率限制，防止滥用。</p>
+        <p>一次检测通常 10–25 秒：系统并行调用多个 AI 模型，等待各模型的完整回答后统一汇总打分。同 IP 有频率限制，防止滥用。</p>
       </details>
       <details>
         <summary>我的数据安全吗？</summary>
@@ -239,17 +236,92 @@
 </div>
 
 <script>
-  // 检测演示：API 上线前展示友好提示
+  // 检测演示：调用公网检测 API（Cloudflare Pages Function /api/check）
   const demoBtn = document.getElementById('demoBtn');
-  const demoSoon = document.getElementById('demoSoon');
   const demoInput = document.getElementById('demoInput');
-  demoBtn.addEventListener('click', function () {
-    demoSoon.classList.remove('hidden');
-    demoSoon.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  });
-  demoInput.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter') { e.preventDefault(); demoBtn.click(); }
-  });
+  const demoResult = document.getElementById('demoResult');
+
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function scoreClass(n) { return n >= 80 ? 'ok' : n >= 60 ? 'mid' : n >= 40 ? 'warn' : 'bad'; }
+
+  function renderReport(rep) {
+    const ok = rep.results.filter(r => !r.error);
+    const mentionPct = ok.length ? Math.round(ok.filter(r => r.mention).length / ok.length * 100) : 0;
+    const depthPct = ok.length ? Math.round(ok.reduce((s, r) => s + r.description, 0) / ok.length / 30 * 100) : 0;
+    const sourcePct = ok.length ? Math.round(ok.filter(r => r.source).length / ok.length * 100) : 0;
+    const dims = [['认知', mentionPct], ['描述', depthPct], ['来源', sourcePct]];
+    const tips = (rep.tips || []).map(t => `<div>${esc(t)}</div>`).join('');
+    const details = rep.results.map(r => `
+      <details class="r-detail">
+        <summary>${esc(r.providerLabel)} · ${esc(r.question)}${r.error ? ' · 失败' : ''}</summary>
+        ${r.error
+          ? `<div class="r-answer">${esc(r.error)}</div>`
+          : `<div class="r-provider">
+               <span class="pn">${esc(r.providerLabel)}</span>
+               <span class="r-chip ${r.mention ? 'yes' : 'no'}">认知 ${r.mention ? '提到' : '未提'}</span>
+               <span class="r-chip ${r.description > 0 ? 'yes' : 'no'}">描述 ${r.description}</span>
+               <span class="r-chip ${r.source ? 'yes' : 'no'}">来源 ${r.source ? '有引用' : '无引用'}</span>
+               <span class="r-chip">${r.score} 分</span>
+             </div>
+             <div class="r-answer">${esc(r.answer)}</div>`}
+      </details>`).join('');
+    return `
+      <div class="r-top">
+        <div class="r-score ${scoreClass(rep.score)}">${rep.score}</div>
+        <div class="r-meta">
+          <div class="r-verdict">${esc(rep.verdict)}</div>
+          <div class="r-query">${esc(rep.query)} · ${rep.createdAt.slice(5, 16)}</div>
+        </div>
+      </div>
+      <div class="r-dims">
+        ${dims.map(([label, v]) => `
+        <div class="r-dim">
+          <b>${label}</b>
+          <div class="v">${v}%</div>
+          <div class="r-bar"><i style="width:${v}%"></i></div>
+        </div>`).join('')}
+      </div>
+      ${rep.citationMap && rep.citationMap.total > 0 ? `<div class="r-cite">${esc(rep.citationMap.headline)}</div>` : ''}
+      <div class="r-tips">${tips}</div>
+      ${details}`;
+  }
+
+  async function run() {
+    const query = demoInput.value.trim();
+    if (!query) {
+      demoResult.classList.remove('hidden');
+      demoResult.innerHTML = '<div class="r-error">请输入品牌名、网站域名或问题</div>';
+      return;
+    }
+    demoBtn.disabled = true; demoBtn.textContent = '检测中…';
+    demoResult.classList.remove('hidden');
+    demoResult.innerHTML = `<div class="r-loading">正在检测「${esc(query)}」…<br><span>同时询问多个 AI 模型，通常 10–25 秒</span></div>`;
+    demoResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    try {
+      const res = await fetch('/api/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query })
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        demoResult.innerHTML = `<div class="r-error">${esc(data.message || '检测失败，请稍后再试')}</div>`;
+      } else if (data.report && data.report.results && data.report.results.length > 0 && data.report.results.every(r => r.error)) {
+        // 所有 AI 源都失败（如账户欠费/限流）→ 不展示误导性的 0 分报告
+        demoResult.innerHTML = '<div class="r-error">AI 检测源暂时不可用，请稍后再试；也可<a href="https://zkoner.com/#connect" target="_blank" rel="noopener">联系创始人</a>预约人工检测。</div>';
+      } else {
+        demoResult.innerHTML = renderReport(data.report);
+      }
+    } catch (e) {
+      demoResult.innerHTML = '<div class="r-error">网络异常，请稍后再试</div>';
+    } finally {
+      demoBtn.disabled = false; demoBtn.textContent = '检测';
+    }
+  }
+
+  demoBtn.addEventListener('click', run);
+  demoInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); run(); } });
 </script>
 </body>
 </html>

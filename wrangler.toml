@@ -1,0 +1,11 @@
+# geoloopos.com · Cloudflare Pages 配置
+# 部署：npx wrangler pages deploy --project-name geoloopos-com
+# （site/ 是静态输出目录，site/functions/ 里的 Pages Function 会被一并编译）
+name = "geoloopos-com"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "site"
+
+# 跨节点限流升级：创建 KV 命名空间后把 id 填入并取消注释
+# [[kv_namespaces]]
+# binding = "GEO_RATE"
+# id = "<your-namespace-id>"

@@ -10,3 +10,7 @@ data/*
 
 # 日志
 *.log
+
+# Cloudflare Pages 构建产物
+_worker.bundle
+.wrangler/
