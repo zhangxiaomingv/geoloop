@@ -1,0 +1,37 @@
+# GEOloopOS — AI 可见度基础设施
+
+> 让 AI 认识你、理解你、推荐你。
+
+GEOloopOS 是 AI 可见度基础设施（生成式引擎优化 / GEO）。它检测品牌、网站与内容在 DeepSeek、豆包、ChatGPT 等 AI 搜索中的可见度与描述，与竞品对比，持续追踪，把 AI 可见度沉淀为战略资产。
+
+产品定位：客户先问 AI，再搜索。能被 AI 读到、读懂、推荐的内容，才出现在 AI 的答案里。
+
+## 核心能力
+
+- **可见度检测**：输入品牌名、网站域名或自然语言问题，从三个维度打分——认知（40 分）+ 描述（30 分）+ 来源（30 分），满分 100。
+- **竞品对比**：同场景下与竞品在 AI 答案中的份额与排名对比，输出差距分析与优化建议。
+- **持续追踪**：每日自动检测 + 文章/域名引用追踪，观察 AI 认知随内容迭代的变化曲线。
+
+## 核心概念
+
+- GEO（生成式引擎优化）：让品牌信息被 AI 大模型准确识别、描述与引用的方法。
+- loop图：360 个行业按「五行五段」排布的 GEO 行业位地图，每个行业一格，对应一套检测→对比→生成→追踪打法。
+- 检测引擎开源：github.com/zhangxiaomingv/geoloopos，支持私有化部署（Docker 一键），数据不出客户服务器。
+
+## 链接
+
+- [产品官网](https://geoloopos.com/)
+- [创始人实验站 zkoner.com](https://zkoner.com)
+- [GEO 方法论](https://zkoner.com/geo)
+- [开源引擎 GitHub](https://github.com/zhangxiaomingv/geoloopos)
+- [项目日志（迭代时间线）](https://zkoner.com/project-log)
+- [创始人站点 llms.txt](https://zkoner.com/llms.txt)
+- [创始人站点完整知识库 llms-full.txt](https://zkoner.com/llms-full.txt)
+
+## 关键事实
+
+- 品牌名：GEOloopOS（GEOloop OS）
+- 全称：AI 可见度基础设施
+- 领域：GEO 生成式引擎优化 / AI 搜索可见度
+- 英文关键词：GEO, Generative Engine Optimization, AI Search Visibility, AI Visibility Infrastructure
+- 中文关键词：GEO, 生成式引擎优化, AI 搜索优化, 品牌可见度, AI 可见度
