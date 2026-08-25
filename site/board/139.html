@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/139" />
+<meta name="description" content="「成都最好的品牌体验店有哪些？」DeepSeek 与豆包双引擎实测推荐名单：成都SKP、Apple 成都太古里旗舰店、太古里·漫广场品牌集合店 等 16 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都品牌体验店推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都品牌体验店 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的品牌体验店有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "成都SKP"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Apple 成都太古里旗舰店"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "太古里·漫广场品牌集合店"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "蔚来中心（成都太古里店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "华为旗舰店（万象城）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "MUJI無印良品成都远洋太古里世界旗舰店"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "蔚来中心（太古里）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "Lululemon 成都IFS旗舰店"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "方所书店（远洋太古里）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "泡泡玛特全球旗舰店（成都宽窄巷子店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "小米之家（环球中心旗舰店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "小鹏汽车X WUDO联名体验店（成都交子大道店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "三星旗舰体验店（成都万象城店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "三宅一生（IFS）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "华为智能生活馆（成都环球中心店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "无印良品世界旗舰店（远洋太古里）"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>品牌体验店</span></div>
+  <h1 class="title">成都品牌体验店 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的品牌体验店有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 16 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">成都SKP</div>
+        <div class="item-reason">西南奢侈品地标，沉浸式高端零售与艺术展览结合（高新区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">Apple 成都太古里旗舰店</div>
+        <div class="item-reason">位于锦江区远洋太古里核心商圈，是西南首家苹果官方旗舰店，可体验全系列新品及专属Genius Bar服务，打卡感和体验感拉满。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">太古里·漫广场品牌集合店</div>
+        <div class="item-reason">开放式街区中汇聚全球旗舰店，潮流与人文交融（锦江区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">蔚来中心（成都太古里店）</div>
+        <div class="item-reason">位于锦江区东大街下东大街，是新能源品牌体验标杆空间，除了全系车型试驾体验，还提供咖啡休憩、用户社群活动等多元服务。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">华为旗舰店（万象城）</div>
+        <div class="item-reason">全场景智慧生活体验，科技感与互动装置拉满（成华区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">MUJI無印良品成都远洋太古里世界旗舰店</div>
+        <div class="item-reason">位于锦江区远洋太古里，是国内规模顶尖的无印良品门店，设有成都限定餐区、专属定制服务，可沉浸式体验日式生活方式。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">蔚来中心（太古里）</div>
+        <div class="item-reason">不止卖车，更是城市会客厅，设计感与社群活动俱佳（锦江区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">Lululemon 成都IFS旗舰店</div>
+        <div class="item-reason">位于锦江区春熙路IFS商场，是西南最大的露露乐蒙门店，除全系列运动服饰装备体验，还定期开设免费瑜伽、户外跑等社群活动。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">方所书店（远洋太古里）</div>
+        <div class="item-reason">文化品牌体验标杆，空间美学与阅读生活深度融合（锦江区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">泡泡玛特全球旗舰店（成都宽窄巷子店）</div>
+        <div class="item-reason">位于青羊区宽窄巷子景区，融合川西传统建筑风格打造，设有成都限定盲盒首发权益，是潮玩爱好者的必打卡体验空间。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">小米之家（环球中心旗舰店）</div>
+        <div class="item-reason">超大面积全品类陈列，智能家居实景体验（高新区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">小鹏汽车X WUDO联名体验店（成都交子大道店）</div>
+        <div class="item-reason">位于高新区交子大道商圈，是小鹏与成都本土潮牌联名的特色店，融合汽车展示、潮玩周边、咖啡休憩功能，本土氛围感十足。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">三星旗舰体验店（成都万象城店）</div>
+        <div class="item-reason">位于成华区成都万象城A馆，是西南最大的三星官方体验店，可体验折叠屏、智能家居等全生态产品，还提供专属维修、定制服务。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">三宅一生（IFS）</div>
+        <div class="item-reason">极简设计美学空间，服装与艺术装置相得益彰（锦江区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">15</div>
+      <div class="item-main">
+        <div class="item-name">华为智能生活馆（成都环球中心店）</div>
+        <div class="item-reason">位于高新区新世纪环球中心，是华为全场景智慧生活体验店，可体验手机、新能源汽车、智能家居联动的全场景智慧生活。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">16</div>
+      <div class="item-main">
+        <div class="item-name">无印良品世界旗舰店（远洋太古里）</div>
+        <div class="item-reason">三层独栋，涵盖餐饮、家居与生活杂货的完整日式体验（锦江区）。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都品牌体验店」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

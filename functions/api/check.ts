@@ -1,7 +1,7 @@
 /**
  * geoloopos.com 公网检测 API（Cloudflare Pages Function）
  * 与引擎 src/check.ts 同构：输入品牌/网站/问句 → 分类 → 并行询问 AI 源 → 三维打分 → 报告。
- * 纯 API 源（DeepSeek + 豆包，OpenAI 兼容），key 只存在 Pages secret，不进前端。
+ * 纯 API 源（DeepSeek + 豆包 + Ox Alpha，OpenAI 兼容），key 只存在 Pages secret，不进前端。
  * 部署：`npx wrangler pages deploy site --project-name geoloopos-com`
  * 限流：per-isolate 内存；若绑定 KV 命名空间 GEO_RATE 则升级为跨节点限流。
  */
@@ -13,6 +13,7 @@ const TIMEOUT_MS = 22000; // 单次 AI 调用超时；双问句并行，整体 <
 
 const DEEPSEEK_URL = "https://api.deepseek.com/chat/completions";
 const DOUBAO_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
+const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const SOURCE_PROMPT =
   "（回答时如涉及信息来源，请给出真实来源链接或平台名称；不确定来源时请勿编造链接）";
 
@@ -305,6 +306,15 @@ async function runCheck(query: string, env: Record<string, string | undefined>):
       url: DOUBAO_URL,
       model: env.DOUBAO_MODEL || "doubao-seed-2-0-pro-260215",
       key: env.ARK_API_KEY,
+    });
+  }
+  if (env.OPENROUTER_API_KEY) {
+    providers.push({
+      id: "openrouter",
+      label: "Ox Alpha",
+      url: OPENROUTER_URL,
+      model: env.OPENROUTER_MODEL || "stealth/ox-alpha",
+      key: env.OPENROUTER_API_KEY,
     });
   }
 

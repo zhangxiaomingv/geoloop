@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" href="/logo.png?v=20260823" />
 <meta name="color-scheme" content="dark" />
-<meta name="description" content="GEOloopOS 检测报告 — 品牌 / 网站 / 问题在 DeepSeek、豆包眼中的 AI 可见度、描述深度与来源溯源。" />
+<meta name="description" content="GEOloopOS 检测报告 — 品牌 / 网站 / 问题在 DeepSeek、豆包、Ox Alpha 眼中的 AI 可见度、描述深度与来源溯源。" />
 <title>检测报告 · GEOloopOS</title>
 <style>
   :root {
@@ -35,17 +35,17 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    background: var(--bg); color: var(--text);
+    color: var(--text);
     font-family: var(--font-sans); font-size: 15px; line-height: 1.65;
-    min-height: 100dvh; -webkit-font-smoothing: antialiased;
-  }
-  body::before {
-    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    /* 100dvh 在微信 X5 里缩放时会重算导致"松手弹回",改用静态 vh/svh(只算一次,缩放不重算) */
+    min-height: 100vh; min-height: 100svh; -webkit-font-smoothing: antialiased;
+    /* 顶部光晕直接做进 body 背景(不用 fixed 全屏伪元素,避免移动端捏合缩放被拉回) */
     background:
       radial-gradient(1000px 520px at 50% -200px, rgba(76,141,255,.14), transparent 62%),
-      radial-gradient(700px 360px at 88% 4%, rgba(124,92,252,.07), transparent 60%);
+      radial-gradient(700px 360px at 88% 4%, rgba(124,92,252,.07), transparent 60%),
+      var(--bg);
   }
   .wrap { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 20px 80px; }
 
@@ -263,7 +263,7 @@
 
   <footer>
     <span>GEOloopOS · AI 可见度增长闭环系统 — 让 AI 认识你、理解你、推荐你</span>
-    <span>数据源 <code>DeepSeek</code> / <code>豆包</code> · 结果来自模型实时回答，仅供参考</span>
+    <span>数据源 <code>DeepSeek</code> / <code>豆包</code> / <code>Ox Alpha</code> · 结果来自模型实时回答，仅供参考</span>
   </footer>
 </div>
 <script>

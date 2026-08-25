@@ -1,6 +1,6 @@
 /**
  * GEOloopOS Identity Engine · 配置 — 模型源在此文件调整
- * 产品端检测走 API 即时查询（DeepSeek / 豆包），无需固定问题集。
+ * 产品端检测走 API 即时查询（DeepSeek / 豆包 / Ox Alpha），无需固定问题集。
  */
 
 export interface Question {
@@ -31,7 +31,7 @@ export interface Provider {
 
 /**
  * 模型源 — 产品检测用 API 源（快、稳、公网友好）
- *  DeepSeek / 豆包：OpenAI 兼容，各需自己的 Key（配置在 .env）
+ *  DeepSeek / 豆包 / Ox Alpha：OpenAI 兼容，各需自己的 Key（配置在 .env）
  */
 export const providers: Provider[] = [
   {
@@ -50,6 +50,18 @@ export const providers: Provider[] = [
     // 默认模型名（账号可调用 doubao-seed-2-0-pro），可用环境变量 DOUBAO_MODEL 覆盖（或填方舟 endpoint ID ep-xxx）
     model: process.env.DOUBAO_MODEL || "doubao-seed-2-0-pro-260215",
     apiKeyEnv: "ARK_API_KEY",
+  },
+  {
+    id: "openrouter",
+    label: "Ox Alpha",
+    kind: "api",
+    // OpenRouter 聚合源（openrouter.ai）；Ox Alpha = 匿名 stealth 模型，1M 上下文、擅长编程
+    baseUrl: "https://openrouter.ai/api/v1/chat/completions",
+    // 可用环境变量 OPENROUTER_MODEL 覆盖（Ox Alpha 尚未定名，将来可能更名/换模型）
+    model: process.env.OPENROUTER_MODEL || "stealth/ox-alpha",
+    apiKeyEnv: "OPENROUTER_API_KEY",
+    // 慢（带 thinking）且未来可能收费 → 只进产品检测，不进 360 行业批量采样
+    excludeFromSampling: true,
   },
   // ── 真引用引擎（可选，默认未启用）──────────────────────────────
   // 溯源模块当前走「B 方案」：纯文本抽取 + prompt 引导，仅 DeepSeek/豆包。

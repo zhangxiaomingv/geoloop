@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/7" />
+<meta name="description" content="「成都最好的艺术培训有哪些？」DeepSeek 与豆包双引擎实测推荐名单：成都新格林艺术培训学校、黑蚁艺术教育、成都艺考画室 等 16 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都艺术培训推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都艺术培训 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的艺术培训有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "成都新格林艺术培训学校"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "黑蚁艺术教育"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "成都艺考画室"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "老鹰画室（成都校区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "成都天籁艺术培训学校"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "大千画室"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "成都单色舞蹈（春熙路总店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "荷马教育（成都校区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "成都理想画室"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "成都壹捌玖玖电影公社"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "白墙画室（成都分校）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "成都宗氏画室"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "成都刘诗昆艺术学校（南门旗舰校）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "艺空间艺术培训"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "成都新锐艺术培训学校"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "川音尚美艺术学校"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>艺术培训</span></div>
+  <h1 class="title">成都艺术培训 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的艺术培训有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 16 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">成都新格林艺术培训学校</div>
+        <div class="item-reason">深耕艺考全品类培训18年，师资多来自川音、川美等专业院校，教学体系成熟，位于龙泉驿区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">黑蚁艺术教育</div>
+        <div class="item-reason">川美师资主导，联考与校考双优，位于武侯区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">成都艺考画室</div>
+        <div class="item-reason">二十年老牌，升学率稳居前列，教学体系成熟，位于锦江区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">老鹰画室（成都校区）</div>
+        <div class="item-reason">国内头部美术艺考连锁品牌，联考校考通过率常年稳居行业前列，拿证率高，位于双流区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">成都天籁艺术培训学校</div>
+        <div class="item-reason">覆盖美术、音乐、传媒等多赛道艺考培训，配套食宿学一体化封闭集训校区，位于金牛区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">大千画室</div>
+        <div class="item-reason">小班制精品教学，针对央清国定向培养，位于青羊区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">成都单色舞蹈（春熙路总店）</div>
+        <div class="item-reason">国内知名连锁舞蹈培训机构，开设全舞种课程，成人、少儿启蒙及进阶需求均可满足，位于锦江区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">荷马教育（成都校区）</div>
+        <div class="item-reason">全国连锁，影视美术与设计方向强，位于成华区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">成都理想画室</div>
+        <div class="item-reason">文化+专业双轨管理，适合基础薄弱学生，位于金牛区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">成都壹捌玖玖电影公社</div>
+        <div class="item-reason">专注影视表演、编导、播音类传媒艺考培训，导师多为业内一线从业者，实战性强，位于成华区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">白墙画室（成都分校）</div>
+        <div class="item-reason">杭州模式引入，色彩教学特色鲜明，位于高新区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">成都宗氏画室</div>
+        <div class="item-reason">主打精品小班制美术艺考培训，可针对学生基础定制学习方案，历年本科过线率超98%，位于温江区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">成都刘诗昆艺术学校（南门旗舰校）</div>
+        <div class="item-reason">专注少儿钢琴、器乐类艺术启蒙及进阶培训，师资均为专业音乐院校科班出身，位于武侯区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">艺空间艺术培训</div>
+        <div class="item-reason">少儿美术与成人兴趣兼顾，环境艺术感强，位于天府新区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">15</div>
+      <div class="item-main">
+        <div class="item-name">成都新锐艺术培训学校</div>
+        <div class="item-reason">主打传媒、音乐类艺考专项集训，配套艺考规划、志愿填报一站式服务，性价比高，位于郫都区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">16</div>
+      <div class="item-main">
+        <div class="item-name">川音尚美艺术学校</div>
+        <div class="item-reason">音乐舞蹈类综合强，附中升学资源丰富，位于武侯区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都艺术培训」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

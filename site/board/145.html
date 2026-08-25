@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/145" />
+<meta name="description" content="「成都最好的房产经纪有哪些？」DeepSeek 与豆包双引擎实测推荐名单：链家（成都）、链家成都、贝壳找房（成都站） 等 16 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都房产经纪推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都房产经纪 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的房产经纪有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "链家（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "链家成都"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "贝壳找房（成都站）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "中原地产成都分公司"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "我爱我家成都"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "中原地产（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "大唐房屋"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "我爱我家（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "21世纪不动产成都"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "大唐房屋（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "21世纪不动产（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "富房不动产"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "富房不动产（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "玛雅房屋成都"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "玛雅房屋（成都）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "优居优住成都"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>房产经纪</span></div>
+  <h1 class="title">成都房产经纪 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的房产经纪有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 16 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">链家（成都）</div>
+        <div class="item-reason">全国直营标杆，房源真实性与交易流程规范度最高，覆盖全城主城区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">链家成都</div>
+        <div class="item-reason">覆盖成都全区县的头部房产经纪品牌，真房源保障体系完善，各类房源交易流程规范透明。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">贝壳找房（成都站）</div>
+        <div class="item-reason">平台聚合多品牌真房源，VR看房体验佳，高新区、锦江区数据最全。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">中原地产成都分公司</div>
+        <div class="item-reason">深耕成都二十余年的港资老牌房产经纪，核心覆盖青羊、锦江等主城核心区，二手房及大宗物业交易经验丰富。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">我爱我家成都</div>
+        <div class="item-reason">国内知名连锁房产经纪品牌，重点布局武侯、成华等区域，租房及刚需二手房服务性价比突出。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">中原地产（成都）</div>
+        <div class="item-reason">深耕成都20余年，老牌港资背景，擅长高端住宅与商铺，重点在武侯区、青羊区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">大唐房屋</div>
+        <div class="item-reason">成都本土头部房产经纪品牌，全域覆盖且双流、温江等近郊区域门店资源尤为充足，刚需改善房源选择面广。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">我爱我家（成都）</div>
+        <div class="item-reason">社区门店密集，二手房买卖经验丰富，服务口碑稳定，尤其擅长成华区、金牛区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">21世纪不动产成都</div>
+        <div class="item-reason">国际化连锁房产经纪品牌，核心覆盖高新、天府新区等热门板块，中高端改善及新房代理资源丰富。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">大唐房屋（成都）</div>
+        <div class="item-reason">本土知名品牌，新房代理渠道强，团队执行力高，主攻天府新区、双流区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">21世纪不动产（成都）</div>
+        <div class="item-reason">国际品牌加盟体系，经纪人培训规范，涉外及改善型房源有优势，覆盖锦江区、高新区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">富房不动产</div>
+        <div class="item-reason">成都本土老牌房产经纪，深耕金牛、青羊等主城老城区，学区房及老旧小区房源交易经验十分充足。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">富房不动产（成都）</div>
+        <div class="item-reason">成都本土老牌中介，二手房与租赁业务扎实，性价比服务好，深耕郫都区、温江区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">玛雅房屋成都</div>
+        <div class="item-reason">全国连锁房产经纪品牌，重点布局新都、郫都等近郊区县，中小户型刚需房源储备充足。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">15</div>
+      <div class="item-main">
+        <div class="item-name">玛雅房屋（成都）</div>
+        <div class="item-reason">全国连锁品牌，社区渗透力强，中小户型成交活跃，在青羊区、金牛区口碑较好。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">16</div>
+      <div class="item-main">
+        <div class="item-name">优居优住成都</div>
+        <div class="item-reason">全国性房产经纪服务品牌，重点布局龙泉驿、青白江等远郊区域，新房团购优惠力度较大。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都房产经纪」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

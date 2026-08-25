@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/142" />
+<meta name="description" content="「成都最好的会员制消费品牌有哪些？」DeepSeek 与豆包双引擎实测推荐名单：山姆会员商店（高新店）、山姆会员商店（锦江区）、开市客（Costco成华店） 等 16 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都会员制消费品牌推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都会员制消费品牌 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的会员制消费品牌有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "山姆会员商店（高新店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "山姆会员商店（锦江区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "开市客（Costco成华店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "COSTCO开市客（天府新区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "盒马X会员店（成华区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "盒马X会员店（锦江店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "麦德龙会员店（青羊店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "麦德龙PLUS会员店（青羊区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "方所（太古里店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "永辉仓储店（武侯区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "奥乐齐ALDI（高新区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "Ole'精品超市（IFS店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "麓客岛会员中心"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "王府井会员制生活馆（锦江区）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "西西弗书店（万象城店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "伊藤洋华堂会员俱乐部（高新区）"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>会员制消费品牌</span></div>
+  <h1 class="title">成都会员制消费品牌 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的会员制消费品牌有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 16 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">山姆会员商店（高新店）</div>
+        <div class="item-reason">主打高性价比大包装生鲜、全球直供日用商品，货品覆盖全面适配家庭消费需求，位于成都高新区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">山姆会员商店（锦江区）</div>
+        <div class="item-reason">全球精选商品与高品质生鲜，成都会员制仓储超市的标杆之选。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">开市客（Costco成华店）</div>
+        <div class="item-reason">美式经典仓储式会员店，自有品牌Kirkland品控出色，附加汽修、验光等便民服务，位于成都成华区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">COSTCO开市客（天府新区）</div>
+        <div class="item-reason">超大包装高性价比爆款云集，家庭囤货与进口好物的首选地。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">盒马X会员店（成华区）</div>
+        <div class="item-reason">本土化生鲜供应链强，线上线下一体化体验最便捷的会员制超市。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">盒马X会员店（锦江店）</div>
+        <div class="item-reason">鲜食、短保商品适配川渝本地口味，会员权益含免费菜、免配送费等实用性强，位于成都锦江区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">麦德龙会员店（青羊店）</div>
+        <div class="item-reason">兼顾B端与C端消费需求，进口冻品、餐饮原料品类齐全，适合美食爱好者与小微商家，位于成都青羊区。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">麦德龙PLUS会员店（青羊区）</div>
+        <div class="item-reason">德系严选品质与餐饮级食材，适合对食品安全有高要求的家庭。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">方所（太古里店）</div>
+        <div class="item-reason">艺文类会员制消费空间，会员可享购书折扣、免费艺文活动参与权及咖啡文创专属优惠，位于成都锦江区太古里商圈。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">永辉仓储店（武侯区）</div>
+        <div class="item-reason">平价会员制转型典范，生鲜日杂价格亲民，社区型囤货便利之选。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">奥乐齐ALDI（高新区）</div>
+        <div class="item-reason">德式自有品牌性价比极高，小包装精品路线适合都市白领日常采购。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">Ole&#39;精品超市（IFS店）</div>
+        <div class="item-reason">高端精品会员超市，有机食材、进口小众商品选择丰富，会员可享积分抵现、专属试吃等权益，位于成都锦江区IFS商圈。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">麓客岛会员中心</div>
+        <div class="item-reason">主打城市休闲场景会员服务，可享麓湖生态城内游乐、餐饮、住宿专属折扣及社群活动优先参与权，位于成都天府新区麓湖生态城。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">王府井会员制生活馆（锦江区）</div>
+        <div class="item-reason">高端百货转型会员体验，美妆服饰与进口食品组合的精致消费场景。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">15</div>
+      <div class="item-main">
+        <div class="item-name">西西弗书店（万象城店）</div>
+        <div class="item-reason">连锁艺文会员消费品牌，会员可享购书折扣、免费借阅、咖啡立减等权益，门店覆盖广使用便利，位于成都成华区万象城商圈。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">16</div>
+      <div class="item-main">
+        <div class="item-name">伊藤洋华堂会员俱乐部（高新区）</div>
+        <div class="item-reason">日式精细服务与熟食便当口碑极佳，会员日折扣力度大，适合品质生活人群。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都会员制消费品牌」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

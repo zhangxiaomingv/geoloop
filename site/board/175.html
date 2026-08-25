@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/175" />
+<meta name="description" content="「成都最好的养老社区有哪些？」DeepSeek 与豆包双引擎实测推荐名单：泰康之家·蜀园、太保家园·成都国际颐养社区、太平小镇·芙蓉人家 等 14 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都养老社区推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都养老社区 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的养老社区有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 14,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "泰康之家·蜀园"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "太保家园·成都国际颐养社区"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "太平小镇·芙蓉人家"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "国寿嘉园·锦瑭"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "华润置地·润馨汇"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "远洋·椿萱茂（成都南三环）老年公寓"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "九如城（成都）康养中心"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "置信·亲睦家鹭湖健康公寓"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "大家的家·成都青羊城心社区"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "中铁·春台悦"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "成都锦欣花乡老年公寓"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "川投舒适之家·颐康养老中心"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "蓝光·青城河谷国际康养社区"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "亲睦家·鹭湖健康公寓"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>养老社区</span></div>
+  <h1 class="title">成都养老社区 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的养老社区有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 14 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">泰康之家·蜀园</div>
+        <div class="item-reason">医养结合标杆，华西医院绿色通道，温江区高端CCRC社区。</div>
+      </div>
+      <span class="pill dual">双引擎一致 (DeepSeek·豆包)</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">太保家园·成都国际颐养社区</div>
+        <div class="item-reason">太保高端养老产品线，日式介护服务，温江区近地铁。</div>
+      </div>
+      <span class="pill dual">双引擎一致 (DeepSeek·豆包)</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">太平小镇·芙蓉人家</div>
+        <div class="item-reason">央企旗舰养老社区，温泉疗愈+全龄配套，温江区生态宜居典范。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">国寿嘉园·锦瑭</div>
+        <div class="item-reason">中国人寿自建高品质社区，智慧养老+川西园林景观，温江区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">华润置地·润馨汇</div>
+        <div class="item-reason">核心城区稀缺高端养老社区，位于锦江区，紧邻地铁，周边三甲医院密集，方便家属探望和长者就医。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">远洋·椿萱茂（成都南三环）老年公寓</div>
+        <div class="item-reason">全国连锁养老品牌标杆项目，位于武侯区，失智照护体系成熟，社区活动丰富，适配多类长者需求。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">九如城（成都）康养中心</div>
+        <div class="item-reason">医养融合型社区，康复护理专业，成华区核心地段。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">置信·亲睦家鹭湖健康公寓</div>
+        <div class="item-reason">成都本土知名康养品牌项目，位于温江区，生态环境优越，性价比突出，适合预算适中的长者长期居住。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">大家的家·成都青羊城心社区</div>
+        <div class="item-reason">城心医养代表项目，位于青羊区，紧邻多家三甲医院，主打临近优质医疗资源的短托、长住康养服务。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">中铁·春台悦</div>
+        <div class="item-reason">中铁文旅康养大盘，田园式养老+中医理疗，郫都区近郊。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">成都锦欣花乡老年公寓</div>
+        <div class="item-reason">本土知名连锁，性价比高，三圣乡景区旁，锦江区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">川投舒适之家·颐康养老中心</div>
+        <div class="item-reason">省属国企川投集团打造的普惠型高端养老项目，位于天府新区，服务体系规范，普惠定价受众面广。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">蓝光·青城河谷国际康养社区</div>
+        <div class="item-reason">旅居型特色养老项目，位于都江堰市，紧邻青城山景区，生态环境极佳，适合长者短期避暑康养或长期旅居。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">亲睦家·鹭湖健康公寓</div>
+        <div class="item-reason">湖畔养老社区，活力长者首选，配套运动公园，温江区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都养老社区」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

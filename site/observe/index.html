@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/observe/" />
+<meta name="description" content="GEOloopOS 双信号实验：公开记录 AI 爬虫对我们站点群的实时来访——谁在爬、爬哪里、多频繁。输入侧观测与检测评分共同构成 AI 可见度的完整证据链。" />
+<title>AI 爬虫来访监测 · 双信号实验 | GEOloopOS</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { font-weight:650; font-size:15px; color:var(--text); text-decoration:none; }
+  h1.title { font-size:26px; line-height:1.3; margin:26px 0 8px; letter-spacing:-.01em; }
+  .sub { color:var(--text-muted); font-size:14.5px; margin-bottom:24px; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:30px; }
+  .stat { padding:16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); }
+  .stat b { display:block; font-size:26px; color:var(--primary); font-family:var(--font-mono); }
+  .stat span { font-size:12.5px; color:var(--text-faint); }
+  h2.sec { font-size:17px; margin:34px 0 12px; }
+  table { width:100%; border-collapse:collapse; border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; font-size:13.5px; background:var(--surface); }
+  th { text-align:left; padding:10px 14px; color:var(--text-faint); font-weight:500; font-size:12px; border-bottom:1px solid var(--border); background:rgba(255,255,255,.02); }
+  td { padding:10px 14px; border-top:1px solid var(--border); color:var(--text-muted); }
+  td.num { font-family:var(--font-mono); color:var(--text); }
+  .chart { display:flex; align-items:flex-end; gap:6px; height:120px; padding:14px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); }
+  .bar-col { flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; height:100%; gap:6px; }
+  .bar { width:100%; max-width:34px; background:linear-gradient(180deg, rgba(76,141,255,.85), rgba(76,141,255,.35)); border-radius:3px 3px 0 0; }
+  .bar-col span { font-size:9.5px; color:var(--text-faint); white-space:nowrap; }
+  ul.recent { list-style:none; padding:0; margin:0; font-size:13px; color:var(--text-muted); }
+  ul.recent li { padding:7px 0; border-top:1px solid var(--border); }
+  ul.recent code { color:var(--primary); }
+  ul.recent .path { color:var(--text); font-family:var(--font-mono); font-size:12.5px; }
+  ul.recent em { font-style:normal; color:var(--text-faint); font-size:11.5px; }
+  .pill { font-size:10.5px; padding:2px 8px; border-radius:999px; margin-right:6px; }
+  .pill.cn { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .pill.gl { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .note { margin:30px 0 44px; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">← GEOloopOS</a>
+    <a class="link" href="/" style="color:var(--primary);font-size:13.5px;">可见度检测 →</a>
+  </nav>
+
+  <h1 class="title">AI 爬虫来访监测</h1>
+  <p class="sub">双信号架构实验：AI 怎么「说」我们（检测评分）之外，还要记录 AI 怎么「看」我们（爬虫来访）。以下是公开的原始来访数据。</p>
+
+  <div class="stats">
+    <div class="stat"><b>14</b><span>累计来访事件</span></div>
+    <div class="stat"><b>3</b><span>出现过的 AI 爬虫</span></div>
+    <div class="stat"><b>2</b><span>监测中的站点</span></div>
+    <div class="stat"><b>2026-08-25</b><span>数据起始日期</span></div>
+  </div>
+
+  <h2 class="sec">最近 14 天来访趋势</h2>
+  <div class="chart">
+<div class="bar-col"><div class="bar" style="height:2px" title="08-12 · 0 次"></div><span>12</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-13 · 0 次"></div><span>13</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-14 · 0 次"></div><span>14</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-15 · 0 次"></div><span>15</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-16 · 0 次"></div><span>16</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-17 · 0 次"></div><span>17</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-18 · 0 次"></div><span>18</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-19 · 0 次"></div><span>19</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-20 · 0 次"></div><span>20</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-21 · 0 次"></div><span>21</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-22 · 0 次"></div><span>22</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-23 · 0 次"></div><span>23</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-24 · 0 次"></div><span>24</span></div>
+<div class="bar-col"><div class="bar" style="height:90px" title="08-25 · 14 次"></div><span>25</span></div>
+  </div>
+
+  <h2 class="sec">爬虫来访明细</h2>
+  <table>
+    <thead><tr><th>引擎 / 用途</th><th>来访次数</th><th>最常抓取</th><th>最近来访</th></tr></thead>
+    <tbody>
+    <tr>
+      <td><span class="pill gl">国际</span> Anthropic · Claude 爬取与训练</td>
+      <td class="num">6</td>
+      <td>/robots.txt</td>
+      <td>08-25 07:31 UTC</td>
+    </tr>
+    <tr>
+      <td><span class="pill gl">国际</span> OpenAI · GPT / ChatGPT 训练</td>
+      <td class="num">5</td>
+      <td>/</td>
+      <td>08-25 07:28 UTC</td>
+    </tr>
+    <tr>
+      <td><span class="pill cn">中文引擎</span> 字节跳动 · 豆包 / 今日头条</td>
+      <td class="num">3</td>
+      <td>/geo</td>
+      <td>08-25 04:18 UTC</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2 class="sec">最近来访流水</h2>
+  <ul class="recent">
+      <li><code>claudebot</code> → <span class="path">/sitemap.xml</span> <em>geoloopos.com</em> · 08-25 07:31 UTC</li>
+      <li><code>claudebot</code> → <span class="path">/robots.txt</span> <em>geoloopos.com</em> · 08-25 07:31 UTC</li>
+      <li><code>gptbot</code> → <span class="path">/token-check</span> <em>zkoner.com</em> · 08-25 07:28 UTC</li>
+      <li><code>claudebot</code> → <span class="path">/observe/</span> <em>geoloopos.com</em> · 08-25 06:14 UTC</li>
+      <li><code>claudebot</code> → <span class="path">/sitemap.xml</span> <em>geoloopos.com</em> · 08-25 05:30 UTC</li>
+      <li><code>claudebot</code> → <span class="path">/robots.txt</span> <em>geoloopos.com</em> · 08-25 05:30 UTC</li>
+      <li><code>bytespider</code> → <span class="path">/board/</span> <em>geoloopos.com</em> · 08-25 04:18 UTC</li>
+      <li><code>claudebot</code> → <span class="path">/</span> <em>zkoner.com</em> · 08-25 04:18 UTC</li>
+      <li><code>gptbot</code> → <span class="path">/</span> <em>geoloopos.com</em> · 08-25 04:08 UTC</li>
+      <li><code>gptbot</code> → <span class="path">/</span> <em>geoloopos.com</em> · 08-25 04:08 UTC</li>
+      <li><code>gptbot</code> → <span class="path">/</span> <em>geoloopos.com</em> · 08-25 03:55 UTC</li>
+      <li><code>bytespider</code> → <span class="path">/geo</span> <em>zkoner.com</em> · 08-25 03:07 UTC</li>
+      <li><code>gptbot</code> → <span class="path">/</span> <em>zkoner.com</em> · 08-25 03:07 UTC</li>
+      <li><code>bytespider</code> → <span class="path">/geo</span> <em>zkoner.com</em> · 08-25 03:02 UTC</li>
+  </ul>
+
+  <div class="note">方法说明：各站点的边缘中间件按 User-Agent 识别 AI 爬虫（识别表覆盖 OpenAI、Anthropic、Perplexity 及字节豆包、百度文心、华为小艺等中文引擎），命中即异步上报页面级来访事件；人类访问零记录。<br>这是双信号的「输入侧」——与<a href="/" style="color:var(--primary)">AI 认知检测（输出侧）</a>对齐后，构成「改动 → AI 来读 → AI 认知变化」的完整证据链。数据每小时更新。</div>
+
+  <footer class="foot">
+    <span>GEOloopOS · AI 可见度基础设施 · 公开实验数据</span>
+    <span><a href="/board/">成都360行榜</a> · <a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

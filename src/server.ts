@@ -26,6 +26,7 @@ import { attachCheck, attachCiteCitation, attachSceneShares, entityStats, loadEn
 import { checkCites, loadCites, saveCites, type CiteSite } from "./cite.js";
 import { buildLeaderboard } from "./leaderboard.js";
 import { listBoards, loadBoard } from "./boards.js";
+import { receiveObserve, detectBot, isObservedSite, appendEvents } from "./observe.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -44,6 +45,9 @@ const here = process.cwd();
 const pageFile = path.join(here, "src/web/index.html");
 const reportPageFile = path.join(here, "src/web/report.html");
 const deployPageFile = path.join(here, "src/web/deploy.html");
+
+/** HTML 页面响应头：强制 no-cache（内容随开发持续变化，避免浏览器/CDN 展示旧版本） */
+const htmlHeaders = { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" };
 
 /** 每 IP 限流：X 次 / 分钟，Y 次 / 天 */
 const PER_MIN = Number(process.env.RATE_PER_MIN || 8);
@@ -88,16 +92,25 @@ let runningChecks = 0;
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
 
+  // ============ 来访观测（输入侧）：识别 AI 爬虫 UA → 异步落本地事件（永不阻塞主流程） ============
+  const botId = detectBot(req.headers["user-agent"] ?? "");
+  const host = String(req.headers.host ?? "").toLowerCase().replace(/^www\./, "").split(":")[0];
+  if (botId && isObservedSite(host)) {
+    queueMicrotask(() =>
+      appendEvents({ site: host, bot_id: botId, url: (url.pathname + url.search).slice(0, 512), ts: Date.now() })
+    );
+  }
+
   // 静态页
   if (req.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, htmlHeaders);
     res.end(readFileSync(pageFile, "utf-8"));
     return;
   }
 
   // 企业私有部署定制页
   if (req.method === "GET" && url.pathname === "/deploy") {
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, htmlHeaders);
     res.end(readFileSync(deployPageFile, "utf-8"));
     return;
   }
@@ -111,7 +124,7 @@ const server = createServer(async (req, res) => {
       res.end("报告不存在或已过期");
       return;
     }
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, htmlHeaders);
     res.end(readFileSync(reportPageFile, "utf-8"));
     return;
   }
@@ -129,6 +142,20 @@ const server = createServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": "image/png", "Cache-Control": "public, max-age=3600" });
     res.end(readFileSync(path.join(here, "src/web/logo-original.png")));
     return;
+  }
+
+  // AI 爬虫来访事件接收器（鉴权写入口：zkoner.com 等站点边缘中间件上报）
+  if (url.pathname === "/api/observe") {
+    if (req.method === "GET") {
+      json(res, 200, { ok: true, service: "observe", hint: "POST events with Bearer token" });
+      return;
+    }
+    if (req.method === "POST") {
+      const body = await readBody(req);
+      const r = receiveObserve(body, req.headers["authorization"] ?? "");
+      json(res, r.status, r.body);
+      return;
+    }
   }
 
   // 可见度公示 · 实体可见度数据（内部聚合，供 hero 榜卡片引用）
@@ -557,6 +584,30 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // ============ 静态资产（observe / board / llms / robots / sitemap / 样式）——容器直接服务 Pages 时代的产物 ============
+  if (req.method === "GET") {
+    const p = url.pathname;
+    if (p === "/observe" || p === "/observe/") {
+      serveSiteFile(res, "observe/index.html", "text/html; charset=utf-8");
+      return;
+    }
+    if (p === "/board" || p === "/board/") {
+      serveSiteFile(res, "board/index.html", "text/html; charset=utf-8");
+      return;
+    }
+    const boardNoExt = p.match(/^\/board\/(\d{1,3})$/);
+    if (boardNoExt && serveSiteFile(res, `board/${boardNoExt[1]}.html`, "text/html; charset=utf-8")) return;
+    const boardWithExt = p.match(/^\/board\/(\d{1,3})\.html$/);
+    if (boardWithExt) {
+      res.writeHead(308, { Location: `/board/${boardWithExt[1]}` });
+      res.end();
+      return;
+    }
+    if (SITE_STATIC[p]) {
+      if (serveSiteFile(res, p.replace(/^\//, ""), SITE_STATIC[p], true)) return;
+    }
+  }
+
   res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
   res.end("Not Found");
 });
@@ -578,6 +629,30 @@ function readBody(req: import("node:http").IncomingMessage): Promise<string> {
     req.on("end", () => resolve(data));
     req.on("error", reject);
   });
+}
+
+/** 站点静态资产映射（observe 页 / board SEO 页 / SEO 文件 / 样式） */
+const siteDir = path.join(here, "site");
+const SITE_STATIC: Record<string, string> = {
+  "/llms.txt": "text/plain; charset=utf-8",
+  "/robots.txt": "text/plain; charset=utf-8",
+  "/sitemap.xml": "application/xml; charset=utf-8",
+  "/style.css": "text/css; charset=utf-8",
+};
+
+/** 从 site/ 目录读静态文件；成功写响应返回 true，失败返回 false（调用方走 404） */
+function serveSiteFile(res: import("node:http").ServerResponse, rel: string, type: string, cacheOk = false): boolean {
+  try {
+    const data = readFileSync(path.join(siteDir, rel));
+    res.writeHead(200, {
+      "Content-Type": type,
+      ...(cacheOk ? { "Cache-Control": "public, max-age=600" } : { "Cache-Control": "no-cache" }),
+    });
+    res.end(data);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 server.listen(PORT, "0.0.0.0", () => {

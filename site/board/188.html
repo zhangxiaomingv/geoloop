@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/188" />
+<meta name="description" content="「成都最好的素食餐厅有哪些？」DeepSeek 与豆包双引擎实测推荐名单：大慈寺素斋、枣子树素餐厅（宽窄巷子店）、文殊院香园素食 等 16 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都素食餐厅推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都素食餐厅 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的素食餐厅有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "大慈寺素斋"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "枣子树素餐厅（宽窄巷子店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "文殊院香园素食"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "一叶一世界藏茶素食火锅（科华店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "清水荷花（文殊院店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "枣子树素餐厅(太古里店)"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "蔬稻餐厅(合景摩方店)"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "素满香自助素食餐厅（春熙路店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "本宫·素食美学（太古里店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "素虎净素餐厅(春熙路店)"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "禅悦素食（天府三街店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "轻安素食"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "爱家素食（建设路店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "禅悦素食"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "素心素食（金沙店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "一叶一世界藏茶素火锅(环球中心店)"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>素食餐厅</span></div>
+  <h1 class="title">成都素食餐厅 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的素食餐厅有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 16 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">大慈寺素斋</div>
+        <div class="item-reason">位于锦江区太古里旁大慈寺内，是寺院直营的老牌素斋，禅意氛围浓厚，素烧鱼、素回锅肉口味还原度极高。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">枣子树素餐厅（宽窄巷子店）</div>
+        <div class="item-reason">成都素食界老牌标杆，菜品精致且融合川味，位于青羊区宽窄巷子旁。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">文殊院香园素食</div>
+        <div class="item-reason">位于青羊区文殊院景区内，主打地道川味素食，性价比突出，院落式环境清幽，素火腿、菌汤面深受本地食客喜爱。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">一叶一世界藏茶素食火锅（科华店）</div>
+        <div class="item-reason">以藏茶汤底涮素食为特色，养生又独特，位于武侯区科华北路。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">清水荷花（文殊院店）</div>
+        <div class="item-reason">环境清幽禅意浓，仿荤菜口感逼真，位于青羊区文殊院街。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">枣子树素餐厅(太古里店)</div>
+        <div class="item-reason">位于锦江区太古里商圈，主打创意融合素食，无五辛无蛋奶的纯素选项丰富，摆盘精致适合打卡聚餐。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">蔬稻餐厅(合景摩方店)</div>
+        <div class="item-reason">位于武侯区交子大道合景摩方购物中心，主打高端位餐素食，将时令果蔬与西餐技法融合，适合商务宴请和纪念日用餐。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">素满香自助素食餐厅（春熙路店）</div>
+        <div class="item-reason">性价比极高的自助形式，菜品丰富接地气，位于锦江区春熙路商圈。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">本宫·素食美学（太古里店）</div>
+        <div class="item-reason">新派创意素食，摆盘如艺术，适合拍照打卡，位于锦江区远洋太古里。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">素虎净素餐厅(春熙路店)</div>
+        <div class="item-reason">位于锦江区春熙路商圈，主打高性价比自助素食，热菜、甜品、小吃品类超百种，适配家庭日常聚餐需求。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">禅悦素食（天府三街店）</div>
+        <div class="item-reason">高端雅致，套餐制按季更新，食材考究，位于高新区天府三街。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">轻安素食</div>
+        <div class="item-reason">位于高新区铁像寺水街，主打中式雅致素食，院落式环境充满文艺气息，搭配茶食套餐很适合朋友小聚、下午茶。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">爱家素食（建设路店）</div>
+        <div class="item-reason">社区型温馨小店，家常味浓，糖醋素排和麻婆豆腐必点，位于成华区建设路。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">禅悦素食</div>
+        <div class="item-reason">位于武侯区桐梓林片区，主打藏式素食融合菜，改良后的藏式素餐口味独特，到店还可享免费酥油茶，特色鲜明。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">15</div>
+      <div class="item-main">
+        <div class="item-name">素心素食（金沙店）</div>
+        <div class="item-reason">主打清淡养生，菌汤锅和手工面食口碑好，位于青羊区金沙遗址附近。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">16</div>
+      <div class="item-main">
+        <div class="item-name">一叶一世界藏茶素火锅(环球中心店)</div>
+        <div class="item-reason">位于高新区环球中心，主打藏茶锅底素食火锅，食材新鲜搭配特色蘸料，是成都素食火锅品类里的口碑标杆。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都素食餐厅」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

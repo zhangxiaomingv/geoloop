@@ -9,3 +9,13 @@ pages_build_output_dir = "site"
 # [[kv_namespaces]]
 # binding = "GEO_RATE"
 # id = "<your-namespace-id>"
+
+# AI 爬虫来访事件库（/api/observe 接收器写入）
+[[d1_databases]]
+binding = "DB"
+database_name = "geoloop-observe"
+database_id = "80d2d422-8c03-404c-a608-b68e7e16315c"
+
+# 允许上报来访事件的站点白名单（逗号分隔）
+[vars]
+OBSERVE_SITES = "zkoner.com,geoloopos.com"

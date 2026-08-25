@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/167" />
+<meta name="description" content="「成都最好的豪车专修有哪些？」DeepSeek 与豆包双引擎实测推荐名单：成都骏玺名车专修、华胜豪车专修连锁（武侯店）、成都德奥名车专修 等 16 家。合并排序与推荐理由，来自 GEOloopOS 城市 AI 认知实验。" />
+<title>成都豪车专修推荐有哪些？· AI 推荐榜 | GEOloopOS 成都360行</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "成都豪车专修 AI 推荐榜",
+  "description": "向 DeepSeek 与豆包提问「成都最好的豪车专修有哪些？」，合并排序的 AI 推荐名单",
+  "numberOfItems": 16,
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "成都骏玺名车专修"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "华胜豪车专修连锁（武侯店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "成都德奥名车专修"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "中鑫之宝豪车专修（锦江店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "成都车之宝豪车专修"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "星跃德系豪车专修（双流店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "奥驰豪车专修（金牛店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "成都名车汇维修中心"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "成都德系名车专修工厂"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "悦享豪车专修（成华店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "成都豪车汇汽车服务"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "晟禾超跑豪车专修（高新店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "成都捷豹路虎专修中心"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "腾达豪车专修（龙泉驿店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "车捷仕豪车专修（温江店）"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "成都星徽名车专修"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/board/">成都360行 · AI 推荐榜</a><span>/</span><span>豪车专修</span></div>
+  <h1 class="title">成都豪车专修 · AI 推荐榜</h1>
+  <p class="ask">我们问了 AI：<b>「成都最好的豪车专修有哪些？」</b></p>
+  <p class="meta-line">2 个引擎实测（DeepSeek、豆包）· 合并排序 · 快照日期 2026-08-23 · 共 16 条推荐</p>
+  <div class="list">
+    <div class="row">
+      <div class="rank">1</div>
+      <div class="item-main">
+        <div class="item-name">成都骏玺名车专修</div>
+        <div class="item-reason">西南地区BBA保时捷专修标杆，技术总监原厂认证，武侯区簇桥片区口碑第一。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">2</div>
+      <div class="item-main">
+        <div class="item-name">华胜豪车专修连锁（武侯店）</div>
+        <div class="item-reason">国内头部连锁豪车维保品牌，配件原厂溯源，武侯区，服务流程透明，性价比远超4S店。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">3</div>
+      <div class="item-main">
+        <div class="item-name">成都德奥名车专修</div>
+        <div class="item-reason">专注奔驰/奥迪/保时捷15年，原厂诊断仪+透明报价，金牛区茶店子老牌强店。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">4</div>
+      <div class="item-main">
+        <div class="item-name">中鑫之宝豪车专修（锦江店）</div>
+        <div class="item-reason">专注豪华车维修20余年，技师均经过品牌官方培训，锦江区，提供和4S店一致的标准维保服务。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">5</div>
+      <div class="item-main">
+        <div class="item-name">成都车之宝豪车专修</div>
+        <div class="item-reason">玛莎拉蒂/路虎/保时捷疑难故障专家，提供代步车服务，高新区神仙树片区。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">6</div>
+      <div class="item-main">
+        <div class="item-name">星跃德系豪车专修（双流店）</div>
+        <div class="item-reason">主打奔驰、宝马、奥迪等德系豪车精修，双流区，配备全套原厂检测设备，故障排查准确率高。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">7</div>
+      <div class="item-main">
+        <div class="item-name">奥驰豪车专修（金牛店）</div>
+        <div class="item-reason">深耕成都本地豪车维保市场12年，金牛区，收费公开无隐形消费，本地老客户口碑极佳。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">8</div>
+      <div class="item-main">
+        <div class="item-name">成都名车汇维修中心</div>
+        <div class="item-reason">宾利/劳斯莱斯等超豪华品牌专修，钣喷工艺达原厂标准，锦江区三圣乡。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">9</div>
+      <div class="item-main">
+        <div class="item-name">成都德系名车专修工厂</div>
+        <div class="item-reason">宝马/奥迪动力总成精修，拥有发动机台架测试设备，成华区龙潭寺工业园。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">10</div>
+      <div class="item-main">
+        <div class="item-name">悦享豪车专修（成华店）</div>
+        <div class="item-reason">提供维保、改装、美容一体化豪车服务，成华区，支持免费上门取送车，服务便捷度高。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">11</div>
+      <div class="item-main">
+        <div class="item-name">成都豪车汇汽车服务</div>
+        <div class="item-reason">保时捷卡宴/帕拉梅拉电路与底盘专精，支持保险直赔，青羊区光华大道。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">12</div>
+      <div class="item-main">
+        <div class="item-name">晟禾超跑豪车专修（高新店）</div>
+        <div class="item-reason">专注超跑及百万级高端豪车定制维保，高新区，配件均为品牌官方授权渠道供应，品质有保障。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">13</div>
+      <div class="item-main">
+        <div class="item-name">成都捷豹路虎专修中心</div>
+        <div class="item-reason">路虎全系空气悬挂/分动箱专项维修，原厂配件渠道，双流区航空港。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">14</div>
+      <div class="item-main">
+        <div class="item-name">腾达豪车专修（龙泉驿店）</div>
+        <div class="item-reason">主打高性价比豪车基础维保、常见故障维修，龙泉驿区，服务响应速度快，日常保养收费亲民。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">15</div>
+      <div class="item-main">
+        <div class="item-name">车捷仕豪车专修（温江店）</div>
+        <div class="item-reason">覆盖常规保养、事故修复、钣金喷漆全品类豪车服务，温江区，售后质保体系完善，周边车主选择度高。</div>
+      </div>
+      <span class="pill single">豆包 提及</span>
+    </div>
+    <div class="row">
+      <div class="rank">16</div>
+      <div class="item-main">
+        <div class="item-name">成都星徽名车专修</div>
+        <div class="item-reason">奔驰全系电脑编程与内饰翻新强项，价格比4S低40%，武侯区红牌楼。</div>
+      </div>
+      <span class="pill single">DeepSeek 提及</span>
+    </div>
+  </div>
+  <div class="note">方法：用同一条场景问句并行询问多个 AI 引擎，要求按推荐度输出带理由的名单；按「被几个引擎推荐 × 平均名次」合并排序。「双引擎一致」代表两个 AI 独立给出了相同结论——这是当前 AI 认知中最稳的推荐位。<br>你的品牌不在榜上或排名不理想？这正说明 AI 还没认知你——<a href="/" style="color:var(--primary)">检测一下你在 AI 眼中的样子 →</a></div>
+  <div class="cta-box">
+    <p>想让 AI 在「成都豪车专修」这类问题里提到你？GEOloopOS 检测你当前的 AI 可见度，并给出优化路径。</p>
+    <a class="btn" href="/">免费检测我的品牌 →</a>
+  </div>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

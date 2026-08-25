@@ -1,0 +1,1526 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://geoloopos.com/board/" />
+<meta name="description" content="对成都 360 个行业逐一向 DeepSeek 与豆包提问「成都最好的××有哪些？」，双引擎推荐合并排序。城市级 AI 认知实验公开数据集。" />
+<title>成都360行 · AI 推荐榜（360 个行业实测）| GEOloopOS</title>
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:650; font-size:15px; color:var(--text); }
+  .crumb { font-size:13px; color:var(--text-faint); display:flex; gap:8px; align-items:center; margin:22px 0 6px; }
+  .crumb a { color:var(--text-muted); }
+  h1.title { font-size:26px; line-height:1.3; margin:6px 0 10px; letter-spacing:-.01em; }
+  .ask { color:var(--text-muted); font-size:14.5px; margin-bottom:6px; }
+  .ask b { color:var(--text); font-weight:550; }
+  .meta-line { font-size:12.5px; color:var(--text-faint); margin-bottom:26px; }
+  .list { border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+  .row { display:flex; gap:14px; padding:14px 18px; border-top:1px solid var(--border); align-items:baseline; }
+  .row:first-child { border-top:none; background:rgba(76,141,255,.06); }
+  .rank { flex:0 0 30px; font-family:var(--font-mono); font-size:14px; color:var(--text-faint); }
+  .row:first-child .rank { color:var(--primary); font-weight:700; }
+  .item-main { flex:1; min-width:0; }
+  .item-name { font-size:15.5px; font-weight:600; color:var(--text); }
+  .item-reason { font-size:13px; color:var(--text-muted); margin-top:3px; line-height:1.55; }
+  .pill { flex:0 0 auto; font-size:11px; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.dual { color:var(--success); background:var(--success-soft); border:1px solid rgba(52,211,153,.25); }
+  .pill.single { color:var(--warning); background:var(--warning-soft); border:1px solid rgba(251,191,36,.25); }
+  .note { margin:26px 0; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); font-size:12.5px; color:var(--text-faint); line-height:1.7; }
+  .cta-box { margin:30px 0 50px; padding:20px; border-radius:var(--radius); background:linear-gradient(135deg, rgba(76,141,255,.12), rgba(167,139,250,.08)); border:1px solid rgba(76,141,255,.28); }
+  .cta-box p { color:var(--text-muted); font-size:13.5px; margin-bottom:12px; }
+  .btn { display:inline-block; padding:9px 18px; border-radius:999px; background:var(--primary-soft); border:1px solid rgba(76,141,255,.35); color:var(--primary); font-size:13.5px; font-weight:550; }
+  .btn:hover { border-color:rgba(76,141,255,.6); }
+  .foot { border-top:1px solid var(--border); padding:22px 0 40px; font-size:12px; color:var(--text-faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+  .foot a { color:var(--text-faint); }
+  /* 总览页 */
+  .search { width:100%; max-width:420px; padding:10px 14px; border-radius:var(--radius-sm); border:1px solid var(--border-strong); background:var(--surface); color:var(--text); font-size:14px; margin:18px 0 22px; outline:none; }
+  .search:focus { border-color:rgba(76,141,255,.5); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px; margin-bottom:40px; }
+  .card { display:block; padding:14px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); transition:border-color .15s, transform .15s; }
+  .card:hover { border-color:rgba(76,141,255,.45); transform:translateY(-1px); }
+  .card-name { font-size:14.5px; font-weight:600; color:var(--text); margin-bottom:6px; }
+  .card-top { font-size:12.5px; color:var(--text-faint); line-height:1.6; }
+  .card-top b { color:var(--text-muted); font-weight:500; }
+  .empty-tip { color:var(--text-faint); font-size:13px; padding:20px 0; display:none; }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <a class="brand" href="/">GEOloopOS</a>
+    <a class="btn" href="/">可见度检测 →</a>
+  </nav>
+  <div class="crumb"><a href="/">首页</a><span>/</span><span>成都360行 · AI 推荐榜</span></div>
+  <h1 class="title">成都 360 行 · AI 推荐榜</h1>
+  <p class="ask">对 360 个行业逐一向 AI 提问<b>「成都最好的××有哪些？」</b>——DeepSeek 与豆包双引擎实测，合并排序。</p>
+  <p class="meta-line">360 个行业 · 4524 条 AI 推荐 · 快照日期 2026-08-23 · GEOloopOS 城市 AI 认知实验公开数据</p>
+  <input class="search" id="q" type="text" placeholder="搜索行业或品牌名，如：装修 / 海底捞…" autocomplete="off" />
+  <div class="grid" id="grid">
+    <a class="card" href="/board/1" data-search="职业教育 成都职业技术学院 四川交通职业技术学院 成都航空职业技术学院">
+      <div class="card-name">职业教育</div>
+      <div class="card-top"><b>成都职业技术学院</b>、<b>四川交通职业技术学院</b>、<b>成都航空职业技术学院</b></div>
+    </a>
+    <a class="card" href="/board/2" data-search="职业技能认证 成都市职业技能鉴定指导中心 成都职业技能鉴定指导中心 成都新东方烹饪职业技能鉴定站">
+      <div class="card-name">职业技能认证</div>
+      <div class="card-top"><b>成都市职业技能鉴定指导中心</b>、<b>成都职业技能鉴定指导中心</b>、<b>成都新东方烹饪职业技能鉴定站</b></div>
+    </a>
+    <a class="card" href="/board/3" data-search="企业培训 行动教育成都分校 倍垒企业管理咨询有限公司 华为成都研究所企业培训中心">
+      <div class="card-name">企业培训</div>
+      <div class="card-top"><b>行动教育成都分校</b>、<b>倍垒企业管理咨询有限公司</b>、<b>华为成都研究所企业培训中心</b></div>
+    </a>
+    <a class="card" href="/board/4" data-search="语言培训 新东方培训学校（成都总校） 新东方前途出国（武侯区） 朗阁英语培训（锦江区）">
+      <div class="card-name">语言培训</div>
+      <div class="card-top"><b>新东方培训学校（成都总校）</b>、<b>新东方前途出国（武侯区）</b>、<b>朗阁英语培训（锦江区）</b></div>
+    </a>
+    <a class="card" href="/board/5" data-search="考研培训 新东方考研 新东方考研（武侯区） 文都考研">
+      <div class="card-name">考研培训</div>
+      <div class="card-top"><b>新东方考研</b>、<b>新东方考研（武侯区）</b>、<b>文都考研</b></div>
+    </a>
+    <a class="card" href="/board/6" data-search="公考培训 金标尺教育成都总校 四川中公教育（总校） 华图教育（成都分校）">
+      <div class="card-name">公考培训</div>
+      <div class="card-top"><b>金标尺教育成都总校</b>、<b>四川中公教育（总校）</b>、<b>华图教育（成都分校）</b></div>
+    </a>
+    <a class="card" href="/board/7" data-search="艺术培训 成都新格林艺术培训学校 黑蚁艺术教育 成都艺考画室">
+      <div class="card-name">艺术培训</div>
+      <div class="card-top"><b>成都新格林艺术培训学校</b>、<b>黑蚁艺术教育</b>、<b>成都艺考画室</b></div>
+    </a>
+    <a class="card" href="/board/8" data-search="体育培训 成都吾同体育 动因体育成都分校 成都灌篮公园篮球培训">
+      <div class="card-name">体育培训</div>
+      <div class="card-top"><b>成都吾同体育</b>、<b>动因体育成都分校</b>、<b>成都灌篮公园篮球培训</b></div>
+    </a>
+    <a class="card" href="/board/9" data-search="在线教育 成都七中网校 猿辅导成都中心 极客数学帮">
+      <div class="card-name">在线教育</div>
+      <div class="card-top"><b>成都七中网校</b>、<b>猿辅导成都中心</b>、<b>极客数学帮</b></div>
+    </a>
+    <a class="card" href="/board/10" data-search="教育科技 成都七中网校 字节跳动教育科技（成都）有限公司 成都佳发安泰教育科技股份有限公司">
+      <div class="card-name">教育科技</div>
+      <div class="card-top"><b>成都七中网校</b>、<b>字节跳动教育科技（成都）有限公司</b>、<b>成都佳发安泰教育科技股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/11" data-search="研学旅行 成都博物馆研学营 成都博物馆研学中心 大熊猫繁育研究基地研学营">
+      <div class="card-name">研学旅行</div>
+      <div class="card-top"><b>成都博物馆研学营</b>、<b>成都博物馆研学中心</b>、<b>大熊猫繁育研究基地研学营</b></div>
+    </a>
+    <a class="card" href="/board/12" data-search="留学规划 新东方前途出国（锦江区） 新通留学成都分公司 启德教育（青羊区）">
+      <div class="card-name">留学规划</div>
+      <div class="card-top"><b>新东方前途出国（锦江区）</b>、<b>新通留学成都分公司</b>、<b>启德教育（青羊区）</b></div>
+    </a>
+    <a class="card" href="/board/13" data-search="口腔诊所 成都华西口腔医院 四川大学华西口腔医院门诊部 成都极光口腔（总院）">
+      <div class="card-name">口腔诊所</div>
+      <div class="card-top"><b>成都华西口腔医院</b>、<b>四川大学华西口腔医院门诊部</b>、<b>成都极光口腔（总院）</b></div>
+    </a>
+    <a class="card" href="/board/14" data-search="眼科视光 四川大学华西医院眼科 四川省人民医院眼科 成都普瑞眼科医院">
+      <div class="card-name">眼科视光</div>
+      <div class="card-top"><b>四川大学华西医院眼科</b>、<b>四川省人民医院眼科</b>、<b>成都普瑞眼科医院</b></div>
+    </a>
+    <a class="card" href="/board/15" data-search="医美诊所 成都铜雀台医学美容医院 成都艺星医疗美容医院 成都娇点医学美容医院">
+      <div class="card-name">医美诊所</div>
+      <div class="card-top"><b>成都铜雀台医学美容医院</b>、<b>成都艺星医疗美容医院</b>、<b>成都娇点医学美容医院</b></div>
+    </a>
+    <a class="card" href="/board/16" data-search="中医馆 成都中医药大学附属医院名医馆 成都中医药大学国医馆 秉正堂中医馆">
+      <div class="card-name">中医馆</div>
+      <div class="card-top"><b>成都中医药大学附属医院名医馆</b>、<b>成都中医药大学国医馆</b>、<b>秉正堂中医馆</b></div>
+    </a>
+    <a class="card" href="/board/17" data-search="健康管理 成都中医药大学附属医院健康管理中心 四川大学华西医院健康管理中心 爱康国宾健康管理（成都高新旗舰店）">
+      <div class="card-name">健康管理</div>
+      <div class="card-top"><b>成都中医药大学附属医院健康管理中心</b>、<b>四川大学华西医院健康管理中心</b>、<b>爱康国宾健康管理（成都高新旗舰店）</b></div>
+    </a>
+    <a class="card" href="/board/18" data-search="心理咨询 四川大学华西医院心理卫生中心 成都南阁子心理咨询中心 成都市第四人民医院（成都市精神卫生中心）">
+      <div class="card-name">心理咨询</div>
+      <div class="card-top"><b>四川大学华西医院心理卫生中心</b>、<b>成都南阁子心理咨询中心</b>、<b>成都市第四人民医院（成都市精神卫生中心）</b></div>
+    </a>
+    <a class="card" href="/board/19" data-search="产后康复 爱帝宫产后康复中心（锦江院） 成都安琪儿妇产医院（产后康复中心） 成都新世纪妇女儿童医院（产后康复科）">
+      <div class="card-name">产后康复</div>
+      <div class="card-top"><b>爱帝宫产后康复中心（锦江院）</b>、<b>成都安琪儿妇产医院（产后康复中心）</b>、<b>成都新世纪妇女儿童医院（产后康复科）</b></div>
+    </a>
+    <a class="card" href="/board/20" data-search="运动康复 成都体育学院附属体育医院运动康复中心 锐博运动康复成都店 四川省骨科医院运动医学科">
+      <div class="card-name">运动康复</div>
+      <div class="card-top"><b>成都体育学院附属体育医院运动康复中心</b>、<b>锐博运动康复成都店</b>、<b>四川省骨科医院运动医学科</b></div>
+    </a>
+    <a class="card" href="/board/21" data-search="养老服务 泰康之家·蜀园 锦欣花乡老年公寓 中铁春台悦康养社区">
+      <div class="card-name">养老服务</div>
+      <div class="card-top"><b>泰康之家·蜀园</b>、<b>锦欣花乡老年公寓</b>、<b>中铁春台悦康养社区</b></div>
+    </a>
+    <a class="card" href="/board/22" data-search="慢病管理 成都京东方医院慢病管理中心 四川大学华西医院健康管理中心慢病管理部 四川大学华西医院全科医学中心">
+      <div class="card-name">慢病管理</div>
+      <div class="card-top"><b>成都京东方医院慢病管理中心</b>、<b>四川大学华西医院健康管理中心慢病管理部</b>、<b>四川大学华西医院全科医学中心</b></div>
+    </a>
+    <a class="card" href="/board/23" data-search="体检服务 四川大学华西医院健康管理中心 四川省人民医院健康管理中心 成都市第一人民医院健康管理中心">
+      <div class="card-name">体检服务</div>
+      <div class="card-top"><b>四川大学华西医院健康管理中心</b>、<b>四川省人民医院健康管理中心</b>、<b>成都市第一人民医院健康管理中心</b></div>
+    </a>
+    <a class="card" href="/board/24" data-search="睡眠健康 四川大学华西医院睡眠医学中心 成都市第四人民医院睡眠医学中心 四川省人民医院睡眠中心">
+      <div class="card-name">睡眠健康</div>
+      <div class="card-top"><b>四川大学华西医院睡眠医学中心</b>、<b>成都市第四人民医院睡眠医学中心</b>、<b>四川省人民医院睡眠中心</b></div>
+    </a>
+    <a class="card" href="/board/25" data-search="升学规划 成都新东方学校（武侯区） 学而思素养成都升学规划中心 成都学而思培优（锦江区）">
+      <div class="card-name">升学规划</div>
+      <div class="card-top"><b>成都新东方学校（武侯区）</b>、<b>学而思素养成都升学规划中心</b>、<b>成都学而思培优（锦江区）</b></div>
+    </a>
+    <a class="card" href="/board/26" data-search="出国考试培训 成都新东方出国考试中心 新东方前途出国（春熙路） 成都环球教育（环球雅思）">
+      <div class="card-name">出国考试培训</div>
+      <div class="card-top"><b>成都新东方出国考试中心</b>、<b>新东方前途出国（春熙路）</b>、<b>成都环球教育（环球雅思）</b></div>
+    </a>
+    <a class="card" href="/board/27" data-search="非遗研学 成都蜀锦织绣博物馆 成都国际非物质文化遗产博览园 成都漆器工艺厂">
+      <div class="card-name">非遗研学</div>
+      <div class="card-top"><b>成都蜀锦织绣博物馆</b>、<b>成都国际非物质文化遗产博览园</b>、<b>成都漆器工艺厂</b></div>
+    </a>
+    <a class="card" href="/board/28" data-search="文创品牌 成都博物馆文创 野狗商店 宽窄匠造所">
+      <div class="card-name">文创品牌</div>
+      <div class="card-top"><b>成都博物馆文创</b>、<b>野狗商店</b>、<b>宽窄匠造所</b></div>
+    </a>
+    <a class="card" href="/board/29" data-search="书店品牌 方所（成都太古里店） 方所（锦江区） 钟书阁（成都银泰中心in99店）">
+      <div class="card-name">书店品牌</div>
+      <div class="card-top"><b>方所（成都太古里店）</b>、<b>方所（锦江区）</b>、<b>钟书阁（成都银泰中心in99店）</b></div>
+    </a>
+    <a class="card" href="/board/30" data-search="商学院教育 四川大学商学院 西南财经大学工商管理学院 电子科技大学经济与管理学院">
+      <div class="card-name">商学院教育</div>
+      <div class="card-top"><b>四川大学商学院</b>、<b>西南财经大学工商管理学院</b>、<b>电子科技大学经济与管理学院</b></div>
+    </a>
+    <a class="card" href="/board/31" data-search="影视公司 成都可可豆动画影视有限公司 成都影视硅谷 成都艾尔平方文化传播有限公司">
+      <div class="card-name">影视公司</div>
+      <div class="card-top"><b>成都可可豆动画影视有限公司</b>、<b>成都影视硅谷</b>、<b>成都艾尔平方文化传播有限公司</b></div>
+    </a>
+    <a class="card" href="/board/32" data-search="动漫品牌 可可豆动画 米哈游科技（成都）有限公司 艾尔平方">
+      <div class="card-name">动漫品牌</div>
+      <div class="card-top"><b>可可豆动画</b>、<b>米哈游科技（成都）有限公司</b>、<b>艾尔平方</b></div>
+    </a>
+    <a class="card" href="/board/33" data-search="亲子沟通教育 成都心希望青少年心理关爱中心 大J小D亲子成长中心（成都首店） 成都亲子沟通研究中心">
+      <div class="card-name">亲子沟通教育</div>
+      <div class="card-top"><b>成都心希望青少年心理关爱中心</b>、<b>大J小D亲子成长中心（成都首店）</b>、<b>成都亲子沟通研究中心</b></div>
+    </a>
+    <a class="card" href="/board/34" data-search="青少年心理服务 四川大学华西医院心理卫生中心青少年心理门诊 四川省精神医学中心（温江区） 成都市第四人民医院（金牛区）">
+      <div class="card-name">青少年心理服务</div>
+      <div class="card-top"><b>四川大学华西医院心理卫生中心青少年心理门诊</b>、<b>四川省精神医学中心（温江区）</b>、<b>成都市第四人民医院（金牛区）</b></div>
+    </a>
+    <a class="card" href="/board/35" data-search="AI技能培训 极客时间企业版 字节跳动数字经济人才培养中心（成都） 传智教育成都校区">
+      <div class="card-name">AI技能培训</div>
+      <div class="card-top"><b>极客时间企业版</b>、<b>字节跳动数字经济人才培养中心（成都）</b>、<b>传智教育成都校区</b></div>
+    </a>
+    <a class="card" href="/board/36" data-search="数字化人才培训 极客时间企业版 字节跳动成都数字经济人才培养中心 阿里云创新中心（成都）数字化培训部">
+      <div class="card-name">数字化人才培训</div>
+      <div class="card-top"><b>极客时间企业版</b>、<b>字节跳动成都数字经济人才培养中心</b>、<b>阿里云创新中心（成都）数字化培训部</b></div>
+    </a>
+    <a class="card" href="/board/37" data-search="有机农业品牌 多利有机农庄 尚作有机 绿光味影">
+      <div class="card-name">有机农业品牌</div>
+      <div class="card-top"><b>多利有机农庄</b>、<b>尚作有机</b>、<b>绿光味影</b></div>
+    </a>
+    <a class="card" href="/board/38" data-search="茶叶品牌 蒙顶山茶业 竹叶青 竹叶青茶业">
+      <div class="card-name">茶叶品牌</div>
+      <div class="card-top"><b>蒙顶山茶业</b>、<b>竹叶青</b>、<b>竹叶青茶业</b></div>
+    </a>
+    <a class="card" href="/board/39" data-search="咖啡豆品牌 常识咖啡 Common Sense 无屿咖啡 Pause Coffee烘焙线">
+      <div class="card-name">咖啡豆品牌</div>
+      <div class="card-top"><b>常识咖啡 Common Sense</b>、<b>无屿咖啡</b>、<b>Pause Coffee烘焙线</b></div>
+    </a>
+    <a class="card" href="/board/40" data-search="高端食材品牌 川味源·臻选 通威鲜°配 蜀山珍品汇">
+      <div class="card-name">高端食材品牌</div>
+      <div class="card-top"><b>川味源·臻选</b>、<b>通威鲜°配</b>、<b>蜀山珍品汇</b></div>
+    </a>
+    <a class="card" href="/board/41" data-search="滋补品牌 德仁堂 龙抄手（总府路店） 同仁堂御膳（宽窄巷子店）">
+      <div class="card-name">滋补品牌</div>
+      <div class="card-top"><b>德仁堂</b>、<b>龙抄手（总府路店）</b>、<b>同仁堂御膳（宽窄巷子店）</b></div>
+    </a>
+    <a class="card" href="/board/42" data-search="药膳品牌 德仁堂 同仁堂御膳 鹤鸣茶社·药膳坊">
+      <div class="card-name">药膳品牌</div>
+      <div class="card-top"><b>德仁堂</b>、<b>同仁堂御膳</b>、<b>鹤鸣茶社·药膳坊</b></div>
+    </a>
+    <a class="card" href="/board/43" data-search="有机母婴食品 乐友孕婴童（环球中心店） 伊藤洋华堂（春熙路店） 孩子王（IFS国际金融中心店）">
+      <div class="card-name">有机母婴食品</div>
+      <div class="card-top"><b>乐友孕婴童（环球中心店）</b>、<b>伊藤洋华堂（春熙路店）</b>、<b>孩子王（IFS国际金融中心店）</b></div>
+    </a>
+    <a class="card" href="/board/44" data-search="地方特产品牌 鹃城牌郫县豆瓣 文殊院宫廷糕点 廖记棒棒鸡">
+      <div class="card-name">地方特产品牌</div>
+      <div class="card-top"><b>鹃城牌郫县豆瓣</b>、<b>文殊院宫廷糕点</b>、<b>廖记棒棒鸡</b></div>
+    </a>
+    <a class="card" href="/board/45" data-search="康养农业品牌 多利桃花源 天府红谷 明月村·蜀山窑">
+      <div class="card-name">康养农业品牌</div>
+      <div class="card-top"><b>多利桃花源</b>、<b>天府红谷</b>、<b>明月村·蜀山窑</b></div>
+    </a>
+    <a class="card" href="/board/46" data-search="有机食品品牌 尚作有机 阿柑农场 绿源尚品有机农场">
+      <div class="card-name">有机食品品牌</div>
+      <div class="card-top"><b>尚作有机</b>、<b>阿柑农场</b>、<b>绿源尚品有机农场</b></div>
+    </a>
+    <a class="card" href="/board/47" data-search="功能性食品品牌 润馨堂 元气森林 白家阿宽">
+      <div class="card-name">功能性食品品牌</div>
+      <div class="card-top"><b>润馨堂</b>、<b>元气森林</b>、<b>白家阿宽</b></div>
+    </a>
+    <a class="card" href="/board/48" data-search="高端饮用水品牌 蓝剑冰川时代 全兴天然矿泉水 峨眉山钰泉水">
+      <div class="card-name">高端饮用水品牌</div>
+      <div class="card-top"><b>蓝剑冰川时代</b>、<b>全兴天然矿泉水</b>、<b>峨眉山钰泉水</b></div>
+    </a>
+    <a class="card" href="/board/49" data-search="管理咨询 麦肯锡成都分公司 中大咨询 波士顿咨询（BCG）成都分公司">
+      <div class="card-name">管理咨询</div>
+      <div class="card-top"><b>麦肯锡成都分公司</b>、<b>中大咨询</b>、<b>波士顿咨询（BCG）成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/50" data-search="品牌咨询 华与华（成都分公司） 思创志远 考拉看看">
+      <div class="card-name">品牌咨询</div>
+      <div class="card-top"><b>华与华（成都分公司）</b>、<b>思创志远</b>、<b>考拉看看</b></div>
+    </a>
+    <a class="card" href="/board/51" data-search="战略咨询 麦肯锡成都分公司 波士顿咨询（BCG）成都办公室 波士顿咨询（BCG）成都分公司">
+      <div class="card-name">战略咨询</div>
+      <div class="card-top"><b>麦肯锡成都分公司</b>、<b>波士顿咨询（BCG）成都办公室</b>、<b>波士顿咨询（BCG）成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/52" data-search="人力资源咨询 韦莱韬悦（Willis Towers Watson） 中智四川经济技术合作有限公司 美世（Mercer）">
+      <div class="card-name">人力资源咨询</div>
+      <div class="card-top"><b>韦莱韬悦（Willis Towers Watson）</b>、<b>中智四川经济技术合作有限公司</b>、<b>美世（Mercer）</b></div>
+    </a>
+    <a class="card" href="/board/53" data-search="数字化咨询 埃森哲（Accenture） 德勤管理咨询（成都）数字化业务部 埃森哲（成都）数字化转型咨询中心">
+      <div class="card-name">数字化咨询</div>
+      <div class="card-top"><b>埃森哲（Accenture）</b>、<b>德勤管理咨询（成都）数字化业务部</b>、<b>埃森哲（成都）数字化转型咨询中心</b></div>
+    </a>
+    <a class="card" href="/board/54" data-search="市场研究 益普索（成都）分公司 益普索中国（成都） 零点有数成都分公司">
+      <div class="card-name">市场研究</div>
+      <div class="card-top"><b>益普索（成都）分公司</b>、<b>益普索中国（成都）</b>、<b>零点有数成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/55" data-search="用户研究 成都数联铭品 字节跳动成都用户研究中心 成都睿哲咨询">
+      <div class="card-name">用户研究</div>
+      <div class="card-top"><b>成都数联铭品</b>、<b>字节跳动成都用户研究中心</b>、<b>成都睿哲咨询</b></div>
+    </a>
+    <a class="card" href="/board/56" data-search="教育测评服务 成都市教育科学研究院测评研究中心 成都树仁教育测评中心 新东方（成都）前途学业测评">
+      <div class="card-name">教育测评服务</div>
+      <div class="card-top"><b>成都市教育科学研究院测评研究中心</b>、<b>成都树仁教育测评中心</b>、<b>新东方（成都）前途学业测评</b></div>
+    </a>
+    <a class="card" href="/board/57" data-search="企业智库服务 成都高质量发展研究院 成都市经济发展研究院（成都智库） 四川省企业发展促进中心企业智库研究所">
+      <div class="card-name">企业智库服务</div>
+      <div class="card-top"><b>成都高质量发展研究院</b>、<b>成都市经济发展研究院（成都智库）</b>、<b>四川省企业发展促进中心企业智库研究所</b></div>
+    </a>
+    <a class="card" href="/board/58" data-search="企业教练 成都智汇方略企业管理咨询 行动教育成都分公司 成都启承教练机构">
+      <div class="card-name">企业教练</div>
+      <div class="card-top"><b>成都智汇方略企业管理咨询</b>、<b>行动教育成都分公司</b>、<b>成都启承教练机构</b></div>
+    </a>
+    <a class="card" href="/board/59" data-search="生涯规划 成都树德中学国际部生涯规划中心 新精英生涯成都中心 成都优志愿生涯规划中心">
+      <div class="card-name">生涯规划</div>
+      <div class="card-top"><b>成都树德中学国际部生涯规划中心</b>、<b>新精英生涯成都中心</b>、<b>成都优志愿生涯规划中心</b></div>
+    </a>
+    <a class="card" href="/board/60" data-search="知识付费机构 得到高研院（成都校区） 混沌学园成都分社 得到高研院成都校区">
+      <div class="card-name">知识付费机构</div>
+      <div class="card-top"><b>得到高研院（成都校区）</b>、<b>混沌学园成都分社</b>、<b>得到高研院成都校区</b></div>
+    </a>
+    <a class="card" href="/board/61" data-search="儿童教育品牌 成都童萌汇儿童成长中心 学而思素养成都校区 金宝贝早教（成都中心）">
+      <div class="card-name">儿童教育品牌</div>
+      <div class="card-top"><b>成都童萌汇儿童成长中心</b>、<b>学而思素养成都校区</b>、<b>金宝贝早教（成都中心）</b></div>
+    </a>
+    <a class="card" href="/board/62" data-search="少儿编程 编程猫（锦江区） 西瓜创客 童程童美（武侯区）">
+      <div class="card-name">少儿编程</div>
+      <div class="card-top"><b>编程猫（锦江区）</b>、<b>西瓜创客</b>、<b>童程童美（武侯区）</b></div>
+    </a>
+    <a class="card" href="/board/63" data-search="高考志愿填报 成都树德中学国际部升学指导中心 亿以志愿成都总部 成都市教育考试院直属志愿指导点">
+      <div class="card-name">高考志愿填报</div>
+      <div class="card-top"><b>成都树德中学国际部升学指导中心</b>、<b>亿以志愿成都总部</b>、<b>成都市教育考试院直属志愿指导点</b></div>
+    </a>
+    <a class="card" href="/board/64" data-search="职业资格证书培训 成都新东方烹饪学校 中公教育成都分校 成都朗沃教育">
+      <div class="card-name">职业资格证书培训</div>
+      <div class="card-top"><b>成都新东方烹饪学校</b>、<b>中公教育成都分校</b>、<b>成都朗沃教育</b></div>
+    </a>
+    <a class="card" href="/board/65" data-search="亲子研学 成都大熊猫繁育研究基地 成都自然博物馆（成都理工大学博物馆）研学部 成都博物馆">
+      <div class="card-name">亲子研学</div>
+      <div class="card-top"><b>成都大熊猫繁育研究基地</b>、<b>成都自然博物馆（成都理工大学博物馆）研学部</b>、<b>成都博物馆</b></div>
+    </a>
+    <a class="card" href="/board/66" data-search="家庭教育 博瑞智家庭教育成都中心 新东方家庭教育指导中心（锦江区） 成都新东方家庭教育中心">
+      <div class="card-name">家庭教育</div>
+      <div class="card-top"><b>博瑞智家庭教育成都中心</b>、<b>新东方家庭教育指导中心（锦江区）</b>、<b>成都新东方家庭教育中心</b></div>
+    </a>
+    <a class="card" href="/board/67" data-search="特殊教育 成都市特殊教育学校 成都市青羊区特殊教育学校 成华区特殊教育学校">
+      <div class="card-name">特殊教育</div>
+      <div class="card-top"><b>成都市特殊教育学校</b>、<b>成都市青羊区特殊教育学校</b>、<b>成华区特殊教育学校</b></div>
+    </a>
+    <a class="card" href="/board/68" data-search="成人学历教育 四川大学成人继续教育学院 中公教育成都分校学历提升中心 电子科技大学继续教育学院">
+      <div class="card-name">成人学历教育</div>
+      <div class="card-top"><b>四川大学成人继续教育学院</b>、<b>中公教育成都分校学历提升中心</b>、<b>电子科技大学继续教育学院</b></div>
+    </a>
+    <a class="card" href="/board/69" data-search="企业大学 华为成都企业大学 华为成都研究所企业大学 阿里巴巴成都企业大学">
+      <div class="card-name">企业大学</div>
+      <div class="card-top"><b>华为成都企业大学</b>、<b>华为成都研究所企业大学</b>、<b>阿里巴巴成都企业大学</b></div>
+    </a>
+    <a class="card" href="/board/70" data-search="管理技能培训 行动教育成都分公司 中智光华管理培训 博商管理成都中心">
+      <div class="card-name">管理技能培训</div>
+      <div class="card-top"><b>行动教育成都分公司</b>、<b>中智光华管理培训</b>、<b>博商管理成都中心</b></div>
+    </a>
+    <a class="card" href="/board/71" data-search="新媒体技能培训 成都新视界新媒体学院 蓉媒新媒体学院 火星时代教育（成都校区）">
+      <div class="card-name">新媒体技能培训</div>
+      <div class="card-top"><b>成都新视界新媒体学院</b>、<b>蓉媒新媒体学院</b>、<b>火星时代教育（成都校区）</b></div>
+    </a>
+    <a class="card" href="/board/72" data-search="个人成长教育 新东方家庭教育指导中心 新励成演讲口才培训（成都高新校区） 行动派成都校区">
+      <div class="card-name">个人成长教育</div>
+      <div class="card-top"><b>新东方家庭教育指导中心</b>、<b>新励成演讲口才培训（成都高新校区）</b>、<b>行动派成都校区</b></div>
+    </a>
+    <a class="card" href="/board/73" data-search="AI应用服务 成都智元汇 字节跳动成都AI创新中心 考拉悠然">
+      <div class="card-name">AI应用服务</div>
+      <div class="card-top"><b>成都智元汇</b>、<b>字节跳动成都AI创新中心</b>、<b>考拉悠然</b></div>
+    </a>
+    <a class="card" href="/board/74" data-search="大模型应用 豆包 晓多科技 明途科技">
+      <div class="card-name">大模型应用</div>
+      <div class="card-top"><b>豆包</b>、<b>晓多科技</b>、<b>明途科技</b></div>
+    </a>
+    <a class="card" href="/board/75" data-search="大数据 成都四方伟业软件股份有限公司 阿里云西部大数据中心 成都数之联科技股份有限公司">
+      <div class="card-name">大数据</div>
+      <div class="card-top"><b>成都四方伟业软件股份有限公司</b>、<b>阿里云西部大数据中心</b>、<b>成都数之联科技股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/76" data-search="云计算 阿里云（成都） 阿里云成都分公司 华为云（成都）">
+      <div class="card-name">云计算</div>
+      <div class="card-top"><b>阿里云（成都）</b>、<b>阿里云成都分公司</b>、<b>华为云（成都）</b></div>
+    </a>
+    <a class="card" href="/board/77" data-search="物联网 成都华为物联网创新中心 成都物联网技术研究院 四川长虹物联网中心">
+      <div class="card-name">物联网</div>
+      <div class="card-top"><b>成都华为物联网创新中心</b>、<b>成都物联网技术研究院</b>、<b>四川长虹物联网中心</b></div>
+    </a>
+    <a class="card" href="/board/78" data-search="网络安全 奇安信科技集团股份有限公司成都分公司 亚信安全（高新区） 奇安信（天府新区）">
+      <div class="card-name">网络安全</div>
+      <div class="card-top"><b>奇安信科技集团股份有限公司成都分公司</b>、<b>亚信安全（高新区）</b>、<b>奇安信（天府新区）</b></div>
+    </a>
+    <a class="card" href="/board/79" data-search="软件定制 成都软通动力 成都字节跳动智能技术有限公司定制业务部 成都华软恒信科技有限公司">
+      <div class="card-name">软件定制</div>
+      <div class="card-top"><b>成都软通动力</b>、<b>成都字节跳动智能技术有限公司定制业务部</b>、<b>成都华软恒信科技有限公司</b></div>
+    </a>
+    <a class="card" href="/board/80" data-search="小程序开发 成都晓多科技 字节跳动成都研发中心 成都极米科技软件团队">
+      <div class="card-name">小程序开发</div>
+      <div class="card-top"><b>成都晓多科技</b>、<b>字节跳动成都研发中心</b>、<b>成都极米科技软件团队</b></div>
+    </a>
+    <a class="card" href="/board/81" data-search="AI数字人服务 成都智算中心 字节跳动成都AI创新中心 百度智能云成都分公司">
+      <div class="card-name">AI数字人服务</div>
+      <div class="card-top"><b>成都智算中心</b>、<b>字节跳动成都AI创新中心</b>、<b>百度智能云成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/82" data-search="自动化 成都卡诺普机器人技术股份有限公司 西门子（成都）有限公司 四川成焊宝玛焊接装备工程有限公司">
+      <div class="card-name">自动化</div>
+      <div class="card-top"><b>成都卡诺普机器人技术股份有限公司</b>、<b>西门子（成都）有限公司</b>、<b>四川成焊宝玛焊接装备工程有限公司</b></div>
+    </a>
+    <a class="card" href="/board/83" data-search="智能体服务 成都智元汇 字节跳动智能体创新中心（成都） 成都智元汇AI实验室">
+      <div class="card-name">智能体服务</div>
+      <div class="card-top"><b>成都智元汇</b>、<b>字节跳动智能体创新中心（成都）</b>、<b>成都智元汇AI实验室</b></div>
+    </a>
+    <a class="card" href="/board/84" data-search="智能硬件 极米科技 咕咚 成都明夷电子">
+      <div class="card-name">智能硬件</div>
+      <div class="card-top"><b>极米科技</b>、<b>咕咚</b>、<b>成都明夷电子</b></div>
+    </a>
+    <a class="card" href="/board/85" data-search="光伏服务 通威新能源 通威新能源成都分公司 四川协鑫新能源">
+      <div class="card-name">光伏服务</div>
+      <div class="card-top"><b>通威新能源</b>、<b>通威新能源成都分公司</b>、<b>四川协鑫新能源</b></div>
+    </a>
+    <a class="card" href="/board/86" data-search="储能服务 成都亿纬储能有限公司 四川电力设计咨询有限责任公司 成都宁德时代新能源科技服务有限公司">
+      <div class="card-name">储能服务</div>
+      <div class="card-top"><b>成都亿纬储能有限公司</b>、<b>四川电力设计咨询有限责任公司</b>、<b>成都宁德时代新能源科技服务有限公司</b></div>
+    </a>
+    <a class="card" href="/board/87" data-search="充电桩 特来电（成都东站超级充电站） 特斯拉V3超级充电站（成都太古里站） 国家电网智慧充电桩集群（天府国际机场站）">
+      <div class="card-name">充电桩</div>
+      <div class="card-top"><b>特来电（成都东站超级充电站）</b>、<b>特斯拉V3超级充电站（成都太古里站）</b>、<b>国家电网智慧充电桩集群（天府国际机场站）</b></div>
+    </a>
+    <a class="card" href="/board/88" data-search="节能改造 成都建工节能技术有限公司 中建西南院工程技术有限公司 四川联创节能科技有限公司">
+      <div class="card-name">节能改造</div>
+      <div class="card-top"><b>成都建工节能技术有限公司</b>、<b>中建西南院工程技术有限公司</b>、<b>四川联创节能科技有限公司</b></div>
+    </a>
+    <a class="card" href="/board/89" data-search="绿色建筑 成都天府国际会议中心 成都绿色建筑示范中心 中建滨湖设计总部">
+      <div class="card-name">绿色建筑</div>
+      <div class="card-top"><b>成都天府国际会议中心</b>、<b>成都绿色建筑示范中心</b>、<b>中建滨湖设计总部</b></div>
+    </a>
+    <a class="card" href="/board/90" data-search="环保工程 成都兴蓉环保科技股份有限公司 成都环境集团 中电建成都生态环境工程有限公司">
+      <div class="card-name">环保工程</div>
+      <div class="card-top"><b>成都兴蓉环保科技股份有限公司</b>、<b>成都环境集团</b>、<b>中电建成都生态环境工程有限公司</b></div>
+    </a>
+    <a class="card" href="/board/91" data-search="净水品牌服务 怡口净水（成都富森美家居高新店） 怡口净水（锦江区） 3M净水（武侯区）">
+      <div class="card-name">净水品牌服务</div>
+      <div class="card-top"><b>怡口净水（成都富森美家居高新店）</b>、<b>怡口净水（锦江区）</b>、<b>3M净水（武侯区）</b></div>
+    </a>
+    <a class="card" href="/board/92" data-search="智慧环保服务 成都智慧环保科技有限公司 成都智慧环保科技有限责任公司 四川联合环境交易所">
+      <div class="card-name">智慧环保服务</div>
+      <div class="card-top"><b>成都智慧环保科技有限公司</b>、<b>成都智慧环保科技有限责任公司</b>、<b>四川联合环境交易所</b></div>
+    </a>
+    <a class="card" href="/board/93" data-search="碳中和 四川联合环境交易所 通威集团有限公司 东方电气集团有限公司">
+      <div class="card-name">碳中和</div>
+      <div class="card-top"><b>四川联合环境交易所</b>、<b>通威集团有限公司</b>、<b>东方电气集团有限公司</b></div>
+    </a>
+    <a class="card" href="/board/94" data-search="新能源材料 天齐锂业股份有限公司 通威太阳能（双流区） 巴莫科技（龙泉驿区）">
+      <div class="card-name">新能源材料</div>
+      <div class="card-top"><b>天齐锂业股份有限公司</b>、<b>通威太阳能（双流区）</b>、<b>巴莫科技（龙泉驿区）</b></div>
+    </a>
+    <a class="card" href="/board/95" data-search="新能源出行服务 曹操出行 天府出行 成都城投能源">
+      <div class="card-name">新能源出行服务</div>
+      <div class="card-top"><b>曹操出行</b>、<b>天府出行</b>、<b>成都城投能源</b></div>
+    </a>
+    <a class="card" href="/board/96" data-search="智慧能源 国网四川综合能源服务有限公司 特来电新能源（武侯区） 川开电气（双流区）">
+      <div class="card-name">智慧能源</div>
+      <div class="card-top"><b>国网四川综合能源服务有限公司</b>、<b>特来电新能源（武侯区）</b>、<b>川开电气（双流区）</b></div>
+    </a>
+    <a class="card" href="/board/97" data-search="品牌营销 阿佩克思奥美 黑蚁营销 成都火石营销">
+      <div class="card-name">品牌营销</div>
+      <div class="card-top"><b>阿佩克思奥美</b>、<b>黑蚁营销</b>、<b>成都火石营销</b></div>
+    </a>
+    <a class="card" href="/board/98" data-search="效果营销 成都云锐传媒 字节跳动成都本地直营中心 成都盘古广告">
+      <div class="card-name">效果营销</div>
+      <div class="card-top"><b>成都云锐传媒</b>、<b>字节跳动成都本地直营中心</b>、<b>成都盘古广告</b></div>
+    </a>
+    <a class="card" href="/board/99" data-search="事件营销 成都活动策划公司·黑蚁文化 黑蚁文创 奥美成都">
+      <div class="card-name">事件营销</div>
+      <div class="card-top"><b>成都活动策划公司·黑蚁文化</b>、<b>黑蚁文创</b>、<b>奥美成都</b></div>
+    </a>
+    <a class="card" href="/board/100" data-search="新品发布 成都世纪城新国际会展中心 成都SKP 东郊记忆·成都国际时尚产业园">
+      <div class="card-name">新品发布</div>
+      <div class="card-top"><b>成都世纪城新国际会展中心</b>、<b>成都SKP</b>、<b>东郊记忆·成都国际时尚产业园</b></div>
+    </a>
+    <a class="card" href="/board/101" data-search="品牌升级 东道品牌创意集团成都分公司 集和品牌设计 集和品牌整合设计成都公司">
+      <div class="card-name">品牌升级</div>
+      <div class="card-top"><b>东道品牌创意集团成都分公司</b>、<b>集和品牌设计</b>、<b>集和品牌整合设计成都公司</b></div>
+    </a>
+    <a class="card" href="/board/102" data-search="增长咨询 增长黑盒成都分公司 增长熊猫 成都解数咨询有限公司">
+      <div class="card-name">增长咨询</div>
+      <div class="card-top"><b>增长黑盒成都分公司</b>、<b>增长熊猫</b>、<b>成都解数咨询有限公司</b></div>
+    </a>
+    <a class="card" href="/board/103" data-search="零售营销 成都华邑品牌营销策划有限公司 成都IFS 成都久其数字传播有限公司">
+      <div class="card-name">零售营销</div>
+      <div class="card-top"><b>成都华邑品牌营销策划有限公司</b>、<b>成都IFS</b>、<b>成都久其数字传播有限公司</b></div>
+    </a>
+    <a class="card" href="/board/104" data-search="会员增长 成都远洋太古里 微盟成都分公司 有赞成都运营中心">
+      <div class="card-name">会员增长</div>
+      <div class="card-top"><b>成都远洋太古里</b>、<b>微盟成都分公司</b>、<b>有赞成都运营中心</b></div>
+    </a>
+    <a class="card" href="/board/105" data-search="私域营销 成都数联魔方 成都微盟运营中心 成都微盛网络">
+      <div class="card-name">私域营销</div>
+      <div class="card-top"><b>成都数联魔方</b>、<b>成都微盟运营中心</b>、<b>成都微盛网络</b></div>
+    </a>
+    <a class="card" href="/board/106" data-search="内容营销 成都科特勒咨询 字节跳动四川营销中心 奥美成都">
+      <div class="card-name">内容营销</div>
+      <div class="card-top"><b>成都科特勒咨询</b>、<b>字节跳动四川营销中心</b>、<b>奥美成都</b></div>
+    </a>
+    <a class="card" href="/board/107" data-search="整合营销 成都黑蚁文化创意集团股份有限公司 成都深蓝互动 成都阿佩克思奥美品牌营销咨询有限公司">
+      <div class="card-name">整合营销</div>
+      <div class="card-top"><b>成都黑蚁文化创意集团股份有限公司</b>、<b>成都深蓝互动</b>、<b>成都阿佩克思奥美品牌营销咨询有限公司</b></div>
+    </a>
+    <a class="card" href="/board/108" data-search="营销科技 巨量引擎四川分公司 新潮传媒 数之联">
+      <div class="card-name">营销科技</div>
+      <div class="card-top"><b>巨量引擎四川分公司</b>、<b>新潮传媒</b>、<b>数之联</b></div>
+    </a>
+    <a class="card" href="/board/109" data-search="沉浸式体验 成都偷心 环球魔力沉浸式剧场 福尔摩斯·全球官方授权沉浸式探案展">
+      <div class="card-name">沉浸式体验</div>
+      <div class="card-top"><b>成都偷心</b>、<b>环球魔力沉浸式剧场</b>、<b>福尔摩斯·全球官方授权沉浸式探案展</b></div>
+    </a>
+    <a class="card" href="/board/110" data-search="数字艺术 成都当代影像馆 东郊记忆·繁星数字艺术馆 麓湖·A4美术馆">
+      <div class="card-name">数字艺术</div>
+      <div class="card-top"><b>成都当代影像馆</b>、<b>东郊记忆·繁星数字艺术馆</b>、<b>麓湖·A4美术馆</b></div>
+    </a>
+    <a class="card" href="/board/111" data-search="电竞场馆 成都AG超玩会主场馆 成都AG电竞中心 成都VSPN量子光电竞中心">
+      <div class="card-name">电竞场馆</div>
+      <div class="card-top"><b>成都AG超玩会主场馆</b>、<b>成都AG电竞中心</b>、<b>成都VSPN量子光电竞中心</b></div>
+    </a>
+    <a class="card" href="/board/112" data-search="游戏开发 米哈游成都分公司 腾讯天美工作室群（成都） 腾讯天美工作室群成都分部">
+      <div class="card-name">游戏开发</div>
+      <div class="card-top"><b>米哈游成都分公司</b>、<b>腾讯天美工作室群（成都）</b>、<b>腾讯天美工作室群成都分部</b></div>
+    </a>
+    <a class="card" href="/board/113" data-search="体育场馆 凤凰山体育公园 东安湖体育公园 成都高新体育中心">
+      <div class="card-name">体育场馆</div>
+      <div class="card-top"><b>凤凰山体育公园</b>、<b>东安湖体育公园</b>、<b>成都高新体育中心</b></div>
+    </a>
+    <a class="card" href="/board/114" data-search="健身连锁 热炼健身（高新区） 韦德伍斯健身 超级猩猩健身">
+      <div class="card-name">健身连锁</div>
+      <div class="card-top"><b>热炼健身（高新区）</b>、<b>韦德伍斯健身</b>、<b>超级猩猩健身</b></div>
+    </a>
+    <a class="card" href="/board/115" data-search="运动品牌 迪卡侬（天府新区旗舰店） 劲浪体育春熙路总店 李宁太古里旗舰店">
+      <div class="card-name">运动品牌</div>
+      <div class="card-top"><b>迪卡侬（天府新区旗舰店）</b>、<b>劲浪体育春熙路总店</b>、<b>李宁太古里旗舰店</b></div>
+    </a>
+    <a class="card" href="/board/116" data-search="演出场馆 成都城市音乐厅 四川大剧院 麓湖水上剧场">
+      <div class="card-name">演出场馆</div>
+      <div class="card-top"><b>成都城市音乐厅</b>、<b>四川大剧院</b>、<b>麓湖水上剧场</b></div>
+    </a>
+    <a class="card" href="/board/117" data-search="沉浸式剧场品牌 环球魔力沉浸式剧场 UMEPLAY（成都店） 暴风岛多结局沉浸式剧场（春熙路店）">
+      <div class="card-name">沉浸式剧场品牌</div>
+      <div class="card-top"><b>环球魔力沉浸式剧场</b>、<b>UMEPLAY（成都店）</b>、<b>暴风岛多结局沉浸式剧场（春熙路店）</b></div>
+    </a>
+    <a class="card" href="/board/118" data-search="高端演出品牌 成都城市音乐厅 成都城市音乐厅演出系列 四川大剧院">
+      <div class="card-name">高端演出品牌</div>
+      <div class="card-top"><b>成都城市音乐厅</b>、<b>成都城市音乐厅演出系列</b>、<b>四川大剧院</b></div>
+    </a>
+    <a class="card" href="/board/119" data-search="主题乐园 成都欢乐谷 国色天乡乐园 成都海昌极地海洋公园">
+      <div class="card-name">主题乐园</div>
+      <div class="card-top"><b>成都欢乐谷</b>、<b>国色天乡乐园</b>、<b>成都海昌极地海洋公园</b></div>
+    </a>
+    <a class="card" href="/board/120" data-search="文旅夜游品牌 宽窄巷子夜游 黄龙溪古镇夜游 锦江夜游">
+      <div class="card-name">文旅夜游品牌</div>
+      <div class="card-top"><b>宽窄巷子夜游</b>、<b>黄龙溪古镇夜游</b>、<b>锦江夜游</b></div>
+    </a>
+    <a class="card" href="/board/121" data-search="护肤品牌 华西珐玛 薇诺娜（Winona） 敷尔佳（Fuerjia）">
+      <div class="card-name">护肤品牌</div>
+      <div class="card-top"><b>华西珐玛</b>、<b>薇诺娜（Winona）</b>、<b>敷尔佳（Fuerjia）</b></div>
+    </a>
+    <a class="card" href="/board/122" data-search="彩妆品牌 毛戈平彩妆（春熙路旗舰店） 毛戈平美妆（春熙路） 彩棠（成都IFS店）">
+      <div class="card-name">彩妆品牌</div>
+      <div class="card-top"><b>毛戈平彩妆（春熙路旗舰店）</b>、<b>毛戈平美妆（春熙路）</b>、<b>彩棠（成都IFS店）</b></div>
+    </a>
+    <a class="card" href="/board/123" data-search="香氛品牌 观夏（成都太古里店） 观夏（锦江区） 山隅香铺（玉林西路店）">
+      <div class="card-name">香氛品牌</div>
+      <div class="card-top"><b>观夏（成都太古里店）</b>、<b>观夏（锦江区）</b>、<b>山隅香铺（玉林西路店）</b></div>
+    </a>
+    <a class="card" href="/board/124" data-search="营养品牌 纽迪希亚（NUTRICIA） 新希望华西营养体验中心 雀巢健康科学（Nestlé Health Science）">
+      <div class="card-name">营养品牌</div>
+      <div class="card-top"><b>纽迪希亚（NUTRICIA）</b>、<b>新希望华西营养体验中心</b>、<b>雀巢健康科学（Nestlé Health Science）</b></div>
+    </a>
+    <a class="card" href="/board/125" data-search="保健品牌 北京同仁堂（成都春熙路店） 太极集团（桐君阁） 德仁堂（成都青羊宫店）">
+      <div class="card-name">保健品牌</div>
+      <div class="card-top"><b>北京同仁堂（成都春熙路店）</b>、<b>太极集团（桐君阁）</b>、<b>德仁堂（成都青羊宫店）</b></div>
+    </a>
+    <a class="card" href="/board/126" data-search="珠宝品牌 爱恋珠宝 天鑫洋 六福珠宝">
+      <div class="card-name">珠宝品牌</div>
+      <div class="card-top"><b>爱恋珠宝</b>、<b>天鑫洋</b>、<b>六福珠宝</b></div>
+    </a>
+    <a class="card" href="/board/127" data-search="腕表品牌 百达翡丽成都IFS专卖店 亨得利钟表（锦江区） 成都IFS国际金融中心名表廊（锦江区）">
+      <div class="card-name">腕表品牌</div>
+      <div class="card-top"><b>百达翡丽成都IFS专卖店</b>、<b>亨得利钟表（锦江区）</b>、<b>成都IFS国际金融中心名表廊（锦江区）</b></div>
+    </a>
+    <a class="card" href="/board/128" data-search="箱包品牌 红谷 蜀锦箱包 熊猫客PandaCabin">
+      <div class="card-name">箱包品牌</div>
+      <div class="card-top"><b>红谷</b>、<b>蜀锦箱包</b>、<b>熊猫客PandaCabin</b></div>
+    </a>
+    <a class="card" href="/board/129" data-search="设计师品牌 马思唯品牌（MAISON SANS TITRE） 密扇MUKZIN成都太古里店 梵几客厅成都大悦城店">
+      <div class="card-name">设计师品牌</div>
+      <div class="card-top"><b>马思唯品牌（MAISON SANS TITRE）</b>、<b>密扇MUKZIN成都太古里店</b>、<b>梵几客厅成都大悦城店</b></div>
+    </a>
+    <a class="card" href="/board/130" data-search="潮玩品牌 泡泡玛特成都IFS旗舰店 TOP TOY（锦江区春熙路） 52TOYS（武侯区大悦城）">
+      <div class="card-name">潮玩品牌</div>
+      <div class="card-top"><b>泡泡玛特成都IFS旗舰店</b>、<b>TOP TOY（锦江区春熙路）</b>、<b>52TOYS（武侯区大悦城）</b></div>
+    </a>
+    <a class="card" href="/board/131" data-search="户外品牌 迪卡侬（天府新区旗舰店） 极星（Shehe） 川藏队">
+      <div class="card-name">户外品牌</div>
+      <div class="card-top"><b>迪卡侬（天府新区旗舰店）</b>、<b>极星（Shehe）</b>、<b>川藏队</b></div>
+    </a>
+    <a class="card" href="/board/132" data-search="家居品牌 掌上明珠家居 帝标家居 南方家居">
+      <div class="card-name">家居品牌</div>
+      <div class="card-top"><b>掌上明珠家居</b>、<b>帝标家居</b>、<b>南方家居</b></div>
+    </a>
+    <a class="card" href="/board/133" data-search="智能穿戴 华为智能穿戴（成都太古里旗舰店） 华为智能生活馆（成都万象城店） 小米之家（成都旗舰店）">
+      <div class="card-name">智能穿戴</div>
+      <div class="card-top"><b>华为智能穿戴（成都太古里旗舰店）</b>、<b>华为智能生活馆（成都万象城店）</b>、<b>小米之家（成都旗舰店）</b></div>
+    </a>
+    <a class="card" href="/board/134" data-search="家电品牌 美的 长虹·美菱 格力">
+      <div class="card-name">家电品牌</div>
+      <div class="card-top"><b>美的</b>、<b>长虹·美菱</b>、<b>格力</b></div>
+    </a>
+    <a class="card" href="/board/135" data-search="消费电子 成都国际金融中心（IFS） 苹果成都太古里直营店 成都万象城">
+      <div class="card-name">消费电子</div>
+      <div class="card-top"><b>成都国际金融中心（IFS）</b>、<b>苹果成都太古里直营店</b>、<b>成都万象城</b></div>
+    </a>
+    <a class="card" href="/board/136" data-search="新能源汽车品牌 极星汽车 特斯拉 比亚迪">
+      <div class="card-name">新能源汽车品牌</div>
+      <div class="card-top"><b>极星汽车</b>、<b>特斯拉</b>、<b>比亚迪</b></div>
+    </a>
+    <a class="card" href="/board/137" data-search="奢侈品零售服务 成都远洋太古里 成都SKP 成都仁恒置地广场">
+      <div class="card-name">奢侈品零售服务</div>
+      <div class="card-top"><b>成都远洋太古里</b>、<b>成都SKP</b>、<b>成都仁恒置地广场</b></div>
+    </a>
+    <a class="card" href="/board/138" data-search="智能零售服务 成都新零售研究院 红旗连锁智慧旗舰店 盒马X会员店（成都高新店）">
+      <div class="card-name">智能零售服务</div>
+      <div class="card-top"><b>成都新零售研究院</b>、<b>红旗连锁智慧旗舰店</b>、<b>盒马X会员店（成都高新店）</b></div>
+    </a>
+    <a class="card" href="/board/139" data-search="品牌体验店 成都SKP Apple 成都太古里旗舰店 太古里·漫广场品牌集合店">
+      <div class="card-name">品牌体验店</div>
+      <div class="card-top"><b>成都SKP</b>、<b>Apple 成都太古里旗舰店</b>、<b>太古里·漫广场品牌集合店</b></div>
+    </a>
+    <a class="card" href="/board/140" data-search="品牌孵化 天府新谷 字节跳动成都品牌创新孵化中心 成都科技企业孵化器协会">
+      <div class="card-name">品牌孵化</div>
+      <div class="card-top"><b>天府新谷</b>、<b>字节跳动成都品牌创新孵化中心</b>、<b>成都科技企业孵化器协会</b></div>
+    </a>
+    <a class="card" href="/board/141" data-search="新消费品牌 茶百道 书亦烧仙草 白家阿宽">
+      <div class="card-name">新消费品牌</div>
+      <div class="card-top"><b>茶百道</b>、<b>书亦烧仙草</b>、<b>白家阿宽</b></div>
+    </a>
+    <a class="card" href="/board/142" data-search="会员制消费品牌 山姆会员商店（高新店） 山姆会员商店（锦江区） 开市客（Costco成华店）">
+      <div class="card-name">会员制消费品牌</div>
+      <div class="card-top"><b>山姆会员商店（高新店）</b>、<b>山姆会员商店（锦江区）</b>、<b>开市客（Costco成华店）</b></div>
+    </a>
+    <a class="card" href="/board/143" data-search="生活方式品牌 荒石公园 观山茶事 UID Co">
+      <div class="card-name">生活方式品牌</div>
+      <div class="card-top"><b>荒石公园</b>、<b>观山茶事</b>、<b>UID Co</b></div>
+    </a>
+    <a class="card" href="/board/144" data-search="高端康养服务 泰康之家·蜀园 太平小镇·芙蓉人家 太保家园·成都国际颐养社区">
+      <div class="card-name">高端康养服务</div>
+      <div class="card-top"><b>泰康之家·蜀园</b>、<b>太平小镇·芙蓉人家</b>、<b>太保家园·成都国际颐养社区</b></div>
+    </a>
+    <a class="card" href="/board/145" data-search="房产经纪 链家（成都） 链家成都 贝壳找房（成都站）">
+      <div class="card-name">房产经纪</div>
+      <div class="card-top"><b>链家（成都）</b>、<b>链家成都</b>、<b>贝壳找房（成都站）</b></div>
+    </a>
+    <a class="card" href="/board/146" data-search="商业地产 成都IFS国际金融中心 成都SKP 成都万象城">
+      <div class="card-name">商业地产</div>
+      <div class="card-top"><b>成都IFS国际金融中心</b>、<b>成都SKP</b>、<b>成都万象城</b></div>
+    </a>
+    <a class="card" href="/board/147" data-search="家装公司 岚庭装饰 东易日盛装饰成都分公司 业之峰装饰">
+      <div class="card-name">家装公司</div>
+      <div class="card-top"><b>岚庭装饰</b>、<b>东易日盛装饰成都分公司</b>、<b>业之峰装饰</b></div>
+    </a>
+    <a class="card" href="/board/148" data-search="全屋定制 索菲亚全屋定制（富森美高新店） 维意定制 欧派全屋定制（居然之家金牛店）">
+      <div class="card-name">全屋定制</div>
+      <div class="card-top"><b>索菲亚全屋定制（富森美高新店）</b>、<b>维意定制</b>、<b>欧派全屋定制（居然之家金牛店）</b></div>
+    </a>
+    <a class="card" href="/board/149" data-search="智能家居 绿米Aqara（武侯区） 绿米Aqara智能家居（成都高新旗舰店） 欧瑞博全宅智能（成都锦江旗舰体验店）">
+      <div class="card-name">智能家居</div>
+      <div class="card-top"><b>绿米Aqara（武侯区）</b>、<b>绿米Aqara智能家居（成都高新旗舰店）</b>、<b>欧瑞博全宅智能（成都锦江旗舰体验店）</b></div>
+    </a>
+    <a class="card" href="/board/150" data-search="软装设计 山止川行设计 尚层装饰软装中心 岚庭家居软装部">
+      <div class="card-name">软装设计</div>
+      <div class="card-top"><b>山止川行设计</b>、<b>尚层装饰软装中心</b>、<b>岚庭家居软装部</b></div>
+    </a>
+    <a class="card" href="/board/151" data-search="门窗品牌 飞宇门窗 皇派门窗 良木道门窗">
+      <div class="card-name">门窗品牌</div>
+      <div class="card-top"><b>飞宇门窗</b>、<b>皇派门窗</b>、<b>良木道门窗</b></div>
+    </a>
+    <a class="card" href="/board/152" data-search="卫浴品牌 帝王洁具 科勒（KOHLER） 汉斯格雅（hansgrohe）">
+      <div class="card-name">卫浴品牌</div>
+      <div class="card-top"><b>帝王洁具</b>、<b>科勒（KOHLER）</b>、<b>汉斯格雅（hansgrohe）</b></div>
+    </a>
+    <a class="card" href="/board/153" data-search="家具品牌 全友家居 掌上明珠家居 双虎家私">
+      <div class="card-name">家具品牌</div>
+      <div class="card-top"><b>全友家居</b>、<b>掌上明珠家居</b>、<b>双虎家私</b></div>
+    </a>
+    <a class="card" href="/board/154" data-search="照明品牌 华体照明 西顿照明 雷士照明">
+      <div class="card-name">照明品牌</div>
+      <div class="card-top"><b>华体照明</b>、<b>西顿照明</b>、<b>雷士照明</b></div>
+    </a>
+    <a class="card" href="/board/155" data-search="装修监理 成都监理网（第三方监理平台） 搭窝监理成都分公司 牛角监成都运营中心">
+      <div class="card-name">装修监理</div>
+      <div class="card-top"><b>成都监理网（第三方监理平台）</b>、<b>搭窝监理成都分公司</b>、<b>牛角监成都运营中心</b></div>
+    </a>
+    <a class="card" href="/board/156" data-search="旧房改造 玖雅装饰 U家工场 空间演化设计">
+      <div class="card-name">旧房改造</div>
+      <div class="card-top"><b>玖雅装饰</b>、<b>U家工场</b>、<b>空间演化设计</b></div>
+    </a>
+    <a class="card" href="/board/157" data-search="新能源车服务 特斯拉成都高新服务中心 特斯拉成都万象城体验店 比亚迪王朝网成都青羊旗舰服务中心">
+      <div class="card-name">新能源车服务</div>
+      <div class="card-top"><b>特斯拉成都高新服务中心</b>、<b>特斯拉成都万象城体验店</b>、<b>比亚迪王朝网成都青羊旗舰服务中心</b></div>
+    </a>
+    <a class="card" href="/board/158" data-search="二手车平台 瓜子二手车（严选直卖店） 瓜子二手车成都双流严选店 宏盟二手车交易市场（双流总部）">
+      <div class="card-name">二手车平台</div>
+      <div class="card-top"><b>瓜子二手车（严选直卖店）</b>、<b>瓜子二手车成都双流严选店</b>、<b>宏盟二手车交易市场（双流总部）</b></div>
+    </a>
+    <a class="card" href="/board/159" data-search="汽车维修连锁 精典汽车连锁 途虎养车工场店（武侯区） 精典汽车（锦江区）">
+      <div class="card-name">汽车维修连锁</div>
+      <div class="card-top"><b>精典汽车连锁</b>、<b>途虎养车工场店（武侯区）</b>、<b>精典汽车（锦江区）</b></div>
+    </a>
+    <a class="card" href="/board/160" data-search="汽车改装 成都极速漂移汽车改装 成都特驱快车汽车改装 成都欧特汽车改装">
+      <div class="card-name">汽车改装</div>
+      <div class="card-top"><b>成都极速漂移汽车改装</b>、<b>成都特驱快车汽车改装</b>、<b>成都欧特汽车改装</b></div>
+    </a>
+    <a class="card" href="/board/161" data-search="汽车金融 平安银行汽车金融中心 上汽通用汽车金融有限责任公司成都分公司 比亚迪汽车金融有限公司成都运营中心">
+      <div class="card-name">汽车金融</div>
+      <div class="card-top"><b>平安银行汽车金融中心</b>、<b>上汽通用汽车金融有限责任公司成都分公司</b>、<b>比亚迪汽车金融有限公司成都运营中心</b></div>
+    </a>
+    <a class="card" href="/board/162" data-search="汽车保险 人保财险（锦江区） 中国人民财产保险股份有限公司成都市分公司 平安产险（武侯区）">
+      <div class="card-name">汽车保险</div>
+      <div class="card-top"><b>人保财险（锦江区）</b>、<b>中国人民财产保险股份有限公司成都市分公司</b>、<b>平安产险（武侯区）</b></div>
+    </a>
+    <a class="card" href="/board/163" data-search="驾校 蜀安驾校 长征驾校 天欣驾校">
+      <div class="card-name">驾校</div>
+      <div class="card-top"><b>蜀安驾校</b>、<b>长征驾校</b>、<b>天欣驾校</b></div>
+    </a>
+    <a class="card" href="/board/164" data-search="汽车租赁 神州租车（双流机场店） 一嗨租车成都分部 神州租车成都分公司">
+      <div class="card-name">汽车租赁</div>
+      <div class="card-top"><b>神州租车（双流机场店）</b>、<b>一嗨租车成都分部</b>、<b>神州租车成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/165" data-search="车辆检测 成都锦城机动车检测站 成都明友智胜机动车检测有限公司 成都车之宝机动车检测有限公司">
+      <div class="card-name">车辆检测</div>
+      <div class="card-top"><b>成都锦城机动车检测站</b>、<b>成都明友智胜机动车检测有限公司</b>、<b>成都车之宝机动车检测有限公司</b></div>
+    </a>
+    <a class="card" href="/board/166" data-search="房车服务 成都房车生活家（青羊区） 上汽大通房车成都直营中心 成都一路逍遥房车租赁">
+      <div class="card-name">房车服务</div>
+      <div class="card-top"><b>成都房车生活家（青羊区）</b>、<b>上汽大通房车成都直营中心</b>、<b>成都一路逍遥房车租赁</b></div>
+    </a>
+    <a class="card" href="/board/167" data-search="豪车专修 成都骏玺名车专修 华胜豪车专修连锁（武侯店） 成都德奥名车专修">
+      <div class="card-name">豪车专修</div>
+      <div class="card-top"><b>成都骏玺名车专修</b>、<b>华胜豪车专修连锁（武侯店）</b>、<b>成都德奥名车专修</b></div>
+    </a>
+    <a class="card" href="/board/168" data-search="汽车延保服务 华奥延保 万高汽车质保成都服务中心 成都中升集团延保服务中心">
+      <div class="card-name">汽车延保服务</div>
+      <div class="card-top"><b>华奥延保</b>、<b>万高汽车质保成都服务中心</b>、<b>成都中升集团延保服务中心</b></div>
+    </a>
+    <a class="card" href="/board/169" data-search="婚庆策划 美薇亭婚礼顾问 找我婚礼 婚礼主义">
+      <div class="card-name">婚庆策划</div>
+      <div class="card-top"><b>美薇亭婚礼顾问</b>、<b>找我婚礼</b>、<b>婚礼主义</b></div>
+    </a>
+    <a class="card" href="/board/170" data-search="婚礼场地 成都华尔道夫酒店 麓湖生态城艺展中心 成都博舍酒店">
+      <div class="card-name">婚礼场地</div>
+      <div class="card-top"><b>成都华尔道夫酒店</b>、<b>麓湖生态城艺展中心</b>、<b>成都博舍酒店</b></div>
+    </a>
+    <a class="card" href="/board/171" data-search="婚纱摄影 金夫人婚纱摄影 奎恩摄影 古摄影">
+      <div class="card-name">婚纱摄影</div>
+      <div class="card-top"><b>金夫人婚纱摄影</b>、<b>奎恩摄影</b>、<b>古摄影</b></div>
+    </a>
+    <a class="card" href="/board/172" data-search="高端家政 成都安信美家 轻喜到家成都分公司 成都好慷在家（高端线）">
+      <div class="card-name">高端家政</div>
+      <div class="card-top"><b>成都安信美家</b>、<b>轻喜到家成都分公司</b>、<b>成都好慷在家（高端线）</b></div>
+    </a>
+    <a class="card" href="/board/173" data-search="月嫂服务 爱帝宫月嫂服务 成都安琪儿母婴护理中心 成都爱悦家月嫂">
+      <div class="card-name">月嫂服务</div>
+      <div class="card-top"><b>爱帝宫月嫂服务</b>、<b>成都安琪儿母婴护理中心</b>、<b>成都爱悦家月嫂</b></div>
+    </a>
+    <a class="card" href="/board/174" data-search="产后护理 爱帝宫月子中心（成都旗舰院） 成都安琪儿妇产医院（产后康复中心） 安琪儿母婴护理中心（高新店）">
+      <div class="card-name">产后护理</div>
+      <div class="card-top"><b>爱帝宫月子中心（成都旗舰院）</b>、<b>成都安琪儿妇产医院（产后康复中心）</b>、<b>安琪儿母婴护理中心（高新店）</b></div>
+    </a>
+    <a class="card" href="/board/175" data-search="养老社区 泰康之家·蜀园 太保家园·成都国际颐养社区 太平小镇·芙蓉人家">
+      <div class="card-name">养老社区</div>
+      <div class="card-top"><b>泰康之家·蜀园</b>、<b>太保家园·成都国际颐养社区</b>、<b>太平小镇·芙蓉人家</b></div>
+    </a>
+    <a class="card" href="/board/176" data-search="宠物医院 华西动物医院 华西动物医院（武侯店） 瑞鹏宠物医院（高新总院）">
+      <div class="card-name">宠物医院</div>
+      <div class="card-top"><b>华西动物医院</b>、<b>华西动物医院（武侯店）</b>、<b>瑞鹏宠物医院（高新总院）</b></div>
+    </a>
+    <a class="card" href="/board/177" data-search="宠物品牌 瑞鹏宠物医院（青羊总院） 它它宠物生活馆 萌宠星球">
+      <div class="card-name">宠物品牌</div>
+      <div class="card-top"><b>瑞鹏宠物医院（青羊总院）</b>、<b>它它宠物生活馆</b>、<b>萌宠星球</b></div>
+    </a>
+    <a class="card" href="/board/178" data-search="宠物医疗品牌 华西动物医院（武侯院区） 瑞鹏宠物医院 安安宠物医院">
+      <div class="card-name">宠物医疗品牌</div>
+      <div class="card-top"><b>华西动物医院（武侯院区）</b>、<b>瑞鹏宠物医院</b>、<b>安安宠物医院</b></div>
+    </a>
+    <a class="card" href="/board/179" data-search="甲醛检测治理 成都绿尚佳环保科技有限公司 四川中环检测 成都洁多多环保科技有限公司">
+      <div class="card-name">甲醛检测治理</div>
+      <div class="card-top"><b>成都绿尚佳环保科技有限公司</b>、<b>四川中环检测</b>、<b>成都洁多多环保科技有限公司</b></div>
+    </a>
+    <a class="card" href="/board/180" data-search="家居健康服务 成都和沐家健康管理 绿驰环保成都高新服务站 洁家帮家居健康服务">
+      <div class="card-name">家居健康服务</div>
+      <div class="card-top"><b>成都和沐家健康管理</b>、<b>绿驰环保成都高新服务站</b>、<b>洁家帮家居健康服务</b></div>
+    </a>
+    <a class="card" href="/board/181" data-search="特色餐饮品牌 陈麻婆豆腐 马旺子（太古里店） 陈麻婆豆腐（骡马市店）">
+      <div class="card-name">特色餐饮品牌</div>
+      <div class="card-top"><b>陈麻婆豆腐</b>、<b>马旺子（太古里店）</b>、<b>陈麻婆豆腐（骡马市店）</b></div>
+    </a>
+    <a class="card" href="/board/182" data-search="茶饮连锁 霸王茶姬 霸王茶姬（春熙路旗舰店） 茶百道">
+      <div class="card-name">茶饮连锁</div>
+      <div class="card-top"><b>霸王茶姬</b>、<b>霸王茶姬（春熙路旗舰店）</b>、<b>茶百道</b></div>
+    </a>
+    <a class="card" href="/board/183" data-search="咖啡连锁 Manner Coffee Seesaw Coffee 瑞幸咖啡">
+      <div class="card-name">咖啡连锁</div>
+      <div class="card-top"><b>Manner Coffee</b>、<b>Seesaw Coffee</b>、<b>瑞幸咖啡</b></div>
+    </a>
+    <a class="card" href="/board/184" data-search="烘焙品牌 山川麦时 醒食 RAND 慢作">
+      <div class="card-name">烘焙品牌</div>
+      <div class="card-top"><b>山川麦时</b>、<b>醒食 RAND</b>、<b>慢作</b></div>
+    </a>
+    <a class="card" href="/board/185" data-search="火锅品牌 大龙燚火锅 蜀大侠火锅（春熙路店） 蜀大侠火锅">
+      <div class="card-name">火锅品牌</div>
+      <div class="card-top"><b>大龙燚火锅</b>、<b>蜀大侠火锅（春熙路店）</b>、<b>蜀大侠火锅</b></div>
+    </a>
+    <a class="card" href="/board/186" data-search="地方菜品牌 陈麻婆豆腐（青华路总店） 马旺子（太古里店） 陈麻婆豆腐（骡马市总店）">
+      <div class="card-name">地方菜品牌</div>
+      <div class="card-top"><b>陈麻婆豆腐（青华路总店）</b>、<b>马旺子（太古里店）</b>、<b>陈麻婆豆腐（骡马市总店）</b></div>
+    </a>
+    <a class="card" href="/board/187" data-search="高端餐厅 玉芝兰 廊桥THE BRIDGE 松云泽">
+      <div class="card-name">高端餐厅</div>
+      <div class="card-top"><b>玉芝兰</b>、<b>廊桥THE BRIDGE</b>、<b>松云泽</b></div>
+    </a>
+    <a class="card" href="/board/188" data-search="素食餐厅 大慈寺素斋 枣子树素餐厅（宽窄巷子店） 文殊院香园素食">
+      <div class="card-name">素食餐厅</div>
+      <div class="card-top"><b>大慈寺素斋</b>、<b>枣子树素餐厅（宽窄巷子店）</b>、<b>文殊院香园素食</b></div>
+    </a>
+    <a class="card" href="/board/189" data-search="有机餐厅 华道生态农庄·善觉堂 云时节西餐厅 轻安·素食">
+      <div class="card-name">有机餐厅</div>
+      <div class="card-top"><b>华道生态农庄·善觉堂</b>、<b>云时节西餐厅</b>、<b>轻安·素食</b></div>
+    </a>
+    <a class="card" href="/board/190" data-search="高端茶餐厅品牌 成都宴 翠华餐厅 唐宫小聚">
+      <div class="card-name">高端茶餐厅品牌</div>
+      <div class="card-top"><b>成都宴</b>、<b>翠华餐厅</b>、<b>唐宫小聚</b></div>
+    </a>
+    <a class="card" href="/board/191" data-search="轻食健康餐厅品牌 新元素Vintage（太古里店） Wagas沃歌斯 木桑森林轻食">
+      <div class="card-name">轻食健康餐厅品牌</div>
+      <div class="card-top"><b>新元素Vintage（太古里店）</b>、<b>Wagas沃歌斯</b>、<b>木桑森林轻食</b></div>
+    </a>
+    <a class="card" href="/board/192" data-search="高端烘焙品牌 醒食 RAND LANLIZI Bakery 面包谷 Grainy">
+      <div class="card-name">高端烘焙品牌</div>
+      <div class="card-top"><b>醒食 RAND</b>、<b>LANLIZI Bakery</b>、<b>面包谷 Grainy</b></div>
+    </a>
+    <a class="card" href="/board/193" data-search="精品酒店 博舍 成都钓鱼台精品酒店 尧棠公馆">
+      <div class="card-name">精品酒店</div>
+      <div class="card-top"><b>博舍</b>、<b>成都钓鱼台精品酒店</b>、<b>尧棠公馆</b></div>
+    </a>
+    <a class="card" href="/board/194" data-search="民宿品牌 成都朴院精品民宿 尧棠公馆 成都瓦当瓦舍旅行酒店（春熙路店）">
+      <div class="card-name">民宿品牌</div>
+      <div class="card-top"><b>成都朴院精品民宿</b>、<b>尧棠公馆</b>、<b>成都瓦当瓦舍旅行酒店（春熙路店）</b></div>
+    </a>
+    <a class="card" href="/board/195" data-search="度假酒店 成都青城山六善酒店 成都群光君悦酒店 成都三岔湖长岛天堂洲际酒店">
+      <div class="card-name">度假酒店</div>
+      <div class="card-top"><b>成都青城山六善酒店</b>、<b>成都群光君悦酒店</b>、<b>成都三岔湖长岛天堂洲际酒店</b></div>
+    </a>
+    <a class="card" href="/board/196" data-search="露营地 麓湖·麓客岛 彭州小鱼洞国际露营公园 青龙湖湿地公园">
+      <div class="card-name">露营地</div>
+      <div class="card-top"><b>麓湖·麓客岛</b>、<b>彭州小鱼洞国际露营公园</b>、<b>青龙湖湿地公园</b></div>
+    </a>
+    <a class="card" href="/board/197" data-search="温泉度假 鱼凫国都温泉大酒店 成都融创文旅城温泉 花水湾豪生温泉大酒店">
+      <div class="card-name">温泉度假</div>
+      <div class="card-top"><b>鱼凫国都温泉大酒店</b>、<b>成都融创文旅城温泉</b>、<b>花水湾豪生温泉大酒店</b></div>
+    </a>
+    <a class="card" href="/board/198" data-search="婚宴场地 成都华尔道夫酒店 麓湖游艇俱乐部 成都钓鱼台精品酒店">
+      <div class="card-name">婚宴场地</div>
+      <div class="card-top"><b>成都华尔道夫酒店</b>、<b>麓湖游艇俱乐部</b>、<b>成都钓鱼台精品酒店</b></div>
+    </a>
+    <a class="card" href="/board/199" data-search="会展场地 中国西部国际博览城 成都世纪城新国际会展中心 成都天府国际会议中心">
+      <div class="card-name">会展场地</div>
+      <div class="card-top"><b>中国西部国际博览城</b>、<b>成都世纪城新国际会展中心</b>、<b>成都天府国际会议中心</b></div>
+    </a>
+    <a class="card" href="/board/200" data-search="景区品牌 成都大熊猫繁育研究基地 青城山 武侯祠博物馆">
+      <div class="card-name">景区品牌</div>
+      <div class="card-top"><b>成都大熊猫繁育研究基地</b>、<b>青城山</b>、<b>武侯祠博物馆</b></div>
+    </a>
+    <a class="card" href="/board/201" data-search="文旅小镇 安仁古镇 黄龙溪古镇 平乐古镇">
+      <div class="card-name">文旅小镇</div>
+      <div class="card-top"><b>安仁古镇</b>、<b>黄龙溪古镇</b>、<b>平乐古镇</b></div>
+    </a>
+    <a class="card" href="/board/202" data-search="乡村旅游 崇州道明竹艺村 战旗村 明月村">
+      <div class="card-name">乡村旅游</div>
+      <div class="card-top"><b>崇州道明竹艺村</b>、<b>战旗村</b>、<b>明月村</b></div>
+    </a>
+    <a class="card" href="/board/203" data-search="亲子乐园 成都融创乐园 成都欢乐谷 奈尔宝家庭中心（环球中心店）">
+      <div class="card-name">亲子乐园</div>
+      <div class="card-top"><b>成都融创乐园</b>、<b>成都欢乐谷</b>、<b>奈尔宝家庭中心（环球中心店）</b></div>
+    </a>
+    <a class="card" href="/board/204" data-search="运动营地 成都空港花田运动营地 麓湖·丸露营 麓客岛运动营地">
+      <div class="card-name">运动营地</div>
+      <div class="card-top"><b>成都空港花田运动营地</b>、<b>麓湖·丸露营</b>、<b>麓客岛运动营地</b></div>
+    </a>
+    <a class="card" href="/board/205" data-search="适老化改造 成都安馨养老适老化改造 成都城养老适老化改造服务中心 成都孝心坊适老化改造事业部">
+      <div class="card-name">适老化改造</div>
+      <div class="card-top"><b>成都安馨养老适老化改造</b>、<b>成都城养老适老化改造服务中心</b>、<b>成都孝心坊适老化改造事业部</b></div>
+    </a>
+    <a class="card" href="/board/206" data-search="社区健康 成都市成华区双桥子社区卫生服务中心 成都市武侯区玉林社区卫生服务中心 成都高新区桂溪社区卫生服务中心">
+      <div class="card-name">社区健康</div>
+      <div class="card-top"><b>成都市成华区双桥子社区卫生服务中心</b>、<b>成都市武侯区玉林社区卫生服务中心</b>、<b>成都高新区桂溪社区卫生服务中心</b></div>
+    </a>
+    <a class="card" href="/board/207" data-search="家庭医生服务 成都高新区桂溪社区卫生服务中心家庭医生团队 四川大学华西医院全科医学中心家庭医生服务部 成都市第一人民医院全科家庭医生团队">
+      <div class="card-name">家庭医生服务</div>
+      <div class="card-top"><b>成都高新区桂溪社区卫生服务中心家庭医生团队</b>、<b>四川大学华西医院全科医学中心家庭医生服务部</b>、<b>成都市第一人民医院全科家庭医生团队</b></div>
+    </a>
+    <a class="card" href="/board/208" data-search="陪诊服务 益康陪诊 成都陪诊无忧 优享陪诊成都站">
+      <div class="card-name">陪诊服务</div>
+      <div class="card-top"><b>益康陪诊</b>、<b>成都陪诊无忧</b>、<b>优享陪诊成都站</b></div>
+    </a>
+    <a class="card" href="/board/209" data-search="家庭护理 成都市第一人民医院居家护理中心 福寿康成都居家护理 成都颐家护理站">
+      <div class="card-name">家庭护理</div>
+      <div class="card-top"><b>成都市第一人民医院居家护理中心</b>、<b>福寿康成都居家护理</b>、<b>成都颐家护理站</b></div>
+    </a>
+    <a class="card" href="/board/210" data-search="康复中心 四川大学华西医院康复医学中心 四川省骨科医院康复科 成都市第二人民医院康复医学科">
+      <div class="card-name">康复中心</div>
+      <div class="card-top"><b>四川大学华西医院康复医学中心</b>、<b>四川省骨科医院康复科</b>、<b>成都市第二人民医院康复医学科</b></div>
+    </a>
+    <a class="card" href="/board/211" data-search="月子中心 成都安琪儿月子中心（高新店） 爱帝宫月子中心（成都锦江院） 成都禧月阁月子中心（锦江店）">
+      <div class="card-name">月子中心</div>
+      <div class="card-top"><b>成都安琪儿月子中心（高新店）</b>、<b>爱帝宫月子中心（成都锦江院）</b>、<b>成都禧月阁月子中心（锦江店）</b></div>
+    </a>
+    <a class="card" href="/board/212" data-search="婴幼儿护理 成都新世纪妇女儿童医院 华西第二医院婴幼儿护理中心 爱帝宫母婴护理中心（成都旗舰店）">
+      <div class="card-name">婴幼儿护理</div>
+      <div class="card-top"><b>成都新世纪妇女儿童医院</b>、<b>华西第二医院婴幼儿护理中心</b>、<b>爱帝宫母婴护理中心（成都旗舰店）</b></div>
+    </a>
+    <a class="card" href="/board/213" data-search="助老服务 成都市老年大学（青羊区） 成都市养老服务指导中心 朗力养老服务中心">
+      <div class="card-name">助老服务</div>
+      <div class="card-top"><b>成都市老年大学（青羊区）</b>、<b>成都市养老服务指导中心</b>、<b>朗力养老服务中心</b></div>
+    </a>
+    <a class="card" href="/board/214" data-search="养老产业咨询 成都汇康养老产业咨询有限公司 和君康养事业部 成都市养老服务业协会咨询部">
+      <div class="card-name">养老产业咨询</div>
+      <div class="card-top"><b>成都汇康养老产业咨询有限公司</b>、<b>和君康养事业部</b>、<b>成都市养老服务业协会咨询部</b></div>
+    </a>
+    <a class="card" href="/board/215" data-search="社区医疗服务 成都高新区桂溪社区卫生服务中心 青羊区新华少城社区卫生服务中心 成华区保和社区卫生服务中心">
+      <div class="card-name">社区医疗服务</div>
+      <div class="card-top"><b>成都高新区桂溪社区卫生服务中心</b>、<b>青羊区新华少城社区卫生服务中心</b>、<b>成华区保和社区卫生服务中心</b></div>
+    </a>
+    <a class="card" href="/board/216" data-search="文旅投资咨询 成都文旅集团 成都文旅投资咨询有限公司 四川川旅投资咨询">
+      <div class="card-name">文旅投资咨询</div>
+      <div class="card-top"><b>成都文旅集团</b>、<b>成都文旅投资咨询有限公司</b>、<b>四川川旅投资咨询</b></div>
+    </a>
+    <a class="card" href="/board/217" data-search="企业贷款 成都银行 中国建设银行成都分行 成都农商银行">
+      <div class="card-name">企业贷款</div>
+      <div class="card-top"><b>成都银行</b>、<b>中国建设银行成都分行</b>、<b>成都农商银行</b></div>
+    </a>
+    <a class="card" href="/board/218" data-search="融资租赁 成都金控融资租赁有限公司 成都工投融资租赁有限公司 工银金融租赁有限公司">
+      <div class="card-name">融资租赁</div>
+      <div class="card-top"><b>成都金控融资租赁有限公司</b>、<b>成都工投融资租赁有限公司</b>、<b>工银金融租赁有限公司</b></div>
+    </a>
+    <a class="card" href="/board/219" data-search="供应链金融 成都交子供应链金融服务有限公司 四川川投云链科技有限公司 成都工投融资租赁有限公司">
+      <div class="card-name">供应链金融</div>
+      <div class="card-top"><b>成都交子供应链金融服务有限公司</b>、<b>四川川投云链科技有限公司</b>、<b>成都工投融资租赁有限公司</b></div>
+    </a>
+    <a class="card" href="/board/220" data-search="支付服务 银联商务股份有限公司四川分公司 银联商务四川分公司 财付通支付科技有限公司成都分公司">
+      <div class="card-name">支付服务</div>
+      <div class="card-top"><b>银联商务股份有限公司四川分公司</b>、<b>银联商务四川分公司</b>、<b>财付通支付科技有限公司成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/221" data-search="保险经纪 明亚保险经纪（四川分公司） 明亚保险经纪股份有限公司四川分公司 大童保险服务（四川分公司）">
+      <div class="card-name">保险经纪</div>
+      <div class="card-top"><b>明亚保险经纪（四川分公司）</b>、<b>明亚保险经纪股份有限公司四川分公司</b>、<b>大童保险服务（四川分公司）</b></div>
+    </a>
+    <a class="card" href="/board/222" data-search="保险代理 大童保险服务（锦江区） 大童保险销售服务有限公司四川分公司 泛华保险销售服务集团（武侯区）">
+      <div class="card-name">保险代理</div>
+      <div class="card-top"><b>大童保险服务（锦江区）</b>、<b>大童保险销售服务有限公司四川分公司</b>、<b>泛华保险销售服务集团（武侯区）</b></div>
+    </a>
+    <a class="card" href="/board/223" data-search="财富管理 中信证券（四川分公司） 招商银行（成都私人银行中心） 中金财富（成都营业部）">
+      <div class="card-name">财富管理</div>
+      <div class="card-top"><b>中信证券（四川分公司）</b>、<b>招商银行（成都私人银行中心）</b>、<b>中金财富（成都营业部）</b></div>
+    </a>
+    <a class="card" href="/board/224" data-search="企业融资顾问 成都高新锦泓科技小额贷款有限责任公司 四川发展融资担保股份有限公司 成都中小企业融资担保有限责任公司">
+      <div class="card-name">企业融资顾问</div>
+      <div class="card-top"><b>成都高新锦泓科技小额贷款有限责任公司</b>、<b>四川发展融资担保股份有限公司</b>、<b>成都中小企业融资担保有限责任公司</b></div>
+    </a>
+    <a class="card" href="/board/225" data-search="税务筹划 四川中税网税务师事务所 成都众环海华税务师事务所 京洲联信（成都）税务师事务所">
+      <div class="card-name">税务筹划</div>
+      <div class="card-top"><b>四川中税网税务师事务所</b>、<b>成都众环海华税务师事务所</b>、<b>京洲联信（成都）税务师事务所</b></div>
+    </a>
+    <a class="card" href="/board/226" data-search="审计服务 四川华信（集团）会计师事务所 信永中和会计师事务所成都分所 天健会计师事务所四川分所">
+      <div class="card-name">审计服务</div>
+      <div class="card-top"><b>四川华信（集团）会计师事务所</b>、<b>信永中和会计师事务所成都分所</b>、<b>天健会计师事务所四川分所</b></div>
+    </a>
+    <a class="card" href="/board/227" data-search="资产评估 四川天健华衡资产评估有限公司 中联资产评估集团四川有限公司 四川华信资产评估事务所有限责任公司">
+      <div class="card-name">资产评估</div>
+      <div class="card-top"><b>四川天健华衡资产评估有限公司</b>、<b>中联资产评估集团四川有限公司</b>、<b>四川华信资产评估事务所有限责任公司</b></div>
+    </a>
+    <a class="card" href="/board/228" data-search="企业并购服务 中伦律师事务所（成都分所） 金杜律师事务所（成都分所） 国浩律师（成都）事务所">
+      <div class="card-name">企业并购服务</div>
+      <div class="card-top"><b>中伦律师事务所（成都分所）</b>、<b>金杜律师事务所（成都分所）</b>、<b>国浩律师（成都）事务所</b></div>
+    </a>
+    <a class="card" href="/board/229" data-search="律师事务所 四川发现律师事务所 北京大成（成都）律师事务所 四川明炬律师事务所">
+      <div class="card-name">律师事务所</div>
+      <div class="card-top"><b>四川发现律师事务所</b>、<b>北京大成（成都）律师事务所</b>、<b>四川明炬律师事务所</b></div>
+    </a>
+    <a class="card" href="/board/230" data-search="知识产权 成都九鼎天元知识产权代理有限公司 四川力久律师事务所（知识产权部） 成都行之专利代理事务所">
+      <div class="card-name">知识产权</div>
+      <div class="card-top"><b>成都九鼎天元知识产权代理有限公司</b>、<b>四川力久律师事务所（知识产权部）</b>、<b>成都行之专利代理事务所</b></div>
+    </a>
+    <a class="card" href="/board/231" data-search="商标代理 成都九鼎天元知识产权代理有限公司 四川力久律师事务所（知识产权部） 成都行之知识产权代理有限公司">
+      <div class="card-name">商标代理</div>
+      <div class="card-top"><b>成都九鼎天元知识产权代理有限公司</b>、<b>四川力久律师事务所（知识产权部）</b>、<b>成都行之知识产权代理有限公司</b></div>
+    </a>
+    <a class="card" href="/board/232" data-search="专利代理 成都九鼎天元知识产权代理有限公司 四川省专利代理事务所 成都行之专利代理事务所">
+      <div class="card-name">专利代理</div>
+      <div class="card-top"><b>成都九鼎天元知识产权代理有限公司</b>、<b>四川省专利代理事务所</b>、<b>成都行之专利代理事务所</b></div>
+    </a>
+    <a class="card" href="/board/233" data-search="企业合规 新希望集团 通威集团 成都银行">
+      <div class="card-name">企业合规</div>
+      <div class="card-top"><b>新希望集团</b>、<b>通威集团</b>、<b>成都银行</b></div>
+    </a>
+    <a class="card" href="/board/234" data-search="合同服务 四川明炬律师事务所 北京大成（成都）律师事务所 四川发现律师事务所">
+      <div class="card-name">合同服务</div>
+      <div class="card-top"><b>四川明炬律师事务所</b>、<b>北京大成（成都）律师事务所</b>、<b>四川发现律师事务所</b></div>
+    </a>
+    <a class="card" href="/board/235" data-search="仲裁服务 成都仲裁委员会 中国国际经济贸易仲裁委员会四川分会 成都国际仲裁中心">
+      <div class="card-name">仲裁服务</div>
+      <div class="card-top"><b>成都仲裁委员会</b>、<b>中国国际经济贸易仲裁委员会四川分会</b>、<b>成都国际仲裁中心</b></div>
+    </a>
+    <a class="card" href="/board/236" data-search="数据合规服务 四川矩衡律师事务所 北京大成（成都）律师事务所 四川发现律师事务所">
+      <div class="card-name">数据合规服务</div>
+      <div class="card-top"><b>四川矩衡律师事务所</b>、<b>北京大成（成都）律师事务所</b>、<b>四川发现律师事务所</b></div>
+    </a>
+    <a class="card" href="/board/237" data-search="企业信用 四川能投集团 成都兴城集团 通威股份">
+      <div class="card-name">企业信用</div>
+      <div class="card-top"><b>四川能投集团</b>、<b>成都兴城集团</b>、<b>通威股份</b></div>
+    </a>
+    <a class="card" href="/board/238" data-search="认证服务 中国质量认证中心成都分中心 SGS通标标准技术服务有限公司成都分公司 中国检验认证集团四川有限公司">
+      <div class="card-name">认证服务</div>
+      <div class="card-top"><b>中国质量认证中心成都分中心</b>、<b>SGS通标标准技术服务有限公司成都分公司</b>、<b>中国检验认证集团四川有限公司</b></div>
+    </a>
+    <a class="card" href="/board/239" data-search="检测服务 华西医院临床检验中心 四川省人民医院检验科 成都迪安医学检验所">
+      <div class="card-name">检测服务</div>
+      <div class="card-top"><b>华西医院临床检验中心</b>、<b>四川省人民医院检验科</b>、<b>成都迪安医学检验所</b></div>
+    </a>
+    <a class="card" href="/board/240" data-search="政策补贴申报 成都高新区“金熊猫”人才计划 成都市“蓉漂计划”创业资助 成都高新区“揭榜挂帅”科技项目">
+      <div class="card-name">政策补贴申报</div>
+      <div class="card-top"><b>成都高新区“金熊猫”人才计划</b>、<b>成都市“蓉漂计划”创业资助</b>、<b>成都高新区“揭榜挂帅”科技项目</b></div>
+    </a>
+    <a class="card" href="/board/241" data-search="精密加工 成都宏明电子股份有限公司 成都飞机工业（集团）有限责任公司 成都天马精密机械有限公司">
+      <div class="card-name">精密加工</div>
+      <div class="card-top"><b>成都宏明电子股份有限公司</b>、<b>成都飞机工业（集团）有限责任公司</b>、<b>成都天马精密机械有限公司</b></div>
+    </a>
+    <a class="card" href="/board/242" data-search="模具制造 成都宏明双新科技股份有限公司 四川成飞集成科技股份有限公司 成都航天模塑股份有限公司">
+      <div class="card-name">模具制造</div>
+      <div class="card-top"><b>成都宏明双新科技股份有限公司</b>、<b>四川成飞集成科技股份有限公司</b>、<b>成都航天模塑股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/243" data-search="包装制造 成都瑞琦包装 四川丰泰包装 成都中科包装">
+      <div class="card-name">包装制造</div>
+      <div class="card-top"><b>成都瑞琦包装</b>、<b>四川丰泰包装</b>、<b>成都中科包装</b></div>
+    </a>
+    <a class="card" href="/board/244" data-search="设备制造 东方电气集团 中国第二重型机械集团（二重装备） 成都飞机工业集团（成飞）">
+      <div class="card-name">设备制造</div>
+      <div class="card-top"><b>东方电气集团</b>、<b>中国第二重型机械集团（二重装备）</b>、<b>成都飞机工业集团（成飞）</b></div>
+    </a>
+    <a class="card" href="/board/245" data-search="自动化产线 成都卡诺普自动化控制技术有限公司 四川成焊宝玛焊接装备工程有限公司 成都思尔特机器人系统有限公司">
+      <div class="card-name">自动化产线</div>
+      <div class="card-top"><b>成都卡诺普自动化控制技术有限公司</b>、<b>四川成焊宝玛焊接装备工程有限公司</b>、<b>成都思尔特机器人系统有限公司</b></div>
+    </a>
+    <a class="card" href="/board/246" data-search="工业机器人 成都卡诺普机器人技术股份有限公司 成都思尔特机器人系统有限公司 成都航发机器人有限公司">
+      <div class="card-name">工业机器人</div>
+      <div class="card-top"><b>成都卡诺普机器人技术股份有限公司</b>、<b>成都思尔特机器人系统有限公司</b>、<b>成都航发机器人有限公司</b></div>
+    </a>
+    <a class="card" href="/board/247" data-search="电子制造 成都京东方光电科技 鸿富锦精密电子（成都） 中电科航空电子有限公司">
+      <div class="card-name">电子制造</div>
+      <div class="card-top"><b>成都京东方光电科技</b>、<b>鸿富锦精密电子（成都）</b>、<b>中电科航空电子有限公司</b></div>
+    </a>
+    <a class="card" href="/board/248" data-search="新材料 中蓝晨光化工研究设计院 成都硅宝科技 四川东材科技">
+      <div class="card-name">新材料</div>
+      <div class="card-top"><b>中蓝晨光化工研究设计院</b>、<b>成都硅宝科技</b>、<b>四川东材科技</b></div>
+    </a>
+    <a class="card" href="/board/249" data-search="3D打印 成都增材科技有限公司 四川维嘉增材制造技术有限公司 成都墨之坊科技有限公司">
+      <div class="card-name">3D打印</div>
+      <div class="card-top"><b>成都增材科技有限公司</b>、<b>四川维嘉增材制造技术有限公司</b>、<b>成都墨之坊科技有限公司</b></div>
+    </a>
+    <a class="card" href="/board/250" data-search="工业设计 洛可可创新设计集团（成都） 浪尖设计（成都） 嘉兰图设计（成都）">
+      <div class="card-name">工业设计</div>
+      <div class="card-top"><b>洛可可创新设计集团（成都）</b>、<b>浪尖设计（成都）</b>、<b>嘉兰图设计（成都）</b></div>
+    </a>
+    <a class="card" href="/board/251" data-search="零部件供应 成都宏明电子股份有限公司 四川华丰科技股份有限公司 成都航天模塑股份有限公司">
+      <div class="card-name">零部件供应</div>
+      <div class="card-top"><b>成都宏明电子股份有限公司</b>、<b>四川华丰科技股份有限公司</b>、<b>成都航天模塑股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/252" data-search="工业品品牌出海 通威集团 新希望集团 东方电气">
+      <div class="card-name">工业品品牌出海</div>
+      <div class="card-top"><b>通威集团</b>、<b>新希望集团</b>、<b>东方电气</b></div>
+    </a>
+    <a class="card" href="/board/253" data-search="企业管理软件 用友网络（成都分公司） 金蝶软件（成都分公司） 浪潮通软（成都研发中心）">
+      <div class="card-name">企业管理软件</div>
+      <div class="card-top"><b>用友网络（成都分公司）</b>、<b>金蝶软件（成都分公司）</b>、<b>浪潮通软（成都研发中心）</b></div>
+    </a>
+    <a class="card" href="/board/254" data-search="客户关系软件 成都数之联 成都任我行（管家婆） 成都明源云">
+      <div class="card-name">客户关系软件</div>
+      <div class="card-top"><b>成都数之联</b>、<b>成都任我行（管家婆）</b>、<b>成都明源云</b></div>
+    </a>
+    <a class="card" href="/board/255" data-search="人力资源软件 盖雅工场 北森 用友大易">
+      <div class="card-name">人力资源软件</div>
+      <div class="card-top"><b>盖雅工场</b>、<b>北森</b>、<b>用友大易</b></div>
+    </a>
+    <a class="card" href="/board/256" data-search="财务软件 用友畅捷通（成都分公司） 金蝶精斗云（成都服务中心） 浪潮云会计（成都运营中心）">
+      <div class="card-name">财务软件</div>
+      <div class="card-top"><b>用友畅捷通（成都分公司）</b>、<b>金蝶精斗云（成都服务中心）</b>、<b>浪潮云会计（成都运营中心）</b></div>
+    </a>
+    <a class="card" href="/board/257" data-search="协同办公 飞书 钉钉 企业微信">
+      <div class="card-name">协同办公</div>
+      <div class="card-top"><b>飞书</b>、<b>钉钉</b>、<b>企业微信</b></div>
+    </a>
+    <a class="card" href="/board/258" data-search="数据安全 亚信安全 奇安信（四川） 启明星辰（成都）">
+      <div class="card-name">数据安全</div>
+      <div class="card-top"><b>亚信安全</b>、<b>奇安信（四川）</b>、<b>启明星辰（成都）</b></div>
+    </a>
+    <a class="card" href="/board/259" data-search="灾备服务 中国电信（成都）灾备中心 万国数据成都数据中心 世纪互联成都灾备中心">
+      <div class="card-name">灾备服务</div>
+      <div class="card-top"><b>中国电信（成都）灾备中心</b>、<b>万国数据成都数据中心</b>、<b>世纪互联成都灾备中心</b></div>
+    </a>
+    <a class="card" href="/board/260" data-search="企业AI 华为成都研究所（AI中心） 腾讯成都AI Lab 阿里巴巴（成都）AI实验室">
+      <div class="card-name">企业AI</div>
+      <div class="card-top"><b>华为成都研究所（AI中心）</b>、<b>腾讯成都AI Lab</b>、<b>阿里巴巴（成都）AI实验室</b></div>
+    </a>
+    <a class="card" href="/board/261" data-search="IT运维 四川准达信息技术股份有限公司 成都同步新创科技股份有限公司 成都四方伟业软件股份有限公司">
+      <div class="card-name">IT运维</div>
+      <div class="card-top"><b>四川准达信息技术股份有限公司</b>、<b>成都同步新创科技股份有限公司</b>、<b>成都四方伟业软件股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/262" data-search="系统集成 华为技术有限公司成都研究所 四川长虹佳华信息产品有限责任公司 成都四方伟业软件股份有限公司">
+      <div class="card-name">系统集成</div>
+      <div class="card-top"><b>华为技术有限公司成都研究所</b>、<b>四川长虹佳华信息产品有限责任公司</b>、<b>成都四方伟业软件股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/263" data-search="软件外包 中软国际（成都） 软通动力（成都） 博彦科技（成都）">
+      <div class="card-name">软件外包</div>
+      <div class="card-top"><b>中软国际（成都）</b>、<b>软通动力（成都）</b>、<b>博彦科技（成都）</b></div>
+    </a>
+    <a class="card" href="/board/264" data-search="企业智能客服 晓多科技 明途科技 数之联">
+      <div class="card-name">企业智能客服</div>
+      <div class="card-top"><b>晓多科技</b>、<b>明途科技</b>、<b>数之联</b></div>
+    </a>
+    <a class="card" href="/board/265" data-search="猎头服务 锐仕方达（成都） 科锐国际（成都） 猎聘（成都分公司）">
+      <div class="card-name">猎头服务</div>
+      <div class="card-top"><b>锐仕方达（成都）</b>、<b>科锐国际（成都）</b>、<b>猎聘（成都分公司）</b></div>
+    </a>
+    <a class="card" href="/board/266" data-search="人力外包 中智四川 外企德科（FESCO Adecco） 四川金沙人才">
+      <div class="card-name">人力外包</div>
+      <div class="card-top"><b>中智四川</b>、<b>外企德科（FESCO Adecco）</b>、<b>四川金沙人才</b></div>
+    </a>
+    <a class="card" href="/board/267" data-search="劳务派遣 中智四川经济技术合作有限公司 四川方胜人力资源服务有限公司 成都人才有限责任公司">
+      <div class="card-name">劳务派遣</div>
+      <div class="card-top"><b>中智四川经济技术合作有限公司</b>、<b>四川方胜人力资源服务有限公司</b>、<b>成都人才有限责任公司</b></div>
+    </a>
+    <a class="card" href="/board/268" data-search="薪酬服务 中智四川 前程无忧薪酬调研中心 美世成都分公司">
+      <div class="card-name">薪酬服务</div>
+      <div class="card-top"><b>中智四川</b>、<b>前程无忧薪酬调研中心</b>、<b>美世成都分公司</b></div>
+    </a>
+    <a class="card" href="/board/269" data-search="培训外包 成都博为峰软件技术培训 成都中软国际教育 成都达内教育">
+      <div class="card-name">培训外包</div>
+      <div class="card-top"><b>成都博为峰软件技术培训</b>、<b>成都中软国际教育</b>、<b>成都达内教育</b></div>
+    </a>
+    <a class="card" href="/board/270" data-search="招聘平台 前程无忧（51job）成都站 智联招聘成都站 BOSS直聘成都站">
+      <div class="card-name">招聘平台</div>
+      <div class="card-top"><b>前程无忧（51job）成都站</b>、<b>智联招聘成都站</b>、<b>BOSS直聘成都站</b></div>
+    </a>
+    <a class="card" href="/board/271" data-search="人才测评 诺姆四达（Noema） 北森（Beisen） 倍智（Talebase）">
+      <div class="card-name">人才测评</div>
+      <div class="card-top"><b>诺姆四达（Noema）</b>、<b>北森（Beisen）</b>、<b>倍智（Talebase）</b></div>
+    </a>
+    <a class="card" href="/board/272" data-search="灵活用工 鱼泡网 新大瀚人力 人瑞人才">
+      <div class="card-name">灵活用工</div>
+      <div class="card-top"><b>鱼泡网</b>、<b>新大瀚人力</b>、<b>人瑞人才</b></div>
+    </a>
+    <a class="card" href="/board/273" data-search="企业文化建设咨询 中智咨询（成都分公司） 华夏基石（成都公司） 正略钧策（成都分部）">
+      <div class="card-name">企业文化建设咨询</div>
+      <div class="card-top"><b>中智咨询（成都分公司）</b>、<b>华夏基石（成都公司）</b>、<b>正略钧策（成都分部）</b></div>
+    </a>
+    <a class="card" href="/board/274" data-search="企业形象设计 成都黑蚁设计 丙火创意 古格品牌设计">
+      <div class="card-name">企业形象设计</div>
+      <div class="card-top"><b>成都黑蚁设计</b>、<b>丙火创意</b>、<b>古格品牌设计</b></div>
+    </a>
+    <a class="card" href="/board/275" data-search="数字化采购服务 四川川能智网 成都积微物联 四川长虹佳华">
+      <div class="card-name">数字化采购服务</div>
+      <div class="card-top"><b>四川川能智网</b>、<b>成都积微物联</b>、<b>四川长虹佳华</b></div>
+    </a>
+    <a class="card" href="/board/276" data-search="行政外包服务 中智四川 前程无忧成都分公司 外企德科FESCO Adecco">
+      <div class="card-name">行政外包服务</div>
+      <div class="card-top"><b>中智四川</b>、<b>前程无忧成都分公司</b>、<b>外企德科FESCO Adecco</b></div>
+    </a>
+    <a class="card" href="/board/277" data-search="设备租赁 宏信建发（成都） 众能联合（成都） 成都建工设备租赁">
+      <div class="card-name">设备租赁</div>
+      <div class="card-top"><b>宏信建发（成都）</b>、<b>众能联合（成都）</b>、<b>成都建工设备租赁</b></div>
+    </a>
+    <a class="card" href="/board/278" data-search="仪器租赁 成都仪器租赁网 四川中测仪器租赁 成都泰克仪器租赁">
+      <div class="card-name">仪器租赁</div>
+      <div class="card-top"><b>成都仪器租赁网</b>、<b>四川中测仪器租赁</b>、<b>成都泰克仪器租赁</b></div>
+    </a>
+    <a class="card" href="/board/279" data-search="测试服务 中电科十所赛宝计量检测中心 成都软件测试中心 华测检测（成都）">
+      <div class="card-name">测试服务</div>
+      <div class="card-top"><b>中电科十所赛宝计量检测中心</b>、<b>成都软件测试中心</b>、<b>华测检测（成都）</b></div>
+    </a>
+    <a class="card" href="/board/280" data-search="实验室服务 华西医院转化医学综合楼实验室 成都生物制品研究所实验中心 四川大学分析测试中心">
+      <div class="card-name">实验室服务</div>
+      <div class="card-top"><b>华西医院转化医学综合楼实验室</b>、<b>成都生物制品研究所实验中心</b>、<b>四川大学分析测试中心</b></div>
+    </a>
+    <a class="card" href="/board/281" data-search="医疗设备服务 四川大学华西医院医学工程科 国药集团四川省医疗器械有限公司 成都联帮医疗科技股份有限公司">
+      <div class="card-name">医疗设备服务</div>
+      <div class="card-top"><b>四川大学华西医院医学工程科</b>、<b>国药集团四川省医疗器械有限公司</b>、<b>成都联帮医疗科技股份有限公司</b></div>
+    </a>
+    <a class="card" href="/board/282" data-search="安防设备 海康威视成都体验中心 大华股份成都分公司 成都安防科技城">
+      <div class="card-name">安防设备</div>
+      <div class="card-top"><b>海康威视成都体验中心</b>、<b>大华股份成都分公司</b>、<b>成都安防科技城</b></div>
+    </a>
+    <a class="card" href="/board/283" data-search="消防工程 四川消防工程有限公司 成都建工消防工程有限公司 四川华宇消防工程有限公司">
+      <div class="card-name">消防工程</div>
+      <div class="card-top"><b>四川消防工程有限公司</b>、<b>成都建工消防工程有限公司</b>、<b>四川华宇消防工程有限公司</b></div>
+    </a>
+    <a class="card" href="/board/284" data-search="工业耗材 成都工具研究所有限公司 四川天虎工具有限责任公司 成都成量工具集团有限公司">
+      <div class="card-name">工业耗材</div>
+      <div class="card-top"><b>成都工具研究所有限公司</b>、<b>四川天虎工具有限责任公司</b>、<b>成都成量工具集团有限公司</b></div>
+    </a>
+    <a class="card" href="/board/285" data-search="工装服务 川豪装饰（工装部） 圣都家装（工装中心） 业之峰装饰（工装分公司）">
+      <div class="card-name">工装服务</div>
+      <div class="card-top"><b>川豪装饰（工装部）</b>、<b>圣都家装（工装中心）</b>、<b>业之峰装饰（工装分公司）</b></div>
+    </a>
+    <a class="card" href="/board/286" data-search="特种设备 成都市特种设备检验检测研究院 四川省特种设备检验研究院 成都蓉城特种设备技术服务有限公司">
+      <div class="card-name">特种设备</div>
+      <div class="card-top"><b>成都市特种设备检验检测研究院</b>、<b>四川省特种设备检验研究院</b>、<b>成都蓉城特种设备技术服务有限公司</b></div>
+    </a>
+    <a class="card" href="/board/287" data-search="工业设备认证 中国测试技术研究院（成华区） 四川省特种设备检验研究院（龙泉驿区） 成都产品质量检验研究院（武侯区）">
+      <div class="card-name">工业设备认证</div>
+      <div class="card-top"><b>中国测试技术研究院（成华区）</b>、<b>四川省特种设备检验研究院（龙泉驿区）</b>、<b>成都产品质量检验研究院（武侯区）</b></div>
+    </a>
+    <a class="card" href="/board/288" data-search="全过程工程咨询 四川明清工程咨询有限公司 成都衡泰工程管理有限责任公司 四川元丰建设项目管理有限公司">
+      <div class="card-name">全过程工程咨询</div>
+      <div class="card-top"><b>四川明清工程咨询有限公司</b>、<b>成都衡泰工程管理有限责任公司</b>、<b>四川元丰建设项目管理有限公司</b></div>
+    </a>
+    <a class="card" href="/board/289" data-search="供应链管理 准时达国际供应链 四川长虹民生物流 成都国际铁路港投资发展集团">
+      <div class="card-name">供应链管理</div>
+      <div class="card-top"><b>准时达国际供应链</b>、<b>四川长虹民生物流</b>、<b>成都国际铁路港投资发展集团</b></div>
+    </a>
+    <a class="card" href="/board/290" data-search="冷链物流 成都银犁冷藏物流股份有限公司 成都海霸王食品物流园 成都润宝物流有限公司">
+      <div class="card-name">冷链物流</div>
+      <div class="card-top"><b>成都银犁冷藏物流股份有限公司</b>、<b>成都海霸王食品物流园</b>、<b>成都润宝物流有限公司</b></div>
+    </a>
+    <a class="card" href="/board/291" data-search="跨境物流 中外运跨境电商物流（成都）有限公司 四川邮政国际业务分公司 京东国际物流（成都）">
+      <div class="card-name">跨境物流</div>
+      <div class="card-top"><b>中外运跨境电商物流（成都）有限公司</b>、<b>四川邮政国际业务分公司</b>、<b>京东国际物流（成都）</b></div>
+    </a>
+    <a class="card" href="/board/292" data-search="仓储服务 京东亚洲一号成都智能物流园 普洛斯成都青白江物流园 菜鸟网络成都双流仓储中心">
+      <div class="card-name">仓储服务</div>
+      <div class="card-top"><b>京东亚洲一号成都智能物流园</b>、<b>普洛斯成都青白江物流园</b>、<b>菜鸟网络成都双流仓储中心</b></div>
+    </a>
+    <a class="card" href="/board/293" data-search="云仓服务 京东云仓（成都） 菜鸟云仓（成都） 发网云仓（成都）">
+      <div class="card-name">云仓服务</div>
+      <div class="card-top"><b>京东云仓（成都）</b>、<b>菜鸟云仓（成都）</b>、<b>发网云仓（成都）</b></div>
+    </a>
+    <a class="card" href="/board/294" data-search="货运代理 中外运长航（成都） 四川航空物流 成都国际陆港运营">
+      <div class="card-name">货运代理</div>
+      <div class="card-top"><b>中外运长航（成都）</b>、<b>四川航空物流</b>、<b>成都国际陆港运营</b></div>
+    </a>
+    <a class="card" href="/board/295" data-search="国际货代 中外运四川公司 四川远成国际物流 成都创源国际货运代理">
+      <div class="card-name">国际货代</div>
+      <div class="card-top"><b>中外运四川公司</b>、<b>四川远成国际物流</b>、<b>成都创源国际货运代理</b></div>
+    </a>
+    <a class="card" href="/board/296" data-search="同城配送 京东秒送 顺丰同城急送 闪送">
+      <div class="card-name">同城配送</div>
+      <div class="card-top"><b>京东秒送</b>、<b>顺丰同城急送</b>、<b>闪送</b></div>
+    </a>
+    <a class="card" href="/board/297" data-search="即时配送 顺丰同城 闪送 美团跑腿">
+      <div class="card-name">即时配送</div>
+      <div class="card-top"><b>顺丰同城</b>、<b>闪送</b>、<b>美团跑腿</b></div>
+    </a>
+    <a class="card" href="/board/298" data-search="物流数字化服务 准时达 积微物联 运荔枝">
+      <div class="card-name">物流数字化服务</div>
+      <div class="card-top"><b>准时达</b>、<b>积微物联</b>、<b>运荔枝</b></div>
+    </a>
+    <a class="card" href="/board/299" data-search="供应链规划服务 准时达国际供应链 京东物流西南供应链 四川物联亿达科技">
+      <div class="card-name">供应链规划服务</div>
+      <div class="card-top"><b>准时达国际供应链</b>、<b>京东物流西南供应链</b>、<b>四川物联亿达科技</b></div>
+    </a>
+    <a class="card" href="/board/300" data-search="供应链科技服务 准时达国际供应链 积微物联 成都国际铁路港供应链">
+      <div class="card-name">供应链科技服务</div>
+      <div class="card-top"><b>准时达国际供应链</b>、<b>积微物联</b>、<b>成都国际铁路港供应链</b></div>
+    </a>
+    <a class="card" href="/board/301" data-search="工业品采购平台 震坤行工业超市 西域供应链 京东工业">
+      <div class="card-name">工业品采购平台</div>
+      <div class="card-top"><b>震坤行工业超市</b>、<b>西域供应链</b>、<b>京东工业</b></div>
+    </a>
+    <a class="card" href="/board/302" data-search="外贸获客服务 成都环球贸易通 四川丝路云商 成都拓客网络">
+      <div class="card-name">外贸获客服务</div>
+      <div class="card-top"><b>成都环球贸易通</b>、<b>四川丝路云商</b>、<b>成都拓客网络</b></div>
+    </a>
+    <a class="card" href="/board/303" data-search="食品供应链 海霸王食品供应链 益民菜市供应链 新希望鲜生活供应链">
+      <div class="card-name">食品供应链</div>
+      <div class="card-top"><b>海霸王食品供应链</b>、<b>益民菜市供应链</b>、<b>新希望鲜生活供应链</b></div>
+    </a>
+    <a class="card" href="/board/304" data-search="包装供应链 成都裕同包装有限公司 四川新升包装科技集团 成都中天印务有限公司">
+      <div class="card-name">包装供应链</div>
+      <div class="card-top"><b>成都裕同包装有限公司</b>、<b>四川新升包装科技集团</b>、<b>成都中天印务有限公司</b></div>
+    </a>
+    <a class="card" href="/board/305" data-search="服装供应链 荷花池大成市场 九龙广场 金荷花时装城">
+      <div class="card-name">服装供应链</div>
+      <div class="card-top"><b>荷花池大成市场</b>、<b>九龙广场</b>、<b>金荷花时装城</b></div>
+    </a>
+    <a class="card" href="/board/306" data-search="美妆供应链 成都美妆供应链管理有限公司 四川美妆汇供应链 成都集美供应链">
+      <div class="card-name">美妆供应链</div>
+      <div class="card-top"><b>成都美妆供应链管理有限公司</b>、<b>四川美妆汇供应链</b>、<b>成都集美供应链</b></div>
+    </a>
+    <a class="card" href="/board/307" data-search="电子供应链 华为数字能源（郫都区） 京东方科技（高新西区） 中电科三十所（武侯区）">
+      <div class="card-name">电子供应链</div>
+      <div class="card-top"><b>华为数字能源（郫都区）</b>、<b>京东方科技（高新西区）</b>、<b>中电科三十所（武侯区）</b></div>
+    </a>
+    <a class="card" href="/board/308" data-search="医疗器械供应链 国药集团四川省医疗器械有限公司 四川大学华西医院装备物资供应链中心 成都医投医疗器械供应链有限公司">
+      <div class="card-name">医疗器械供应链</div>
+      <div class="card-top"><b>国药集团四川省医疗器械有限公司</b>、<b>四川大学华西医院装备物资供应链中心</b>、<b>成都医投医疗器械供应链有限公司</b></div>
+    </a>
+    <a class="card" href="/board/309" data-search="跨境电商 成都跨境贸易电子商务公共服务平台 环球云仓 澳新优选">
+      <div class="card-name">跨境电商</div>
+      <div class="card-top"><b>成都跨境贸易电子商务公共服务平台</b>、<b>环球云仓</b>、<b>澳新优选</b></div>
+    </a>
+    <a class="card" href="/board/310" data-search="外贸服务 成都全球贸易通 四川外贸集团 阿里国际站（成都服务中心）">
+      <div class="card-name">外贸服务</div>
+      <div class="card-top"><b>成都全球贸易通</b>、<b>四川外贸集团</b>、<b>阿里国际站（成都服务中心）</b></div>
+    </a>
+    <a class="card" href="/board/311" data-search="海外仓 中远海运海外仓（双流区） 万邑通海外仓（武侯区） 递四方海外仓（双流区）">
+      <div class="card-name">海外仓</div>
+      <div class="card-top"><b>中远海运海外仓（双流区）</b>、<b>万邑通海外仓（武侯区）</b>、<b>递四方海外仓（双流区）</b></div>
+    </a>
+    <a class="card" href="/board/312" data-search="出口合规 北京金杜（成都）律师事务所 中伦律师事务所成都分所 君合律师事务所成都办公室">
+      <div class="card-name">出口合规</div>
+      <div class="card-top"><b>北京金杜（成都）律师事务所</b>、<b>中伦律师事务所成都分所</b>、<b>君合律师事务所成都办公室</b></div>
+    </a>
+    <a class="card" href="/board/313" data-search="电商代运营 成都数聚汇 成都蝉鸣电商 成都云创电商">
+      <div class="card-name">电商代运营</div>
+      <div class="card-top"><b>成都数聚汇</b>、<b>成都蝉鸣电商</b>、<b>成都云创电商</b></div>
+    </a>
+    <a class="card" href="/board/314" data-search="品牌电商 书亦烧仙草（电商事业部） 极米科技 蜀大侠食品">
+      <div class="card-name">品牌电商</div>
+      <div class="card-top"><b>书亦烧仙草（电商事业部）</b>、<b>极米科技</b>、<b>蜀大侠食品</b></div>
+    </a>
+    <a class="card" href="/board/315" data-search="直播电商 成都极米传媒 四川商通天下 成都星娱文化">
+      <div class="card-name">直播电商</div>
+      <div class="card-top"><b>成都极米传媒</b>、<b>四川商通天下</b>、<b>成都星娱文化</b></div>
+    </a>
+    <a class="card" href="/board/316" data-search="短视频电商 成都云创视界 抖商传媒（成都） 星火映画电商">
+      <div class="card-name">短视频电商</div>
+      <div class="card-top"><b>成都云创视界</b>、<b>抖商传媒（成都）</b>、<b>星火映画电商</b></div>
+    </a>
+    <a class="card" href="/board/317" data-search="私域电商 成都数联魔方 成都云集智汇 成都微盟成都运营中心">
+      <div class="card-name">私域电商</div>
+      <div class="card-top"><b>成都数联魔方</b>、<b>成都云集智汇</b>、<b>成都微盟成都运营中心</b></div>
+    </a>
+    <a class="card" href="/board/318" data-search="社区零售数字化 见福便利店（武侯区） 红旗连锁（高新区） 舞东风（锦江区）">
+      <div class="card-name">社区零售数字化</div>
+      <div class="card-top"><b>见福便利店（武侯区）</b>、<b>红旗连锁（高新区）</b>、<b>舞东风（锦江区）</b></div>
+    </a>
+    <a class="card" href="/board/319" data-search="会员运营 成都数联魔方 成都云徙科技 成都链动时代">
+      <div class="card-name">会员运营</div>
+      <div class="card-top"><b>成都数联魔方</b>、<b>成都云徙科技</b>、<b>成都链动时代</b></div>
+    </a>
+    <a class="card" href="/board/320" data-search="达人经纪 成都星娱文化 四川麦穗传媒 成都热度传媒">
+      <div class="card-name">达人经纪</div>
+      <div class="card-top"><b>成都星娱文化</b>、<b>四川麦穗传媒</b>、<b>成都热度传媒</b></div>
+    </a>
+    <a class="card" href="/board/321" data-search="电商品牌增长 白家阿宽 书亦烧仙草 极米科技">
+      <div class="card-name">电商品牌增长</div>
+      <div class="card-top"><b>白家阿宽</b>、<b>书亦烧仙草</b>、<b>极米科技</b></div>
+    </a>
+    <a class="card" href="/board/322" data-search="达人选品服务 热度星选成都分公司 蝉妈妈成都选品中心 飞瓜数据成都运营点">
+      <div class="card-name">达人选品服务</div>
+      <div class="card-top"><b>热度星选成都分公司</b>、<b>蝉妈妈成都选品中心</b>、<b>飞瓜数据成都运营点</b></div>
+    </a>
+    <a class="card" href="/board/323" data-search="电商数据分析 数聚智汇 观远数据 帆软软件">
+      <div class="card-name">电商数据分析</div>
+      <div class="card-top"><b>数聚智汇</b>、<b>观远数据</b>、<b>帆软软件</b></div>
+    </a>
+    <a class="card" href="/board/324" data-search="跨境电商服务 成都全球跨境电商服务资源中心 四川跨境电商产业联盟 成都跨境贸易电子商务公共服务平台">
+      <div class="card-name">跨境电商服务</div>
+      <div class="card-top"><b>成都全球跨境电商服务资源中心</b>、<b>四川跨境电商产业联盟</b>、<b>成都跨境贸易电子商务公共服务平台</b></div>
+    </a>
+    <a class="card" href="/board/325" data-search="商业情报 成都新经济活力区研究院 成都市经济发展研究院 天虎科技">
+      <div class="card-name">商业情报</div>
+      <div class="card-top"><b>成都新经济活力区研究院</b>、<b>成都市经济发展研究院</b>、<b>天虎科技</b></div>
+    </a>
+    <a class="card" href="/board/326" data-search="行业研究 华西证券研究所 国金证券研究所 四川发展（控股）研究院">
+      <div class="card-name">行业研究</div>
+      <div class="card-top"><b>华西证券研究所</b>、<b>国金证券研究所</b>、<b>四川发展（控股）研究院</b></div>
+    </a>
+    <a class="card" href="/board/327" data-search="市场调研 赛迪顾问成都分公司 益普索（Ipsos）成都 尼尔森IQ成都">
+      <div class="card-name">市场调研</div>
+      <div class="card-top"><b>赛迪顾问成都分公司</b>、<b>益普索（Ipsos）成都</b>、<b>尼尔森IQ成都</b></div>
+    </a>
+    <a class="card" href="/board/328" data-search="用户洞察 集思（成都）用户研究 凯度（成都） 零点有数（成都）">
+      <div class="card-name">用户洞察</div>
+      <div class="card-top"><b>集思（成都）用户研究</b>、<b>凯度（成都）</b>、<b>零点有数（成都）</b></div>
+    </a>
+    <a class="card" href="/board/329" data-search="GEO优化 成都锐之狮网络 成都盘古互动 成都聚网科技">
+      <div class="card-name">GEO优化</div>
+      <div class="card-top"><b>成都锐之狮网络</b>、<b>成都盘古互动</b>、<b>成都聚网科技</b></div>
+    </a>
+    <a class="card" href="/board/330" data-search="SEO优化 成都锐点网络 成都易优网络 成都聚诚科技">
+      <div class="card-name">SEO优化</div>
+      <div class="card-top"><b>成都锐点网络</b>、<b>成都易优网络</b>、<b>成都聚诚科技</b></div>
+    </a>
+    <a class="card" href="/board/331" data-search="舆情监测 四川麻辣社区舆情研究院 成都清博大数据科技有限公司 四川日报全媒体舆情中心">
+      <div class="card-name">舆情监测</div>
+      <div class="card-top"><b>四川麻辣社区舆情研究院</b>、<b>成都清博大数据科技有限公司</b>、<b>四川日报全媒体舆情中心</b></div>
+    </a>
+    <a class="card" href="/board/332" data-search="品牌监测 成都数之联科技 成都清博大数据 成都艾普思咨询">
+      <div class="card-name">品牌监测</div>
+      <div class="card-top"><b>成都数之联科技</b>、<b>成都清博大数据</b>、<b>成都艾普思咨询</b></div>
+    </a>
+    <a class="card" href="/board/333" data-search="数据分析 数联铭品 四方伟业 数之联">
+      <div class="card-name">数据分析</div>
+      <div class="card-top"><b>数联铭品</b>、<b>四方伟业</b>、<b>数之联</b></div>
+    </a>
+    <a class="card" href="/board/334" data-search="数据标注 成都数之联科技 成都澳鹏信息技术 成都文思海辉">
+      <div class="card-name">数据标注</div>
+      <div class="card-top"><b>成都数之联科技</b>、<b>成都澳鹏信息技术</b>、<b>成都文思海辉</b></div>
+    </a>
+    <a class="card" href="/board/335" data-search="AI数据服务 成都数之联科技 成都四方伟业 成都考拉悠然">
+      <div class="card-name">AI数据服务</div>
+      <div class="card-top"><b>成都数之联科技</b>、<b>成都四方伟业</b>、<b>成都考拉悠然</b></div>
+    </a>
+    <a class="card" href="/board/336" data-search="商业数据库 成都数据集团 数联铭品（BBD） 四方伟业">
+      <div class="card-name">商业数据库</div>
+      <div class="card-top"><b>成都数据集团</b>、<b>数联铭品（BBD）</b>、<b>四方伟业</b></div>
+    </a>
+    <a class="card" href="/board/337" data-search="商务旅行 成都富力丽思卡尔顿酒店 成都群光君悦酒店 成都博舍">
+      <div class="card-name">商务旅行</div>
+      <div class="card-top"><b>成都富力丽思卡尔顿酒店</b>、<b>成都群光君悦酒店</b>、<b>成都博舍</b></div>
+    </a>
+    <a class="card" href="/board/338" data-search="会奖旅游 成都世纪城天堂洲际大饭店 成都环球中心天堂洲际大饭店 成都香格里拉大酒店">
+      <div class="card-name">会奖旅游</div>
+      <div class="card-top"><b>成都世纪城天堂洲际大饭店</b>、<b>成都环球中心天堂洲际大饭店</b>、<b>成都香格里拉大酒店</b></div>
+    </a>
+    <a class="card" href="/board/339" data-search="签证服务 成都签证服务中心（武侯区） 中青旅签证（锦江区） 百程旅行网成都分公司（青羊区）">
+      <div class="card-name">签证服务</div>
+      <div class="card-top"><b>成都签证服务中心（武侯区）</b>、<b>中青旅签证（锦江区）</b>、<b>百程旅行网成都分公司（青羊区）</b></div>
+    </a>
+    <a class="card" href="/board/340" data-search="差旅管理 携程商旅 差旅壹号 美亚商旅">
+      <div class="card-name">差旅管理</div>
+      <div class="card-top"><b>携程商旅</b>、<b>差旅壹号</b>、<b>美亚商旅</b></div>
+    </a>
+    <a class="card" href="/board/341" data-search="会议策划 成都世纪城天堂洲际大饭店 成都香格里拉大酒店 成都群光君悦酒店">
+      <div class="card-name">会议策划</div>
+      <div class="card-top"><b>成都世纪城天堂洲际大饭店</b>、<b>成都香格里拉大酒店</b>、<b>成都群光君悦酒店</b></div>
+    </a>
+    <a class="card" href="/board/342" data-search="展览服务 成都世纪城新国际会展中心 成都国际非遗博览园 四川国际会展有限公司">
+      <div class="card-name">展览服务</div>
+      <div class="card-top"><b>成都世纪城新国际会展中心</b>、<b>成都国际非遗博览园</b>、<b>四川国际会展有限公司</b></div>
+    </a>
+    <a class="card" href="/board/343" data-search="活动策划 成都活动策划公司·黑蚁文创 成都壹捌零活动策划 成都锐力公关">
+      <div class="card-name">活动策划</div>
+      <div class="card-top"><b>成都活动策划公司·黑蚁文创</b>、<b>成都壹捌零活动策划</b>、<b>成都锐力公关</b></div>
+    </a>
+    <a class="card" href="/board/344" data-search="会展搭建 成都纵连会展服务有限公司 四川博鳌会展服务有限公司 成都华阳展览展示有限公司">
+      <div class="card-name">会展搭建</div>
+      <div class="card-top"><b>成都纵连会展服务有限公司</b>、<b>四川博鳌会展服务有限公司</b>、<b>成都华阳展览展示有限公司</b></div>
+    </a>
+    <a class="card" href="/board/345" data-search="目的地营销 成都文旅集团 域上和美文旅 成都传媒文化投资">
+      <div class="card-name">目的地营销</div>
+      <div class="card-top"><b>成都文旅集团</b>、<b>域上和美文旅</b>、<b>成都传媒文化投资</b></div>
+    </a>
+    <a class="card" href="/board/346" data-search="旅游科技 成都博物馆（青羊区） 金沙遗址博物馆（青羊区） 成都科技馆（青羊区）">
+      <div class="card-name">旅游科技</div>
+      <div class="card-top"><b>成都博物馆（青羊区）</b>、<b>金沙遗址博物馆（青羊区）</b>、<b>成都科技馆（青羊区）</b></div>
+    </a>
+    <a class="card" href="/board/347" data-search="酒店分销 成都博舍 成都群光君悦酒店 成都富力丽思卡尔顿酒店">
+      <div class="card-name">酒店分销</div>
+      <div class="card-top"><b>成都博舍</b>、<b>成都群光君悦酒店</b>、<b>成都富力丽思卡尔顿酒店</b></div>
+    </a>
+    <a class="card" href="/board/348" data-search="会展商旅服务 成都世纪城新国际会展中心 成都天府国际会议中心 成都国际非遗博览园">
+      <div class="card-name">会展商旅服务</div>
+      <div class="card-top"><b>成都世纪城新国际会展中心</b>、<b>成都天府国际会议中心</b>、<b>成都国际非遗博览园</b></div>
+    </a>
+    <a class="card" href="/board/349" data-search="公关公司 博雅公关（Burson） 蓝色光标（BlueFocus） 爱德曼公关（Edelman）">
+      <div class="card-name">公关公司</div>
+      <div class="card-top"><b>博雅公关（Burson）</b>、<b>蓝色光标（BlueFocus）</b>、<b>爱德曼公关（Edelman）</b></div>
+    </a>
+    <a class="card" href="/board/350" data-search="媒体关系 四川日报报业集团 成都传媒集团 四川广播电视台">
+      <div class="card-name">媒体关系</div>
+      <div class="card-top"><b>四川日报报业集团</b>、<b>成都传媒集团</b>、<b>四川广播电视台</b></div>
+    </a>
+    <a class="card" href="/board/351" data-search="品牌传播 成都黑蚁文化传播 成都奥美集团（成都分公司） 成都新潮传媒集团">
+      <div class="card-name">品牌传播</div>
+      <div class="card-top"><b>成都黑蚁文化传播</b>、<b>成都奥美集团（成都分公司）</b>、<b>成都新潮传媒集团</b></div>
+    </a>
+    <a class="card" href="/board/352" data-search="危机公关 成都壹心公关 成都锐之狮公关 成都星火公关">
+      <div class="card-name">危机公关</div>
+      <div class="card-top"><b>成都壹心公关</b>、<b>成都锐之狮公关</b>、<b>成都星火公关</b></div>
+    </a>
+    <a class="card" href="/board/353" data-search="内容分发 成都商报营销中心 谈资APP 成都全搜索新闻网">
+      <div class="card-name">内容分发</div>
+      <div class="card-top"><b>成都商报营销中心</b>、<b>谈资APP</b>、<b>成都全搜索新闻网</b></div>
+    </a>
+    <a class="card" href="/board/354" data-search="短视频营销 成都黑焰文化 成都星火互娱 成都麦芽传媒">
+      <div class="card-name">短视频营销</div>
+      <div class="card-top"><b>成都黑焰文化</b>、<b>成都星火互娱</b>、<b>成都麦芽传媒</b></div>
+    </a>
+    <a class="card" href="/board/355" data-search="直播营销 成都星耀传媒 四川麦芽文化 成都聚火互娱">
+      <div class="card-name">直播营销</div>
+      <div class="card-top"><b>成都星耀传媒</b>、<b>四川麦芽文化</b>、<b>成都聚火互娱</b></div>
+    </a>
+    <a class="card" href="/board/356" data-search="达人营销 成都华盟传媒 成都星娱文化 成都抖咖互动">
+      <div class="card-name">达人营销</div>
+      <div class="card-top"><b>成都华盟传媒</b>、<b>成都星娱文化</b>、<b>成都抖咖互动</b></div>
+    </a>
+    <a class="card" href="/board/357" data-search="广告代理 四川黑蚁文化传播 成都奥美（Ogilvy Chengdu） 成都博瑞广告">
+      <div class="card-name">广告代理</div>
+      <div class="card-top"><b>四川黑蚁文化传播</b>、<b>成都奥美（Ogilvy Chengdu）</b>、<b>成都博瑞广告</b></div>
+    </a>
+    <a class="card" href="/board/358" data-search="品牌故事营销 霸王茶姬 蜀大侠 茶百道">
+      <div class="card-name">品牌故事营销</div>
+      <div class="card-top"><b>霸王茶姬</b>、<b>蜀大侠</b>、<b>茶百道</b></div>
+    </a>
+    <a class="card" href="/board/359" data-search="播客营销服务 声动活泼 小宇宙播客营销中心 大内密谈">
+      <div class="card-name">播客营销服务</div>
+      <div class="card-top"><b>声动活泼</b>、<b>小宇宙播客营销中心</b>、<b>大内密谈</b></div>
+    </a>
+    <a class="card" href="/board/360" data-search="海外内容营销 成都邑扬互动 成都出海笔记 成都星火出海">
+      <div class="card-name">海外内容营销</div>
+      <div class="card-top"><b>成都邑扬互动</b>、<b>成都出海笔记</b>、<b>成都星火出海</b></div>
+    </a>
+  </div>
+  <p class="empty-tip" id="empty">没有匹配的行业。</p>
+  <script>
+    document.getElementById('q').addEventListener('input', function () {
+      var v = this.value.trim().toLowerCase();
+      var shown = 0;
+      document.querySelectorAll('#grid .card').forEach(function (c) {
+        var hit = !v || c.getAttribute('data-search').toLowerCase().indexOf(v) !== -1;
+        c.style.display = hit ? '' : 'none';
+        if (hit) shown++;
+      });
+      document.getElementById('empty').style.display = shown ? 'none' : 'block';
+    });
+  </script>
+  <footer class="foot">
+    <span>数据快照由 GEOloopOS 引擎生成 · 双引擎实测 · 定期复测更新</span>
+    <span><a href="https://github.com/zhangxiaomingv/geoloopos">开源引擎</a> · <a href="https://zkoner.com">创始人实验站</a></span>
+  </footer>
+</div>
+</body>
+</html>

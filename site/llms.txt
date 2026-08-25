@@ -21,6 +21,8 @@ GEOloopOS 是 AI 可见度基础设施（生成式引擎优化 / GEO）。它检
 ## 链接
 
 - [产品官网](https://geoloopos.com/)
+- [成都360行 · AI 推荐榜（360 个行业实测公开数据）](https://geoloopos.com/board/)
+- [AI 来访监测（双信号实验：公开记录哪些 AI 爬虫在来访、抓了什么）](https://geoloopos.com/observe/)
 - [创始人实验站 zkoner.com](https://zkoner.com)
 - [GEO 方法论](https://zkoner.com/geo)
 - [开源引擎 GitHub](https://github.com/zhangxiaomingv/geoloopos)

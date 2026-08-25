@@ -13,12 +13,16 @@ services:
       DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY}"
       ARK_API_KEY: "${ARK_API_KEY}"
       DOUBAO_MODEL: "${DOUBAO_MODEL:-}"
+      OBSERVE_TOKEN: "${OBSERVE_TOKEN}"
+      OBSERVE_SITES: "${OBSERVE_SITES:-zkoner.com,geoloopos.com}"
       RATE_PER_MIN: "${RATE_PER_MIN:-8}"
       RATE_PER_DAY: "${RATE_PER_DAY:-80}"
       MAX_CONCURRENT: "${MAX_CONCURRENT:-3}"
     # bind mount 到宿主 ./data：数据连续（迁移历史保留）、透明可备份
+    # site/ 也挂进容器：observe/board/llms 等静态页由宿主脚本生成、容器直接服务
     volumes:
       - ./data:/app/data
+      - ./site:/app/site
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:8788/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
