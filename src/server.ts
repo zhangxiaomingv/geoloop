@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { runCheck } from "./check.js";
+import { runAudit, listAudits } from "./audit.js";
 import { appendCheck, listChecks, getCheck } from "./history.js";
 import { generateKB, getKB, saveKB, listKBs, runGapAnalysis, type KBInput } from "./kb.js";
 import {
@@ -54,6 +55,7 @@ const pageFile = path.join(here, "src/web/index.html");
 const reportPageFile = path.join(here, "src/web/report.html");
 const deployPageFile = path.join(here, "src/web/deploy.html");
 const packPageFile = path.join(here, "src/web/packs.html");
+const auditPageFile = path.join(here, "src/web/audit.html");
 
 /** HTML 页面响应头：强制 no-cache（内容随开发持续变化，避免浏览器/CDN 展示旧版本） */
 const htmlHeaders = { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" };
@@ -250,6 +252,67 @@ const server = createServer(async (req, res) => {
     } catch (e) {
       console.error("[检测] 运行失败：", e);
       json(res, 500, { ok: false, message: "检测服务暂时不可用，请稍后再试" });
+    } finally {
+      runningChecks--;
+    }
+    return;
+  }
+
+  // ============ 站点 AI 友好度审计（闭环第一层） ============
+
+  // 审计页面（一个输入框）
+  if (req.method === "GET" && url.pathname === "/audit") {
+    res.writeHead(200, htmlHeaders);
+    res.end(readFileSync(auditPageFile, "utf-8"));
+    return;
+  }
+
+  // 审计历史
+  if (req.method === "GET" && url.pathname === "/api/audits") {
+    const limit = Math.min(Number(url.searchParams.get("limit") || 20), 50);
+    json(res, 200, { ok: true, audits: listAudits(limit) });
+    return;
+  }
+
+  // 跑一次闭环：输入 URL → ①结构审计 ②AI 认知 ③行动清单 ④历史对比
+  if (req.method === "POST" && url.pathname === "/api/audit") {
+    let body: { url?: unknown; withCheck?: unknown };
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      json(res, 400, { ok: false, message: "请求体不是合法 JSON" });
+      return;
+    }
+    const url = typeof body.url === "string" ? body.url.trim() : "";
+    if (!url) {
+      json(res, 400, { ok: false, message: "请输入网站地址，如 geoloopos.com" });
+      return;
+    }
+    if (url.length > 200) {
+      json(res, 400, { ok: false, message: "输入过长（最多 200 字）" });
+      return;
+    }
+
+    const ip = clientIP(req);
+    const lim = allow(ip);
+    if (!lim.ok) {
+      json(res, 429, { ok: false, message: `请求太频繁，请 ${lim.retryAfterSec} 秒后再试`, retryAfterSec: lim.retryAfterSec });
+      return;
+    }
+    if (runningChecks >= MAX_CONCURRENT) {
+      json(res, 429, { ok: false, message: "当前检测人数较多，请稍后再试" });
+      return;
+    }
+
+    runningChecks++;
+    try {
+      const withCheck = body.withCheck !== false;
+      const report = await runAudit(url, { withCheck });
+      json(res, 200, { ok: true, report });
+    } catch (e) {
+      console.error("[审计] 运行失败：", e);
+      const msg = e instanceof Error ? e.message : "审计失败，请稍后再试";
+      json(res, 400, { ok: false, message: msg });
     } finally {
       runningChecks--;
     }

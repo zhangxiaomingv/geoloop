@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>站点 AI 友好度审计 · GEOloopOS</title>
+<style>
+  :root { --bg:#0b0f17; --card:#121a29; --card2:#0e1522; --line:#1e2a3f; --txt:#e8eef7; --dim:#8b9bb4; --acc:#3b82f6; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--txt); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; min-height:100vh; }
+  .wrap { max-width:860px; margin:0 auto; padding:32px 20px 80px; }
+  h1 { font-size:22px; letter-spacing:.3px; }
+  .sub { color:var(--dim); font-size:13px; margin-top:6px; line-height:1.6; }
+  .hero { display:flex; gap:10px; margin-top:26px; }
+  input { flex:1; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; color:var(--txt); font-size:16px; outline:none; }
+  input:focus { border-color:var(--acc); }
+  button { background:var(--acc); border:none; border-radius:10px; padding:14px 22px; color:#fff; font-size:16px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  button:hover { filter:brightness(1.1); }
+  button:disabled { opacity:.5; cursor:wait; }
+  .status { margin-top:14px; color:var(--dim); font-size:13px; }
+  .err { margin-top:14px; color:var(--bad); font-size:13px; }
+
+  .scorecard { margin-top:24px; background:linear-gradient(135deg,var(--card),var(--card2)); border:1px solid var(--line); border-radius:14px; padding:22px 24px; display:flex; align-items:center; gap:22px; }
+  .big { font-size:52px; font-weight:800; line-height:1; }
+  .big small { font-size:16px; color:var(--dim); font-weight:500; }
+  .verdict { font-size:16px; font-weight:600; margin-bottom:4px; }
+  .meta { color:var(--dim); font-size:12px; margin-top:6px; }
+  .delta { margin-top:8px; font-size:12px; color:var(--dim); }
+  .delta b { color:var(--acc); }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px; }
+  @media (max-width:680px){ .grid{grid-template-columns:1fr;} }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .panel h3 { font-size:14px; margin-bottom:12px; color:var(--dim); font-weight:600; display:flex; justify-content:space-between; align-items:baseline; }
+  .panel h3 b { color:var(--txt); font-size:16px; }
+
+  .item { display:flex; gap:10px; padding:9px 0; border-top:1px solid rgba(255,255,255,.04); font-size:13px; line-height:1.5; }
+  .item .dot { flex:none; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; margin-top:1px; }
+  .dot.pass{ background:rgba(34,197,94,.15); color:var(--ok);} .dot.partial{ background:rgba(245,158,11,.15); color:var(--warn);} .dot.fail{ background:rgba(239,68,68,.15); color:var(--bad);}
+  .item .lbl { font-weight:600; }
+  .item .detail { color:var(--dim); font-size:12px; }
+  .item .sc { margin-left:auto; flex:none; font-weight:700; font-size:13px; }
+
+  .checkline { font-size:13px; color:var(--dim); padding:6px 0; line-height:1.5; }
+
+  .actions { margin-top:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .actions h3 { font-size:14px; margin-bottom:10px; color:var(--dim); font-weight:600; }
+  .act { display:flex; gap:12px; padding:11px 0; border-top:1px solid rgba(255,255,255,.04); }
+  .act:first-of-type { border-top:none; }
+  .pill { flex:none; font-size:11px; font-weight:800; padding:3px 8px; border-radius:5px; height:fit-content; margin-top:2px; }
+  .pill.p0{ background:rgba(239,68,68,.2); color:var(--bad);} .pill.p1{ background:rgba(245,158,11,.15); color:var(--warn);} .pill.p2{ background:rgba(59,130,246,.15); color:var(--acc);}
+  .act .at { font-weight:600; font-size:14px; }
+  .act .ad { color:var(--dim); font-size:12.5px; margin-top:3px; line-height:1.6; }
+
+  .history { margin-top:14px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 18px; }
+  .history h3 { font-size:14px; margin-bottom:8px; color:var(--dim); font-weight:600; }
+  .hrow { display:flex; justify-content:space-between; font-size:12.5px; color:var(--dim); padding:6px 0; border-top:1px solid rgba(255,255,255,.04); }
+  .hrow b { color:var(--txt); }
+
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>站点 AI 友好度审计</h1>
+  <div class="sub">输入网址 → ①结构友好度（AI 能不能读懂你，秒级）· ②AI 认知检测（AI 到底怎么看你）· ③行动清单。同一个网址再测一次，自动带上一次对比。</div>
+
+  <div class="hero">
+    <input id="url" placeholder="输入网站地址，如 geoloopos.com" autocomplete="off" spellcheck="false">
+    <button id="go">开始检测</button>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="err hidden" id="err"></div>
+
+  <div id="result"></div>
+</div>
+
+<script>
+const input = document.getElementById("url");
+const go = document.getElementById("go");
+const statusEl = document.getElementById("status");
+const errEl = document.getElementById("err");
+const resultEl = document.getElementById("result");
+
+go.addEventListener("click", run);
+input.addEventListener("keydown", (e) => { if (e.key === "Enter") run(); });
+
+async function run() {
+  const url = input.value.trim();
+  if (!url) { setErr("请输入网站地址"); return; }
+  clearErr();
+  statusEl.textContent = "结构审计（秒级）… AI 认知检测（约 10–30 秒）…";
+  go.disabled = true;
+  try {
+    const res = await fetch("/api/audit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url, withCheck: true }),
+    });
+    const data = await res.json();
+    if (!res.ok) { setErr(data.message || "检测失败"); return; }
+    render(data.report);
+    statusEl.textContent = "";
+  } catch (e) {
+    setErr("网络错误：" + e.message);
+  } finally {
+    go.disabled = false;
+  }
+}
+
+function setErr(msg) { errEl.textContent = msg; errEl.classList.remove("hidden"); }
+function clearErr() { errEl.classList.add("hidden"); errEl.textContent = ""; }
+
+function cls(score) { return score === 0 ? "fail" : score >= 10 ? "pass" : "partial"; }
+function dot(status) { return status === "pass" ? "✓" : status === "partial" ? "~" : "✗"; }
+
+function delta(prev, now) {
+  if (prev === null || prev === undefined || now === null || now === undefined) return "";
+  const d = now - prev;
+  const arrow = d > 0 ? "↑" : d < 0 ? "↓" : "→";
+  const col = d > 0 ? "#22c55e" : d < 0 ? "#ef4444" : "#8b9bb4";
+  return ` <span style="color:${col}">${arrow}${d > 0 ? "+" : ""}${d}</span>`;
+}
+
+function render(r) {
+  const a = r.audit;
+  const c = r.check;
+  const p = r.prev;
+  const t = new Date(r.createdAt).toLocaleString("zh-CN", { hour12: false });
+
+  let prevLine = "";
+  if (p) {
+    prevLine = `<div class="delta">上次（${new Date(p.createdAt).toLocaleString("zh-CN",{hour12:false})}）：
+      综合 ${p.score}${delta(p.score, r.score)} · 结构 ${p.auditScore}${delta(p.auditScore, a.score)} ·
+      认知 ${p.checkScore ?? "—"}${p.checkScore !== null && c ? delta(p.checkScore, c.score) : ""}
+    </div>`;
+  }
+
+  const items = a.items.map((i) => `
+    <div class="item">
+      <div class="dot ${i.status}">${dot(i.status)}</div>
+      <div><div class="lbl">${i.label}</div><div class="detail">${i.detail}</div></div>
+      <div class="sc">${i.score}/${i.max}</div>
+    </div>`).join("");
+
+  const checkPanel = c
+    ? `<div class="panel">
+        <h3>② AI 认知检测 <b>${c.score}/100</b></h3>
+        <div style="font-size:13px;color:#e8eef7;font-weight:600;margin-bottom:6px">${c.verdict}</div>
+        ${c.tips.map((t) => `<div class="checkline">· ${t}</div>`).join("")}
+      </div>`
+    : `<div class="panel"><h3>② AI 认知检测 <b>未跑</b></h3><div class="checkline">认知检测暂不可用（可重试，或稍后再测）。结构审计不受影响。</div></div>`;
+
+  const acts = r.actions.map((x) => `
+    <div class="act">
+      <div class="pill ${x.level.toLowerCase()}">${x.level}</div>
+      <div><div class="at">${x.title}</div><div class="ad">${x.desc}</div></div>
+    </div>`).join("") || `<div class="checkline">结构友好，保持内容更新与多平台联动。</div>`;
+
+  const hist = "";
+  resultEl.innerHTML = `
+    <div class="scorecard">
+      <div><div class="big">${r.score}<small>/100</small></div><div class="meta">${r.domain} · ${t}</div></div>
+      <div>
+        <div class="verdict">${r.verdict}</div>
+        <div class="meta">结构 ${a.score} + 认知 ${c ? c.score : "—"}（综合 = 结构 60% + 认知 40%）</div>
+        ${prevLine}
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="panel">
+        <h3>① 结构友好度 <b>${a.score}/100</b></h3>
+        ${items}
+      </div>
+      ${checkPanel}
+    </div>
+
+    <div class="actions">
+      <h3>③ 行动清单（按优先级）</h3>
+      ${acts}
+    </div>
+
+    <div class="history">
+      <h3>本轮闭环</h3>
+      <div class="hrow"><span>输入</span><b>${r.inputUrl}</b></div>
+      <div class="hrow"><span>判定实体</span><b>${c ? c.entity : r.domain}</b></div>
+      <div class="hrow"><span>纯 HTML 可读内容</span><b>${a.htmlChars} 字</b></div>
+      <div class="hrow"><span>被 robots 封锁的 AI 爬虫</span><b>${a.blockedBots.length ? a.blockedBots.join(", ") : "无"}</b></div>
+      <div class="hrow"><span>报告 ID</span><b>${r.id}</b></div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>
