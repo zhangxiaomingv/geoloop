@@ -27,6 +27,14 @@ import { checkCites, loadCites, saveCites, type CiteSite } from "./cite.js";
 import { buildLeaderboard } from "./leaderboard.js";
 import { listBoards, loadBoard } from "./boards.js";
 import { receiveObserve, detectBot, isObservedSite, appendEvents } from "./observe.js";
+import {
+  generatePlan,
+  loadLedger,
+  getPack,
+  updatePack,
+  renderExportText,
+  type PackStatus,
+} from "./pack.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -45,6 +53,7 @@ const here = process.cwd();
 const pageFile = path.join(here, "src/web/index.html");
 const reportPageFile = path.join(here, "src/web/report.html");
 const deployPageFile = path.join(here, "src/web/deploy.html");
+const packPageFile = path.join(here, "src/web/packs.html");
 
 /** HTML 页面响应头：强制 no-cache（内容随开发持续变化，避免浏览器/CDN 展示旧版本） */
 const htmlHeaders = { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" };
@@ -584,6 +593,78 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // ============ 软文需求单（软文街·软文宝接入） ============
+  if (req.method === "GET" && url.pathname === "/packs") {
+    res.writeHead(200, htmlHeaders);
+    res.end(readFileSync(packPageFile, "utf-8"));
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/packs") {
+    const records = loadLedger().reverse(); // 新的在前
+    json(res, 200, { ok: true, records });
+    return;
+  }
+
+  // 生成需求单（精确路径优先，避免被下面的 {id} 吞掉 "generate"）
+  if (req.method === "POST" && url.pathname === "/api/packs/generate") {
+    let body: { entity?: unknown };
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      json(res, 400, { ok: false, message: "请求体不是合法 JSON" });
+      return;
+    }
+    const entity = String(body.entity ?? "").trim();
+    const plan = generatePlan(entity ? { entity } : {});
+    json(res, 200, { ok: true, plan, exportText: renderExportText(plan) });
+    return;
+  }
+
+  const packMatch = url.pathname.match(/^\/api\/packs\/([a-z0-9-]+)$/i);
+  if (req.method === "GET" && packMatch) {
+    const record = getPack(packMatch[1]);
+    if (!record) {
+      json(res, 404, { ok: false, message: "需求单不存在" });
+      return;
+    }
+    json(res, 200, { ok: true, record, exportText: renderExportText(record.plan) });
+    return;
+  }
+
+  if (req.method === "POST" && packMatch) {
+    let body: { status?: unknown; notes?: unknown; publications?: unknown };
+    try {
+      body = JSON.parse(await readBody(req));
+    } catch {
+      json(res, 400, { ok: false, message: "请求体不是合法 JSON" });
+      return;
+    }
+    const patch: { status?: PackStatus; notes?: string; publications?: unknown[] } = {};
+    if (body.status === "planned" || body.status === "exported" || body.status === "published") patch.status = body.status;
+    if (typeof body.notes === "string") patch.notes = body.notes.slice(0, 2000);
+    if (Array.isArray(body.publications)) {
+      patch.publications = body.publications
+        .filter((p): p is Record<string, unknown> => Boolean(p) && typeof p === "object")
+        .slice(0, 50)
+        .map((p) => ({
+          title: String(p.title ?? "").slice(0, 200),
+          channel: String(p.channel ?? "").slice(0, 100),
+          url: String(p.url ?? "").slice(0, 500),
+          collected: Boolean(p.collected),
+          reads: Number(p.reads) > 0 ? Math.floor(Number(p.reads)) : 0,
+          publishedAt: String(p.publishedAt ?? "").slice(0, 40),
+        }));
+    }
+    const record = updatePack(packMatch[1], patch);
+    if (!record) {
+      json(res, 404, { ok: false, message: "需求单不存在" });
+      return;
+    }
+    json(res, 200, { ok: true, record });
+    return;
+  }
+
   // ============ 静态资产（observe / board / llms / robots / sitemap / 样式）——容器直接服务 Pages 时代的产物 ============
   if (req.method === "GET") {
     const p = url.pathname;
@@ -593,6 +674,10 @@ const server = createServer(async (req, res) => {
     }
     if (p === "/board" || p === "/board/") {
       serveSiteFile(res, "board/index.html", "text/html; charset=utf-8");
+      return;
+    }
+    if (p === "/whitepaper" || p === "/whitepaper/") {
+      serveSiteFile(res, "whitepaper.html", "text/html; charset=utf-8");
       return;
     }
     const boardNoExt = p.match(/^\/board\/(\d{1,3})$/);

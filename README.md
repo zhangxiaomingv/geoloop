@@ -32,9 +32,17 @@ cognition curve that shows whether your AI visibility is actually improving.
 recommended by AI — the channel people increasingly use to make decisions
 (which restaurant, which contractor, which SaaS tool, which advisor).
 
-Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEOloopOS founder and AI
-consultant. Product site: **https://zkoner.com** · Enterprise private deployment
-customization: **https://geoloopos.com/deploy**.
+Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEO 与 AI 搜索可见度独立
+顾问、GEOloopOS 产品创始人。创始人实验站: **https://zkoner.com** · 产品官网:
+**https://geoloopos.com** · 企业私有部署: **https://geoloopos.com/deploy**.
+
+## 商业白皮书
+
+**《GEOloop：AI可见度闭环方法论》**——中文 AI 搜索环境下的实体认知、可见度与
+持续优化。Experiment #001 双源（DeepSeek + 豆包）实测数据 + GEO 闭环方法论。
+
+- 在线阅读: https://geoloopos.com/whitepaper
+- Markdown 全文: [docs/whitepaper.md](docs/whitepaper.md)
 
 ---
 

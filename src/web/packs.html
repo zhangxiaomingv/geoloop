@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="noindex" />
+<title>软文需求单 · GEOloopOS 闭环</title>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #101013;
+    --surface-2: #16161a;
+    --surface-3: #1d1d24;
+    --border: rgba(255, 255, 255, .08);
+    --border-strong: rgba(255, 255, 255, .16);
+    --text: #f5f5f6;
+    --text-muted: #a1a1aa;
+    --text-faint: #76767f;
+    --primary: #4c8dff;
+    --primary-strong: #2563eb;
+    --primary-soft: rgba(76, 141, 255, .13);
+    --success: #34d399;
+    --success-soft: rgba(52, 211, 153, .13);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, .13);
+    --danger: #f87171;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --font-sans: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.6;
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    background: radial-gradient(900px 460px at 50% -180px, rgba(76,141,255,.12), transparent 62%), var(--bg);
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 90px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0 14px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo img { width: 34px; height: 34px; object-fit: contain; }
+  .logo-text { font-weight: 650; font-size: 15px; letter-spacing: -.01em; }
+  .logo-sub { font-size: 11px; color: var(--text-faint); font-family: var(--font-mono); margin-top: 1px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .generate { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; }
+  .generate input {
+    flex: 1; background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px; font-size: 14px; font-family: var(--font-sans);
+  }
+  .generate input:focus { outline: none; border-color: var(--primary); }
+  .btn {
+    background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font-sans);
+    transition: background .15s;
+  }
+  .btn:hover { background: var(--primary-strong); }
+  .btn.ghost { background: var(--surface-3); color: var(--text); border: 1px solid var(--border); font-weight: 500; }
+  .btn.ghost:hover { border-color: var(--border-strong); }
+  .btn:disabled { opacity: .5; cursor: wait; }
+  .btn.sm { padding: 5px 10px; font-size: 12px; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px; }
+  .card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .card-head h3 { font-size: 15px; font-weight: 650; }
+  .badge { font-size: 11px; padding: 2px 9px; border-radius: 20px; font-weight: 600; letter-spacing: .02em; }
+  .b-planned  { background: var(--warning-soft); color: var(--warning); }
+  .b-exported { background: var(--primary-soft); color: var(--primary); }
+  .b-published{ background: var(--success-soft); color: var(--success); }
+  .id-tag { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
+  .time-tag { font-size: 11px; color: var(--text-faint); margin-left: auto; }
+
+  .meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 10px 0; }
+  .meta div { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; }
+  .meta .k { font-size: 11px; color: var(--text-faint); }
+  .meta .v { font-size: 13px; margin-top: 1px; }
+  .meta .v.red { color: var(--danger); }
+
+  .packs { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 4px; }
+  .pack { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; }
+  .pack .pt { font-size: 13px; font-weight: 650; }
+  .pack .pt .pl { color: var(--primary); margin-right: 8px; }
+  .pack .ps { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .pack .list { font-size: 12px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+  .pack .list b { color: var(--text); font-weight: 600; }
+
+  .tools { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .ledger { border-top: 1px dashed var(--border); margin-top: 14px; padding-top: 12px; display: none; }
+  .ledger.open { display: block; }
+  .ledger-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .ledger-row select, .ledger-row input {
+    background: var(--surface-3); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 6px 9px; font-size: 12px; font-family: var(--font-sans);
+  }
+  .ledger-row select:focus, .ledger-row input:focus { outline: none; border-color: var(--primary); }
+  .ledger-row input[type=text] { flex: 1; min-width: 120px; }
+  .pub { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 6px; }
+  .pub .grid { display: grid; grid-template-columns: 1.6fr 1fr 1.8fr 90px 60px 30px; gap: 6px; align-items: center; }
+  .pub input { background: var(--surface-3); border: 1px solid var(--border); border-radius: 6px; padding: 5px 8px; color: var(--text); font-size: 12px; font-family: var(--font-sans); }
+  .pub input:focus { outline: none; border-color: var(--primary); }
+  .pub .del { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 15px; }
+  .hint { font-size: 12px; color: var(--text-faint); margin-top: 6px; }
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--surface-3);
+    border: 1px solid var(--border-strong); color: var(--text); padding: 9px 16px; border-radius: 20px;
+    font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 99; }
+  .toast.show { opacity: 1; }
+  .empty { color: var(--text-faint); text-align: center; padding: 40px 0; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="logo">
+      <img src="/logo.png" alt="" />
+      <div>
+        <div class="logo-text">软文需求单</div>
+        <div class="logo-sub">GEOloopOS · 软文街软文宝接入 · 闭环优化侧</div>
+      </div>
+    </div>
+    <a href="/" style="color:var(--text-faint);font-size:12px;text-decoration:none">← 产品页</a>
+  </header>
+
+  <div class="generate panel">
+    <input id="entity" placeholder="目标实体（留空=自动选：有知识缺口/检测历史最多的）" autocomplete="off" />
+    <button class="btn" id="gen">生成需求单</button>
+  </div>
+
+  <section id="list"><div class="empty">加载中…</div></section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+/* ---------- 台账渲染 ---------- */
+
+function metaHTML(p) {
+  const src = p.plan.source;
+  const gapScore = src.gapScore < 0 ? "未分析" : src.gapScore + "%";
+  return `
+    <div class="meta">
+      <div><div class="k">最近认知分</div><div class="v">${src.score} / 100</div></div>
+      <div><div class="k">缺口完整度</div><div class="v">${gapScore}</div></div>
+      <div><div class="k">借势话题</div><div class="v">${esc(src.scene) || "—"}</div></div>
+      <div><div class="k">AI 认知缺口</div><div class="v ${src.missing.length ? "red" : ""}">${src.missing.length} 条</div></div>
+    </div>
+    ${src.aiSummary ? `<div class="hint">AI 现在这么看我：「${esc(src.aiSummary)}」</div>` : ""}
+    ${src.missing.length ? `<div class="hint" style="color:var(--danger)">要补的缺口：${esc(src.missing.join("；"))}</div>` : ""}`;
+}
+
+function packsHTML(p) {
+  return `<div class="packs">` + p.plan.packs.map((pk) => `
+    <div class="pack">
+      <div class="pt"><span class="pl">${esc(pk.platform)}</span>${esc(pk.titleSuggestion)}</div>
+      <div class="ps">${esc(pk.constraints.wordCount)} · ${esc(pk.constraints.style)}</div>
+      <div class="ps">${esc(pk.hint)}</div>
+      ${pk.gapToFill.length ? `<div class="list"><b>覆盖事实：</b>${esc(pk.gapToFill.join("；"))}</div>` : ""}
+      ${pk.mustContain.length ? `<div class="list"><b>必含口径：</b>${esc(pk.mustContain.join(" / "))}</div>` : ""}
+      ${pk.keywords.length ? `<div class="list"><b>关键词：</b>${esc(pk.keywords.join("、"))}</div>` : ""}
+    </div>`).join("") + `</div>`;
+}
+
+function pubRow(pub = {}) {
+  return `
+  <div class="pub">
+    <div class="grid">
+      <input class="f-title" placeholder="软文标题" value="${esc(pub.title)}" />
+      <input class="f-channel" placeholder="渠道（门户/知乎…）" value="${esc(pub.channel)}" />
+      <input class="f-url" placeholder="收录链接" value="${esc(pub.url)}" />
+      <input class="f-collected" type="checkbox" ${pub.collected ? "checked" : ""} title="已收录" />
+      <input class="f-reads" type="number" placeholder="阅读量" value="${pub.reads ?? 0}" />
+      <button class="del" title="删除">✕</button>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;margin-top:6px">
+      <span class="hint" style="margin:0">发布时间</span>
+      <input class="f-date" placeholder="2026-08-26" value="${esc(pub.publishedAt || "")}" style="flex:1" />
+    </div>
+  </div>`;
+}
+
+function ledgerHTML(p) {
+  return `
+  <div class="tools">
+    <button class="btn ghost sm" data-act="copy" data-id="${p.id}">复制需求单 → 软文宝</button>
+    <button class="btn ghost sm" data-act="toggle-ledger" data-id="${p.id}">${p.publications.length ? "回填台账（" + p.publications.length + "）" : "回填台账"}</button>
+  </div>
+  <div class="ledger" data-ledger="${p.id}">
+    <div class="ledger-row">
+      <span class="hint" style="margin:0">状态</span>
+      <select data-f="status">
+        <option value="planned" ${p.status === "planned" ? "selected" : ""}>planned · 已生成</option>
+        <option value="exported" ${p.status === "exported" ? "selected" : ""}>exported · 已交给软文宝</option>
+        <option value="published" ${p.status === "published" ? "selected" : ""}>published · 已发布</option>
+      </select>
+      <input type="text" data-f="notes" placeholder="备注（发了哪些平台、什么反馈…）" value="${esc(p.notes)}" />
+      <button class="btn sm" data-act="save" data-id="${p.id}">保存</button>
+    </div>
+    <div class="hint">发稿记录（软文街回填：收录链接 / 阅读量）：</div>
+    <div data-pubs>${(p.publications || []).map(pubRow).join("")}</div>
+    <button class="btn ghost sm" data-act="add-pub" data-id="${p.id}" style="margin-top:8px">+ 添加一条发稿记录</button>
+  </div>`;
+}
+
+function card(p) {
+  const badges = { planned: "b-planned", exported: "b-exported", published: "b-published" };
+  const bd = badges[p.status] || badges.planned;
+  const labels = { planned: "已生成", exported: "已交软文宝", published: "已发布" };
+  const el = document.createElement("div");
+  el.className = "card";
+  el.dataset.id = p.id;
+  el.innerHTML = `
+    <div class="card-head">
+      <h3>${esc(p.plan.entityName)}</h3>
+      <span class="badge ${bd}">${labels[p.status] || p.status}</span>
+      <span class="id-tag">${esc(p.id)}</span>
+      <span class="time-tag">${esc((p.createdAt || "").slice(0, 10))}</span>
+    </div>
+    ${metaHTML(p)}
+    ${packsHTML(p)}
+    ${ledgerHTML(p)}
+  `;
+  el.addEventListener("click", onCardClick);
+  return el;
+}
+
+/* ---------- 事件 ---------- */
+
+async function onCardClick(e) {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const cardEl = e.target.closest(".card");
+  const act = btn.dataset.act;
+
+  if (act === "copy") {
+    try {
+      const r = await fetch("/api/packs/" + encodeURIComponent(id), { cache: "no-store" });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.message || "获取失败");
+      await navigator.clipboard.writeText(d.exportText);
+      toast("需求单已复制，去软文宝粘贴写作 ✓");
+    } catch (err) {
+      toast("复制失败：" + err.message);
+    }
+    return;
+  }
+
+  if (act === "toggle-ledger") {
+    const l = cardEl.querySelector("[data-ledger]");
+    l.classList.toggle("open");
+    return;
+  }
+
+  if (act === "add-pub") {
+    const box = cardEl.querySelector("[data-pubs]");
+    box.insertAdjacentHTML("beforeend", pubRow());
+    return;
+  }
+
+  if (act === "save") {
+    btn.disabled = true;
+    const pubs = [...cardEl.querySelectorAll(".pub")].map((row) => ({
+      title: row.querySelector(".f-title").value,
+      channel: row.querySelector(".f-channel").value,
+      url: row.querySelector(".f-url").value,
+      collected: row.querySelector(".f-collected").checked,
+      reads: Number(row.querySelector(".f-reads").value) || 0,
+      publishedAt: row.querySelector(".f-date").value,
+    }));
+    const body = {
+      status: cardEl.querySelector('[data-f="status"]').value,
+      notes: cardEl.querySelector('[data-f="notes"]').value,
+      publications: pubs,
+    };
+    try {
+      const r = await fetch("/api/packs/" + encodeURIComponent(id), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.message || "保存失败");
+      toast("台账已保存 ✓");
+      refresh();
+    } catch (err) {
+      toast("保存失败：" + err.message);
+      btn.disabled = false;
+    }
+    return;
+  }
+
+  // 删除发稿记录行
+  if (e.target.classList.contains("del")) {
+    e.target.closest(".pub").remove();
+  }
+}
+
+/* ---------- 加载 / 生成 ---------- */
+
+async function refresh() {
+  try {
+    const r = await fetch("/api/packs", { cache: "no-store" });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.message || "加载失败");
+    const list = $("#list");
+    if (!d.records.length) {
+      list.innerHTML = `<div class="empty">还没有需求单。上面输入目标实体（或留空），点「生成需求单」。</div>`;
+      return;
+    }
+    list.replaceChildren(...d.records.map(card));
+  } catch (err) {
+    $("#list").innerHTML = `<div class="empty">加载失败：${esc(err.message)}</div>`;
+  }
+}
+
+async function generate() {
+  const btn = $("#gen");
+  btn.disabled = true;
+  btn.textContent = "生成中…";
+  const entity = $("#entity").value.trim();
+  try {
+    const r = await fetch("/api/packs/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ entity: entity || undefined }),
+    });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.message || "生成失败");
+    toast("需求单已生成 ✓（点卡片「复制需求单」交给软文宝）");
+    $("#entity").value = "";
+    refresh();
+  } catch (err) {
+    toast("生成失败：" + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "生成需求单";
+  }
+}
+
+$("#gen").addEventListener("click", generate);
+$("#entity").addEventListener("keydown", (e) => { if (e.key === "Enter") generate(); });
+refresh();
+</script>
+</body>
+</html>

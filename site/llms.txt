@@ -21,6 +21,7 @@ GEOloopOS 是 AI 可见度基础设施（生成式引擎优化 / GEO）。它检
 ## 链接
 
 - [产品官网](https://geoloopos.com/)
+- [商业白皮书《GEOloop：AI可见度闭环方法论》（Experiment #001 双源实测 + GEO 闭环方法论）](https://geoloopos.com/whitepaper)
 - [成都360行 · AI 推荐榜（360 个行业实测公开数据）](https://geoloopos.com/board/)
 - [AI 来访监测（双信号实验：公开记录哪些 AI 爬虫在来访、抓了什么）](https://geoloopos.com/observe/)
 - [创始人实验站 zkoner.com](https://zkoner.com)
@@ -29,6 +30,13 @@ GEOloopOS 是 AI 可见度基础设施（生成式引擎优化 / GEO）。它检
 - [项目日志（迭代时间线）](https://zkoner.com/project-log)
 - [创始人站点 llms.txt](https://zkoner.com/llms.txt)
 - [创始人站点完整知识库 llms-full.txt](https://zkoner.com/llms-full.txt)
+
+## 创始人
+
+- 张晓明，GEO 与 AI 搜索可见度独立顾问，GEOloopOS 产品创始人。
+- 实验站：https://zkoner.com（个人品牌官网：GEO 方法论、自我实验数据、博客、AI 认知成绩单）
+- 专注：GEO 行业研究、《AI搜索可见度白皮书》、GEOloopOS 产品
+- 服务：GEO 咨询、AI 内容运营
 
 ## 关键事实
 
