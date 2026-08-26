@@ -723,6 +723,8 @@ const SITE_STATIC: Record<string, string> = {
   "/robots.txt": "text/plain; charset=utf-8",
   "/sitemap.xml": "application/xml; charset=utf-8",
   "/style.css": "text/css; charset=utf-8",
+  // IndexNow 域名验证 key（site/<key>.txt）
+  "/5b53e066ee93a3da020b2e5666b46d42.txt": "text/plain; charset=utf-8",
 };
 
 /** 从 site/ 目录读静态文件；成功写响应返回 true，失败返回 false（调用方走 404） */
