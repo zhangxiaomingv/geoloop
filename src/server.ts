@@ -62,6 +62,7 @@ import { writeAllArticles, type WriteResult } from "./ai-writer.js";
 const PORT = Number(process.env.PORT || 8788);
 const here = process.cwd();
 const pageFile = path.join(here, "src/web/index.html");
+const appPageFile = path.join(here, "src/web/app.html");
 const reportPageFile = path.join(here, "src/web/report.html");
 const deployPageFile = path.join(here, "src/web/deploy.html");
 const packPageFile = path.join(here, "src/web/packs.html");
@@ -133,6 +134,13 @@ const server = createServer(async (req, res) => {
   if (req.method === "GET" && url.pathname === "/deploy") {
     res.writeHead(200, htmlHeaders);
     res.end(readFileSync(deployPageFile, "utf-8"));
+    return;
+  }
+
+  // 控制台页（方案 A：营销官网 / 与产品操作台 /app 分离）
+  if (req.method === "GET" && (url.pathname === "/app" || url.pathname === "/app/")) {
+    res.writeHead(200, htmlHeaders);
+    res.end(readFileSync(appPageFile, "utf-8"));
     return;
   }
 
@@ -864,6 +872,7 @@ const server = createServer(async (req, res) => {
     const items: CallbackItem[] = parseCallback(payload);
     // 回填台账：按 order_id 关联发稿记录，更新 url / collected
     let updated = 0;
+    let tracked = 0;
     for (const it of items) {
       const all = loadLedger();
       for (const rec of all) {
@@ -871,7 +880,30 @@ const server = createServer(async (req, res) => {
         if (idx < 0) continue;
         if (it.status === 200) {
           const pubs = rec.publications.slice();
-          pubs[idx] = { ...pubs[idx], url: it.responseMessage || pubs[idx].url, collected: true };
+          const pub = pubs[idx];
+          const url = it.responseMessage || pub.url;
+          const wasTracked = !!pub.tracked;
+          let isTracked = wasTracked;
+          pubs[idx] = { ...pub, url, collected: true, tracked: wasTracked || undefined };
+          // 统一闭环：发布链接自动纳入引用追踪（articles.json 监测库）
+          // topic 用需求单关键词，让 AI 按该主题提问时能引用到这篇稿子
+          if (url && !wasTracked) {
+            const arts = loadArticles();
+            if (!arts.some((a) => a.url === url)) {
+              const kw = rec.plan?.packs?.[0]?.keywords ?? [];
+              arts.push({
+                id: "sw-" + Date.now().toString(36),
+                title: pub.title || rec.plan?.packs?.[0]?.titleSuggestion || url,
+                url,
+                topic: kw.join("、") || pub.title || url,
+                createdAt: new Date().toISOString(),
+              });
+              saveArticles(arts);
+              tracked++;
+              isTracked = true;
+              pubs[idx] = { ...pubs[idx], tracked: true };
+            }
+          }
           updatePack(rec.id, { publications: pubs });
           updated++;
         } else {
@@ -882,7 +914,53 @@ const server = createServer(async (req, res) => {
         }
       }
     }
-    json(res, 200, { ok: true, received: items.length, updated });
+    json(res, 200, { ok: true, received: items.length, updated, tracked });
+    return;
+  }
+
+  // POST /api/softwen/track — 手动把发稿链接纳入引用追踪并立即检测
+  // body: { packId, orderId } → 从台账取该条发稿记录，加入 articles.json 并 checkArticles
+  if (req.method === "POST" && url.pathname === "/api/softwen/track") {
+    let body: { packId?: unknown; orderId?: unknown };
+    try { body = JSON.parse(await readBody(req)); } catch { json(res, 400, { ok: false, message: "请求体不是合法 JSON" }); return; }
+    const rec = getPack(String(body.packId ?? ""));
+    const pub = rec?.publications?.find((p) => p.orderId === String(body.orderId ?? ""));
+    if (!rec || !pub || !pub.url) {
+      json(res, 400, { ok: false, message: "找不到该发稿记录，或发布链接尚未回填" });
+      return;
+    }
+    try {
+      // 1) 入监测库（若已有该 url 则复用）
+      let art = loadArticles().find((a) => a.url === pub.url);
+      if (!art) {
+        const kw = rec.plan?.packs?.[0]?.keywords ?? [];
+        art = {
+          id: "sw-" + Date.now().toString(36),
+          title: pub.title || rec.plan?.packs?.[0]?.titleSuggestion || pub.url,
+          url: pub.url,
+          topic: kw.join("、") || pub.title || pub.url,
+          createdAt: new Date().toISOString(),
+        };
+        const arts = loadArticles();
+        arts.push(art);
+        saveArticles(arts);
+      }
+      // 2) 立即检测，并把结果存回监测库
+      const [checked] = await checkArticles([art]);
+      const artsAll = loadArticles();
+      const ai = artsAll.findIndex((a) => a.url === pub.url);
+      if (ai >= 0) artsAll[ai] = checked;
+      else artsAll.push(checked);
+      saveArticles(artsAll);
+      // 3) 标记台账 tracked
+      const pubs = rec.publications.slice();
+      const i = pubs.findIndex((p) => p.orderId === pub.orderId);
+      if (i >= 0) pubs[i] = { ...pubs[i], tracked: true };
+      updatePack(rec.id, { publications: pubs });
+      json(res, 200, { ok: true, tracked: true, check: checked.lastCheck ?? null, article: checked });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "追踪失败：" + (e as Error).message });
+    }
     return;
   }
 

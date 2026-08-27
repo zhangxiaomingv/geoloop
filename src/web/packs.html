@@ -199,6 +199,7 @@ function pubRow(pub = {}) {
     <div style="display:flex;gap:6px;align-items:center;margin-top:6px">
       <span class="hint" style="margin:0">发布时间</span>
       <input class="f-date" placeholder="2026-08-26" value="${esc(pub.publishedAt || "")}" style="flex:1" />
+      ${pub.url ? `<button class="btn ghost sm" data-act="track-article" data-order="${esc(pub.orderId || "")}" title="把收录链接加入引用追踪并立即检测">${pub.tracked ? "重新追踪" : "立即追踪"}</button><span class="hint" style="margin:0">${pub.tracked ? "✓ 已入监测" : "未入监测"}</span>` : `<span class="hint" style="margin:0">等待发布链接回填后可追踪</span>`}
     </div>
   </div>`;
 }
@@ -299,6 +300,29 @@ async function onCardClick(e) {
       toast("写稿失败：" + err.message);
     } finally {
       btn.disabled = false; btn.textContent = "AI 写稿（DeepSeek）";
+    }
+    return;
+  }
+
+  if (act === "track-article") {
+    const orderId = btn.dataset.order;
+    if (!orderId) { toast("缺少订单号"); return; }
+    btn.disabled = true; const oldText = btn.textContent; btn.textContent = "追踪中…";
+    try {
+      const r = await fetch("/api/softwen/track", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ packId: id, orderId }) });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.message || "追踪失败");
+      const c = d.check;
+      const cited = c?.articleCitedBy?.length;
+      const verb = cited ? `被 ${c.articleCitedBy.join("、")} 引用 ✓` : (c?.verdict || "已入监测，暂无引用");
+      toast(`✓ 已加入引用追踪：${verb}`);
+      // 刷新卡片，把按钮状态更新为「已入监测」
+      const panel = cardEl.querySelector("[data-softwen]");
+      if (panel) panel.style.display = "block";
+      refreshCard(id);
+    } catch (err) {
+      toast("追踪失败：" + err.message);
+      btn.disabled = false; btn.textContent = oldText;
     }
     return;
   }
@@ -442,6 +466,23 @@ async function refresh() {
     list.replaceChildren(...d.records.map(card));
   } catch (err) {
     $("#list").innerHTML = `<div class="empty">加载失败：${esc(err.message)}</div>`;
+  }
+}
+
+async function refreshCard(id) {
+  try {
+    const r = await fetch("/api/packs", { cache: "no-store" });
+    const d = await r.json();
+    if (!d.ok) return refresh();
+    const rec = d.records.find((x) => x.id === id);
+    if (!rec) return refresh();
+    const cardEl = $("#list").querySelector(`.card[data-id="${id}"]`);
+    if (cardEl) {
+      const fresh = card(rec); // card() 内部已绑定点击事件
+      cardEl.replaceWith(fresh);
+    }
+  } catch {
+    refresh();
   }
 }
 

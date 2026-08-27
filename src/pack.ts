@@ -78,6 +78,8 @@ export interface PublishRecord {
     publishedAt: string;
     /** 软文街订单 ID（回调按此关联） */
     orderId?: string;
+    /** 已纳入引用追踪（发布链接已同步 articles.json） */
+    tracked?: boolean;
   }[];
 }
 
