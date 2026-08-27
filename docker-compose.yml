@@ -18,6 +18,11 @@ services:
       RATE_PER_MIN: "${RATE_PER_MIN:-8}"
       RATE_PER_DAY: "${RATE_PER_DAY:-80}"
       MAX_CONCURRENT: "${MAX_CONCURRENT:-3}"
+      # 软文街 API（2026-08-27 接入：认证/下单/回调）
+      SOFTWEN_MOBILE: "${SOFTWEN_MOBILE:-}"
+      SOFTWEN_PASSWORD: "${SOFTWEN_PASSWORD:-}"
+      SOFTWEN_API_KEY: "${SOFTWEN_API_KEY:-}"
+      SOFTWEN_CALLBACK_KEY: "${SOFTWEN_CALLBACK_KEY:-}"
     # bind mount 到宿主 ./data：数据连续（迁移历史保留）、透明可备份
     # site/ 也挂进容器：observe/board/llms 等静态页由宿主脚本生成、容器直接服务
     volumes:

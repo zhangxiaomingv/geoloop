@@ -36,6 +36,16 @@ import {
   renderExportText,
   type PackStatus,
 } from "./pack.js";
+import {
+  authenticate,
+  getToken,
+  syncAllResources,
+  submitOrder,
+  parseCallback,
+  type CallbackItem,
+} from "./softwen-api.js";
+import { selectMedia, renderSelection, type ScoredMedia } from "./media-selector.js";
+import { writeAllArticles, type WriteResult } from "./ai-writer.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -703,7 +713,7 @@ const server = createServer(async (req, res) => {
       json(res, 400, { ok: false, message: "请求体不是合法 JSON" });
       return;
     }
-    const patch: { status?: PackStatus; notes?: string; publications?: unknown[] } = {};
+    const patch: { status?: PackStatus; notes?: string; publications?: { title: string; channel: string; url: string; collected: boolean; reads: number; publishedAt: string; orderId?: string }[] } = {};
     if (body.status === "planned" || body.status === "exported" || body.status === "published") patch.status = body.status;
     if (typeof body.notes === "string") patch.notes = body.notes.slice(0, 2000);
     if (Array.isArray(body.publications)) {
@@ -717,6 +727,7 @@ const server = createServer(async (req, res) => {
           collected: Boolean(p.collected),
           reads: Number(p.reads) > 0 ? Math.floor(Number(p.reads)) : 0,
           publishedAt: String(p.publishedAt ?? "").slice(0, 40),
+          orderId: String(p.orderId ?? "").slice(0, 60),
         }));
     }
     const record = updatePack(packMatch[1], patch);
@@ -725,6 +736,164 @@ const server = createServer(async (req, res) => {
       return;
     }
     json(res, 200, { ok: true, record });
+    return;
+  }
+
+  // ============ 软文街 API 接入（选媒体 / 下单 / 回调 / 写稿） ============
+
+  // GET /api/softwen/stats — 媒体资源占比统计（自媒体/门户/收录类型/权重分层）
+  if (req.method === "GET" && url.pathname === "/api/softwen/stats") {
+    try {
+      const fs = await import("node:fs");
+      const file = path.join(here, "data/softwen/stats.json");
+      if (fs.existsSync(file)) {
+        json(res, 200, { ok: true, stats: JSON.parse(fs.readFileSync(file, "utf-8")) });
+      } else {
+        json(res, 404, { ok: false, message: "媒体统计未生成，先跑 scripts/sync-softwen-resources.mjs 拉全量资源" });
+      }
+    } catch (e) {
+      json(res, 500, { ok: false, message: "读取统计失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // GET /api/softwen/resources — 查媒体（可带 page/topN/关键词/地区/是否外链 筛选），从本地缓存读
+  if (req.method === "GET" && url.pathname === "/api/softwen/resources") {
+    try {
+      const q = new URL(req.url!, "http://localhost").searchParams;
+      const fs = await import("node:fs");
+      const file = path.join(here, "data/softwen/resources.jsonl");
+      if (!fs.existsSync(file)) {
+        json(res, 404, { ok: false, message: "媒体资源未同步，先跑 scripts/sync-softwen-resources.mjs" });
+        return;
+      }
+      const topN = Math.min(50, Math.max(1, Number(q.get("topN") || 10)));
+      const picks = selectMedia({
+        topN,
+        maxPrice: Number(q.get("maxPrice") || 200) || 200,
+        requireLink: q.get("requireLink") === "1",
+        // 默认排除自媒体（is_zimeiti=1），只发门户/行业站；includeZimeiti=1 可显式放开
+        excludeZimeiti: q.get("includeZimeiti") !== "1",
+        includeTypes: q.get("includeTypes")?.split(",") || ["新闻源收录", "网页收录"],
+        keywords: q.get("keywords")?.split(",").filter(Boolean),
+        area: q.get("area") || undefined,
+      }, file);
+      json(res, 200, { ok: true, picks, count: picks.length });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "查询媒体失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // POST /api/softwen/sync — 触发全量同步媒体资源（后台跑，可能几分钟）
+  if (req.method === "POST" && url.pathname === "/api/softwen/sync") {
+    try {
+      syncAllResources().then((n) => console.log(`[softwen] 全量同步完成，共 ${n} 条`)).catch((e) => console.error("[softwen] 同步失败:", e.message));
+      json(res, 202, { ok: true, message: "媒体资源同步已启动，后台进行中" });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "启动同步失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // POST /api/softwen/write — 用 DeepSeek 为某需求单写全平台稿件
+  if (req.method === "POST" && url.pathname === "/api/softwen/write") {
+    let body: { id?: unknown };
+    try { body = JSON.parse(await readBody(req)); } catch { json(res, 400, { ok: false, message: "请求体不是合法 JSON" }); return; }
+    const record = getPack(String(body.id ?? ""));
+    if (!record) { json(res, 404, { ok: false, message: "需求单不存在" }); return; }
+    try {
+      const articles: WriteResult[] = await writeAllArticles(record.plan);
+      json(res, 200, { ok: true, articles });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "AI 写稿失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // POST /api/softwen/submit — 从需求单发稿：写稿(可选) + 选媒体 + 下单 + 回填台账
+  if (req.method === "POST" && url.pathname === "/api/softwen/submit") {
+    let body: { id?: unknown; contentHtml?: unknown; resourceIds?: unknown; title?: unknown };
+    try { body = JSON.parse(await readBody(req)); } catch { json(res, 400, { ok: false, message: "请求体不是合法 JSON" }); return; }
+    const record = getPack(String(body.id ?? ""));
+    if (!record) { json(res, 404, { ok: false, message: "需求单不存在" }); return; }
+
+    const resourceIds = Array.isArray(body.resourceIds) ? body.resourceIds.map(String).filter(Boolean) : [];
+    const contentHtml = String(body.contentHtml ?? "").trim();
+    const title = String(body.title ?? record.plan.packs[0]?.titleSuggestion ?? "").trim();
+    if (!resourceIds.length || !contentHtml || !title) {
+      json(res, 400, { ok: false, message: "缺少 resourceIds / contentHtml / title" });
+      return;
+    }
+
+    try {
+      const orders = await submitOrder({ title, contentHtml, resourceIds });
+      // 回填台账：新增发稿记录（order_id / 状态 / 媒体）
+      const pubs = orders.map((o) => ({
+        title,
+        channel: `软文街#${o.resourceId}${o.resourceName ? "·" + o.resourceName : ""}`,
+        url: "", // 发布成功由回调回填
+        collected: false,
+        reads: 0,
+        publishedAt: new Date().toISOString(),
+        orderId: o.orderId,
+      }));
+      const cur = getPack(record.id);
+      const next = updatePack(record.id, {
+        status: "published",
+        notes: (cur?.notes ? cur.notes + "\n" : "") + `[下单] ${new Date().toISOString().slice(0,16)} ${title} → ${orders.length} 家媒体（order_id: ${orders.map(o=>o.orderId).join(",")}）`,
+        publications: [...(cur?.publications ?? []), ...pubs],
+      });
+      json(res, 200, { ok: true, orders, record: next });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "下单失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // POST /api/softwen/callback — 接收软文街订单结果推送（公网，软文街后台配置回调地址为此）
+  if (req.method === "POST" && url.pathname === "/api/softwen/callback") {
+    // 简单鉴权：若配了 SOFTWEN_CALLBACK_KEY，回调地址需带 ?key=xxx（软文街回调地址由我们提供，可带上）
+    const cbKey = process.env.SOFTWEN_CALLBACK_KEY;
+    if (cbKey) {
+      const got = new URL(req.url!, "http://localhost").searchParams.get("key") ?? "";
+      if (got !== cbKey) { json(res, 403, { ok: false, message: "callback key 不匹配" }); return; }
+    }
+    let payload: any;
+    try { payload = JSON.parse(await readBody(req)); } catch { json(res, 200, { ok: false }); return; }
+    const items: CallbackItem[] = parseCallback(payload);
+    // 回填台账：按 order_id 关联发稿记录，更新 url / collected
+    let updated = 0;
+    for (const it of items) {
+      const all = loadLedger();
+      for (const rec of all) {
+        const idx = rec.publications.findIndex((p) => p.orderId === it.orderId);
+        if (idx < 0) continue;
+        if (it.status === 200) {
+          const pubs = rec.publications.slice();
+          pubs[idx] = { ...pubs[idx], url: it.responseMessage || pubs[idx].url, collected: true };
+          updatePack(rec.id, { publications: pubs });
+          updated++;
+        } else {
+          updatePack(rec.id, {
+            notes: (rec.notes ? rec.notes + "\n" : "") + `[失败] order_id=${it.orderId} ${it.responseMessage}`,
+          });
+          updated++;
+        }
+      }
+    }
+    json(res, 200, { ok: true, received: items.length, updated });
+    return;
+  }
+
+  // GET /api/softwen/token — 检查软文街认证状态（token 缓存是否有效）
+  if (req.method === "GET" && url.pathname === "/api/softwen/token") {
+    try {
+      await getToken();
+      json(res, 200, { ok: true, authed: true });
+    } catch {
+      json(res, 200, { ok: true, authed: false });
+    }
     return;
   }
 

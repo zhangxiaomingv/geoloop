@@ -424,6 +424,14 @@
   .agrid input:focus, .agrid textarea:focus { outline: 0; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(76,141,255,.18); }
   .a-actions { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
   .btn-detect.sm { height: 42px; padding: 0 18px; font-size: 13.5px; border-radius: 11px; box-shadow: 0 4px 14px rgba(37,99,235,.3); }
+  /* ---------- 软文媒体分发（软文街接入） ---------- */
+  #softwen-sec { margin-top: 44px; }
+  .softwen-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 14px; }
+  .sw-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .sw-item strong { font-size: 14.5px; font-weight: 650; }
+  .sw-item .cnt { color: var(--text-faint); font-size: 12px; line-height: 1.55; }
+  @media (max-width: 900px) { .softwen-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .softwen-grid { grid-template-columns: 1fr; } }
   .saved { color: var(--success); font-size: 12.5px; }
   .hint { color: var(--text-faint); font-size: 12px; line-height: 1.6; }
   .versions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
@@ -753,6 +761,41 @@
       </form>
     </div>
     <div id="cmpResult"></div>
+  </section>
+
+  <!-- 软文媒体分发（软文街接入） -->
+  <section id="softwen-sec">
+    <div class="sec-head">
+      <h2>软文媒体分发 <span class="en">Soft Article Distribution</span></h2>
+      <span class="cnt">检测发现的认知缺口 → AI 成稿 → 一稿多发门户/行业站 → 收录回调回填台账，闭环复测</span>
+    </div>
+    <div class="panel softwen-grid">
+      <div class="sw-item">
+        <span class="cite-tag">媒体库</span>
+        <strong>9.3万+ 家媒体</strong>
+        <span class="cnt">排除自媒体，10,786 家门户/行业站可用</span>
+      </div>
+      <div class="sw-item">
+        <span class="cite-tag">AI 写稿</span>
+        <strong>DeepSeek 成稿</strong>
+        <span class="cnt">按需求单生成可发布 HTML，统一认知口径</span>
+      </div>
+      <div class="sw-item">
+        <span class="cite-tag">智能选媒体</span>
+        <strong>收录率×权威度加权</strong>
+        <span class="cnt">按知识库相关度筛出最优发稿组合</span>
+      </div>
+      <div class="sw-item">
+        <span class="cite-tag">收录回填</span>
+        <strong>回调闭环</strong>
+        <span class="cnt">发布结果自动回填台账，衔接复测验证</span>
+      </div>
+    </div>
+    <div class="a-actions">
+      <a class="btn-detect sm" href="/packs" style="text-decoration:none;">进入发稿管理 →</a>
+      <a class="btn ghost sm" href="https://i.kol.cn/recharge_center" target="_blank" rel="noopener" style="text-decoration:none;height:42px;padding:0 18px;display:inline-flex;align-items:center;border-radius:11px;border:1px solid var(--border-strong);color:var(--text-muted);font-size:13.5px;font-weight:600;">软文街充值 →</a>
+      <span class="cnt">需求单 · AI 写稿 · 选媒体 · 下单 · 回填</span>
+    </div>
   </section>
 
   <footer>

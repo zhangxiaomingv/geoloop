@@ -102,6 +102,18 @@
   .pub input:focus { outline: none; border-color: var(--primary); }
   .pub .del { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 15px; }
   .hint { font-size: 12px; color: var(--text-faint); margin-top: 6px; }
+  .softwen-panel .row { display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap; margin-bottom: 8px; }
+  .softwen-panel .article { background: var(--surface-3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 8px; }
+  .softwen-panel .article .at { font-size: 12px; font-weight: 650; margin-bottom: 4px; }
+  .softwen-panel .article textarea { width: 100%; min-height: 90px; background: var(--surface-2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 8px; font-size: 12px; font-family: var(--font-mono); resize: vertical; }
+  .softwen-panel .media-opt { display: flex; gap: 6px; align-items: center; background: var(--surface-3); border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; font-size: 12px; }
+  .softwen-panel .media-opt label { display: flex; gap: 4px; align-items: center; }
+  .softwen-panel .media-opt input { background: var(--surface-2); border: 1px solid var(--border); border-radius: 5px; padding: 3px 6px; color: var(--text); font-size: 12px; width: 70px; }
+  .media-list { margin: 8px 0; display: flex; flex-direction: column; gap: 6px; }
+  .media-item { display: flex; gap: 8px; align-items: center; font-size: 12px; background: var(--surface-3); border: 1px solid var(--border); border-radius: 6px; padding: 6px 9px; }
+  .media-item input[type=checkbox] { accent-color: var(--primary); }
+  .media-item .mi-name { flex: 1; }
+  .media-item .mi-tag { color: var(--text-faint); font-size: 11px; }
   .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--surface-3);
     border: 1px solid var(--border-strong); color: var(--text); padding: 9px 16px; border-radius: 20px;
     font-size: 13px; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 99; }
@@ -194,8 +206,17 @@ function pubRow(pub = {}) {
 function ledgerHTML(p) {
   return `
   <div class="tools">
+    <a class="btn ghost sm" href="https://i.kol.cn/recharge_center" target="_blank" rel="noopener" title="软文街充值中心（需登录软文街账号）">充值余额 →</a>
     <button class="btn ghost sm" data-act="copy" data-id="${p.id}">复制需求单 → 软文宝</button>
+    <button class="btn ghost sm" data-act="ai-write" data-id="${p.id}">AI 写稿（DeepSeek）</button>
+    <button class="btn ghost sm" data-act="select-media" data-id="${p.id}">选媒体 + 下单</button>
     <button class="btn ghost sm" data-act="toggle-ledger" data-id="${p.id}">${p.publications.length ? "回填台账（" + p.publications.length + "）" : "回填台账"}</button>
+  </div>
+  <div class="softwen-panel" data-softwen="${p.id}" style="display:none;margin-top:10px;border:1px dashed var(--border-strong);border-radius:var(--radius-sm);padding:12px">
+    <div class="hint" style="margin:0 0 8px">软文街发稿：AI 写好稿 → 选媒体 → 下单（钱从软文街账户扣）</div>
+    <div data-articles></div>
+    <div data-media></div>
+    <div data-submit></div>
   </div>
   <div class="ledger" data-ledger="${p.id}">
     <div class="ledger-row">
@@ -221,6 +242,8 @@ function card(p) {
   const el = document.createElement("div");
   el.className = "card";
   el.dataset.id = p.id;
+  el.dataset.keywords = (p?.plan?.packs?.[0]?.keywords || []).join(",");
+  el.dataset.title = (p?.plan?.packs?.[0]?.titleSuggestion || "");
   el.innerHTML = `
     <div class="card-head">
       <h3>${esc(p.plan.entityName)}</h3>
@@ -254,6 +277,102 @@ async function onCardClick(e) {
       toast("需求单已复制，去软文宝粘贴写作 ✓");
     } catch (err) {
       toast("复制失败：" + err.message);
+    }
+    return;
+  }
+
+  if (act === "ai-write") {
+    btn.disabled = true; btn.textContent = "写稿中…";
+    const panel = cardEl.querySelector("[data-softwen]");
+    panel.style.display = "block";
+    try {
+      const r = await fetch("/api/softwen/write", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.message || "写稿失败");
+      const box = panel.querySelector("[data-articles]");
+      box.innerHTML = `<div class="hint" style="color:var(--success);margin-bottom:6px">✓ AI 已写 ${d.articles.length} 篇（可编辑后再下单）</div>` + d.articles.map((a, i) => `
+        <div class="article">
+          <div class="at">${esc(a.platform)} · ${esc(a.title)} ${a.ok ? "" : `<span style="color:var(--danger)">(失败：${esc(a.error)})</span>`}</div>
+          ${a.ok ? `<textarea data-a="${i}">${esc(a.contentHtml)}</textarea>` : ""}
+        </div>`).join("");
+    } catch (err) {
+      toast("写稿失败：" + err.message);
+    } finally {
+      btn.disabled = false; btn.textContent = "AI 写稿（DeepSeek）";
+    }
+    return;
+  }
+
+  if (act === "select-media") {
+    btn.disabled = true; btn.textContent = "选媒体中…";
+    const panel = cardEl.querySelector("[data-softwen]");
+    panel.style.display = "block";
+    const box = panel.querySelector("[data-media]");
+    try {
+      const kw = cardEl.dataset.keywords || "";
+      const r = await fetch("/api/softwen/resources?topN=10&keywords=" + encodeURIComponent(kw) + "&maxPrice=150");
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.message || "选媒体失败");
+      const cost = d.picks.reduce((s, p) => s + (p.media.price || p.media.price_market || 0), 0);
+      box.innerHTML = `
+        <div class="row">
+          <div class="media-opt"><label><input type="checkbox" id="ml-req"> 仅可带外链</label></div>
+          <div class="media-opt"><label>含自媒体 <input type="checkbox" id="ml-zimeiti"></label></div>
+          <div class="media-opt"><label>预算上限 <input id="ml-price" type="number" value="150" style="width:60px"></label></div>
+          <button class="btn ghost sm" id="ml-refresh">重新选</button>
+          <span class="hint" style="margin:0">共 ${d.count} 家 · 全部选中成本约 ¥${cost}</span>
+        </div>
+        <div class="hint" style="margin:0 0 6px">默认只发门户/行业站（自媒体已排除）；勾选「含自媒体」才放开</div>
+        <div class="media-list" id="ml-list">` + d.picks.map((x, i) => {
+          const m = x.media; const price = m.price || m.price_market || 0;
+          return `<div class="media-item">
+            <input type="checkbox" class="ml-check" value="${m.id}" ${i < 3 ? "checked" : ""}>
+            <span class="mi-name">${esc(m.name)} [${x.score}分]</span>
+            <span class="mi-tag">¥${price} · ${esc(m.include_type || "收录未知")} · ${m.url_type === "可带" ? "可带外链" : "不带外链"}</span>
+            <span class="mi-tag">收录${esc(m.include_radio || "?")}% 成功${esc(m.success_radio || "?")}%</span>
+          </div>`; }).join("") + `</div>
+        <div data-submit></div>`;
+      const refresh = async () => {
+        const ml = panel.querySelector("#ml-list");
+        ml.innerHTML = `<div class="hint">重新选中…</div>`;
+        const link = panel.querySelector("#ml-req").checked ? "&requireLink=1" : "";
+        const zimeiti = panel.querySelector("#ml-zimeiti").checked ? "&includeZimeiti=1" : "";
+        const price = panel.querySelector("#ml-price").value || 150;
+        const r2 = await fetch("/api/softwen/resources?topN=10&keywords=" + encodeURIComponent(kw) + `&maxPrice=${price}${link}${zimeiti}`);
+        const d2 = await r2.json();
+        ml.innerHTML = d2.picks.map((x, i) => {
+          const m = x.media; const pp = m.price || m.price_market || 0;
+          return `<div class="media-item"><input type="checkbox" class="ml-check" value="${m.id}" ${i < 3 ? "checked" : ""}><span class="mi-name">${esc(m.name)} [${x.score}分]</span><span class="mi-tag">¥${pp} · ${esc(m.include_type || "收录未知")} · ${m.url_type === "可带" ? "可带外链" : "不带外链"}</span></div>`;
+        }).join("");
+      };
+      panel.querySelector("#ml-refresh").addEventListener("click", refresh);
+      const sub = panel.querySelector("[data-submit]");
+      sub.innerHTML = `<button class="btn sm" id="ml-submit">提交发稿（扣软文街余额）</button> <span class="hint">未选稿时先点「AI 写稿」</span>`;
+      panel.querySelector("#ml-submit").addEventListener("click", async () => {
+        const ids = [...panel.querySelectorAll(".ml-check:checked")].map((c) => c.value);
+        if (!ids.length) { toast("请至少选一家媒体"); return; }
+        const a0 = panel.querySelector("[data-a]");
+        const content = a0 ? a0.value : "";
+        const title = cardEl.dataset.title || "";
+        if (!content) { toast("请先 AI 写稿，或手动填写稿件 HTML"); return; }
+        const sb = panel.querySelector("#ml-submit");
+        sb.disabled = true; sb.textContent = "提交中…";
+        try {
+          const r3 = await fetch("/api/softwen/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id, resourceIds: ids, contentHtml: content, title }) });
+          const d3 = await r3.json();
+          if (!d3.ok) throw new Error(d3.message || "下单失败");
+          toast(`✓ 已下单 ${d3.orders.length} 家（order_id: ${d3.orders.map(o=>o.orderId).join(", ")}）`);
+          refresh();
+        } catch (err) {
+          toast("下单失败：" + err.message);
+        } finally {
+          sb.disabled = false; sb.textContent = "提交发稿（扣软文街余额）";
+        }
+      });
+    } catch (err) {
+      toast("选媒体失败：" + err.message);
+    } finally {
+      btn.disabled = false; btn.textContent = "选媒体 + 下单";
     }
     return;
   }

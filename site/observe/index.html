@@ -53,7 +53,7 @@
   <p class="sub">双信号架构实验：AI 怎么「说」我们（检测评分）之外，还要记录 AI 怎么「看」我们（爬虫来访）。以下是公开的原始来访数据。</p>
 
   <div class="stats">
-    <div class="stat"><b>774</b><span>累计来访事件</span></div>
+    <div class="stat"><b>776</b><span>累计来访事件</span></div>
     <div class="stat"><b>6</b><span>出现过的 AI 爬虫</span></div>
     <div class="stat"><b>2</b><span>监测中的站点</span></div>
     <div class="stat"><b>2026-08-25</b><span>数据起始日期</span></div>
@@ -61,7 +61,6 @@
 
   <h2 class="sec">最近 14 天来访趋势</h2>
   <div class="chart">
-<div class="bar-col"><div class="bar" style="height:2px" title="08-13 · 0 次"></div><span>13</span></div>
 <div class="bar-col"><div class="bar" style="height:2px" title="08-14 · 0 次"></div><span>14</span></div>
 <div class="bar-col"><div class="bar" style="height:2px" title="08-15 · 0 次"></div><span>15</span></div>
 <div class="bar-col"><div class="bar" style="height:2px" title="08-16 · 0 次"></div><span>16</span></div>
@@ -74,7 +73,8 @@
 <div class="bar-col"><div class="bar" style="height:2px" title="08-23 · 0 次"></div><span>23</span></div>
 <div class="bar-col"><div class="bar" style="height:2px" title="08-24 · 0 次"></div><span>24</span></div>
 <div class="bar-col"><div class="bar" style="height:90px" title="08-25 · 753 次"></div><span>25</span></div>
-<div class="bar-col"><div class="bar" style="height:6px" title="08-26 · 21 次"></div><span>26</span></div>
+<div class="bar-col"><div class="bar" style="height:6px" title="08-26 · 23 次"></div><span>26</span></div>
+<div class="bar-col"><div class="bar" style="height:2px" title="08-27 · 0 次"></div><span>27</span></div>
   </div>
 
   <h2 class="sec">爬虫来访明细</h2>
@@ -83,9 +83,9 @@
     <tbody>
     <tr>
       <td><span class="pill gl">国际</span> OpenAI · GPT / ChatGPT 训练</td>
-      <td class="num">738</td>
+      <td class="num">739</td>
       <td>/</td>
-      <td>08-26 09:31 UTC</td>
+      <td>08-26 12:17 UTC</td>
     </tr>
     <tr>
       <td><span class="pill cn">中文引擎</span> 百度 · 文心一言 / 百度搜索</td>
@@ -101,9 +101,9 @@
     </tr>
     <tr>
       <td><span class="pill gl">国际</span> OpenAI · ChatGPT 搜索索引</td>
-      <td class="num">4</td>
+      <td class="num">5</td>
       <td>/robots.txt</td>
-      <td>08-26 09:31 UTC</td>
+      <td>08-26 12:17 UTC</td>
     </tr>
     <tr>
       <td><span class="pill cn">中文引擎</span> 字节跳动 · 豆包 / 今日头条</td>
@@ -122,6 +122,8 @@
 
   <h2 class="sec">最近来访流水</h2>
   <ul class="recent">
+      <li><code>oai-searchbot</code> → <span class="path">/robots.txt</span> <em>zkoner.com</em> · 08-26 12:17 UTC</li>
+      <li><code>gptbot</code> → <span class="path">/sitemap.xml</span> <em>zkoner.com</em> · 08-26 12:17 UTC</li>
       <li><code>oai-searchbot</code> → <span class="path">/robots.txt</span> <em>geoloopos.com</em> · 08-26 09:31 UTC</li>
       <li><code>gptbot</code> → <span class="path">/sitemap.xml</span> <em>geoloopos.com</em> · 08-26 09:31 UTC</li>
       <li><code>baiduspider</code> → <span class="path">/logo-original.png</span> <em>geoloopos.com</em> · 08-26 07:34 UTC</li>
@@ -135,8 +137,6 @@
       <li><code>baiduspider</code> → <span class="path">/_next/static/chunks/main-app-eb8823a92d7b63ce.js</span> <em>zkoner.com</em> · 08-26 07:30 UTC</li>
       <li><code>baiduspider</code> → <span class="path">/_next/static/css/bb8b661854923969.css</span> <em>zkoner.com</em> · 08-26 07:30 UTC</li>
       <li><code>baiduspider</code> → <span class="path">/_next/static/chunks/255-a70cfdedd3f61710.js</span> <em>zkoner.com</em> · 08-26 07:30 UTC</li>
-      <li><code>baiduspider</code> → <span class="path">/_next/static/chunks/4bd1b696-c023c6e3521b1417.js</span> <em>zkoner.com</em> · 08-26 07:30 UTC</li>
-      <li><code>baiduspider</code> → <span class="path">/_next/static/chunks/app/layout-c53a52316f7f9405.js</span> <em>zkoner.com</em> · 08-26 07:30 UTC</li>
   </ul>
 
   <div class="note">方法说明：各站点的边缘中间件按 User-Agent 识别 AI 爬虫（识别表覆盖 OpenAI、Anthropic、Perplexity 及字节豆包、百度文心、华为小艺等中文引擎），命中即异步上报页面级来访事件；人类访问零记录。<br>这是双信号的「输入侧」——与<a href="/" style="color:var(--primary)">AI 认知检测（输出侧）</a>对齐后，构成「改动 → AI 来读 → AI 认知变化」的完整证据链。数据每小时更新。</div>

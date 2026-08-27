@@ -76,6 +76,8 @@ export interface PublishRecord {
     collected: boolean;
     reads: number;
     publishedAt: string;
+    /** 软文街订单 ID（回调按此关联） */
+    orderId?: string;
   }[];
 }
 
@@ -188,7 +190,7 @@ export function generatePlan(opts: { entity?: string } = {}): PackPlan {
   if (anchor.positioning) mustContain.push(anchor.positioning);
   mustContain.push(...anchor.keywords.slice(0, 3));
   if (anchor.site) mustContain.push(anchor.site);
-  if (kb?.site) mustContain.push(kb.site); // kb.identity.site 同名，兜底
+  if (kb?.identity?.site) mustContain.push(kb.identity.site); // kb.identity.site 兜底
   if (profile?.site && !mustContain.includes(profile.site)) mustContain.push(profile.site);
   const uniqueMust = [...new Set(mustContain.filter(Boolean))];
 
