@@ -1,0 +1,34 @@
+# GEOloopOS 企业私有部署 · 客户侧编排（镜像直接拉取，无需源代码）
+# 用法：复制 .env.example → .env，填 LLM key，然后 `docker compose up -d`
+services:
+  geoloopos:
+    image: geoloopos/identity-engine:latest
+    container_name: geoloopos
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8788:8788"   # 默认只监听本机，由反向代理转发（更安全）
+    environment:
+      PORT: 8788
+      DEEPSEEK_API_KEY: "${DEEPSEEK_API_KEY}"
+      ARK_API_KEY: "${ARK_API_KEY:-}"
+      OPENROUTER_API_KEY: "${OPENROUTER_API_KEY:-}"
+      PPLX_API_KEY: "${PPLX_API_KEY:-}"
+      OBSERVE_SITES: "${OBSERVE_SITES:-}"
+      RATE_PER_MIN: "${RATE_PER_MIN:-8}"
+      RATE_PER_DAY: "${RATE_PER_DAY:-80}"
+      MAX_CONCURRENT: "${MAX_CONCURRENT:-3}"
+      # 激活码管理口令（由服务方提供）
+      LICENSE_ADMIN_KEY: "${LICENSE_ADMIN_KEY}"
+    volumes:
+      - geoloopos-data:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8788/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  geoloopos-data:
+    # 数据持久化卷：检测历史/锚点/引用/知识库/发稿台账/激活码全在这里
+    # 备份：docker run --rm -v geoloopos-data:/app/data -v $(pwd):/backup alpine \
+    #       tar czf /backup/geoloopos-data-$(date +%F).tar.gz -C /app/data .
