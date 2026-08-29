@@ -11,6 +11,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { runCheck } from "./check.js";
 import { attachCheck } from "./entity.js";
+import { dataPath, DEFAULT_WORKSPACE } from "./store.js";
 
 export interface SiteCheck {
   checkedAt: string;
@@ -33,7 +34,7 @@ export interface CiteSite {
   checks: SiteCheck[];
 }
 
-const file = path.resolve(process.cwd(), "data/cites.json");
+const file = dataPath(DEFAULT_WORKSPACE, "cites.json");
 
 export function loadCites(): CiteSite[] {
   try {

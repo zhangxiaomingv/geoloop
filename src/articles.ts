@@ -13,6 +13,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { providers } from "../config.js";
+import { dataPath, DEFAULT_WORKSPACE } from "./store.js";
 import { queryText } from "./providers.js";
 import type { Provider } from "../config.js";
 
@@ -118,7 +119,7 @@ export async function checkArticles(articles: Article[]): Promise<Article[]> {
 
 /* ---------- 持久化 data/articles.json ---------- */
 
-const file = path.resolve(process.cwd(), "data/articles.json");
+const file = dataPath(DEFAULT_WORKSPACE, "articles.json");
 
 export function loadArticles(): Article[] {
   try {

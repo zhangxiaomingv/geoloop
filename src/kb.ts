@@ -13,6 +13,7 @@ import { existsSync, appendFileSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { providers } from "../config.js";
 import { queryText } from "./providers.js";
+import { dataPath, DEFAULT_WORKSPACE } from "./store.js";
 import { runCheck } from "./check.js";
 import { attachCheck, brandKey } from "./entity.js";
 
@@ -271,7 +272,7 @@ export async function generateKB(input: KBInput): Promise<KnowledgeBase> {
 
 /* ---------- 持久化 data/kb.jsonl ---------- */
 
-const file = path.resolve(process.cwd(), "data/kb.jsonl");
+const file = dataPath(DEFAULT_WORKSPACE, "kb.jsonl");
 
 export function saveKB(kb: KnowledgeBase): void {
   appendFileSync(file, JSON.stringify(kb) + "\n", "utf-8");

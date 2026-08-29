@@ -12,6 +12,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { CheckReport } from "./check.js";
 import type { SceneCompareReport } from "./compare.js";
+import { dataPath, DEFAULT_WORKSPACE } from "./store.js";
 
 export type EntityKind = "brand" | "site";
 
@@ -55,7 +56,7 @@ export interface EntityProfile {
   sceneShares: SceneShare[];
 }
 
-const file = path.resolve(process.cwd(), "data/entities.json");
+const file = dataPath(DEFAULT_WORKSPACE, "entities.json");
 
 export function loadEntities(): EntityProfile[] {
   try {

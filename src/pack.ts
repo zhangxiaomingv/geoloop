@@ -13,6 +13,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { loadEntities, type EntityProfile } from "./entity.js";
+import { dataPath, DEFAULT_WORKSPACE } from "./store.js";
 import { getKB, type KnowledgeBase } from "./kb.js";
 import { loadAnchor, type Anchor } from "./anchor.js";
 import { INDUSTRIES } from "./industries.js";
@@ -86,7 +87,7 @@ export interface PublishRecord {
 
 /* ---------- 台账 data/publish.json ---------- */
 
-const ledgerFile = path.resolve(process.cwd(), "data/publish.json");
+const ledgerFile = dataPath(DEFAULT_WORKSPACE, "publish.json");
 
 export function loadLedger(): PublishRecord[] {
   try {

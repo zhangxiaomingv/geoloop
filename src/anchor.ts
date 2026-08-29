@@ -9,6 +9,7 @@
 
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { dataPath, DEFAULT_WORKSPACE } from "./store.js";
 
 export interface Anchor {
   /** 认证名称 */
@@ -82,7 +83,7 @@ export function siteSnippet(a: Anchor): string {
 
 /* ---------- 持久化 data/anchor.json ---------- */
 
-const file = path.resolve(process.cwd(), "data/anchor.json");
+const file = dataPath(DEFAULT_WORKSPACE, "anchor.json");
 
 export function loadAnchor(): Anchor {
   try {
