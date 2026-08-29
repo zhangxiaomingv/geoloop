@@ -1,6 +1,6 @@
 /**
- * 360 行业清单（来自 360-industries.md 提取，五行五段结构）
- * 每个行业对应一条「成都场景问句」推荐榜：行业 AI 可见度榜的数据底座。
+ * 行业目录（来自 360-industries.md 提取，五行五段结构）
+ * 供软文需求单「借势话题」子串匹配：命中行业 → 生成场景问句。
  */
 
 export interface Industry { id: number; name: string; }

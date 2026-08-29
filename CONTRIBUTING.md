@@ -15,7 +15,6 @@ Thanks for being here. This is a small, focused project — the fastest way to c
 npm install
 cp .env.example .env      # fill DEEPSEEK_API_KEY / ARK_API_KEY
 npm run serve             # http://localhost:8788
-npm run retest -- --dry   # dry-run the auto re-test, no API calls
 ```
 
 ## Where things live
@@ -24,7 +23,6 @@ npm run retest -- --dry   # dry-run the auto re-test, no API calls
 |---|---|
 | `src/check.ts` | Detection engine: input classify → questions → scoring → report |
 | `src/entity.ts` | Unified entity archive (`data/entities.json`) — the cognition time-series |
-| `src/retest.ts` | Auto re-test: re-measures archived entities to accumulate curves |
 | `src/server.ts` | Zero-dep HTTP API (rate limit / concurrency / validation) |
 | `src/providers.ts` | API query layer (DeepSeek / Doubao, retry + timeout) |
 | `src/web/` | Product front-end (single `index.html`) |

@@ -62,8 +62,10 @@ nohup npx tsx src/server.ts > geoloopos.log 2>&1 &
 
 - `checks.jsonl` — 检测历史
 - `anchor.json` — 定位锚点（客户填写的品牌口径）
+- `publish.json` — 软文需求单 / 发稿台账
 - `articles.json` — 文章监测库
 - `cites.json` — 域名追踪与趋势
+- `effect-matrix.json` / `effect-log.jsonl` — 发稿效果矩阵快照与历史
 
 **备份**：直接打包 `data/` 目录即可；恢复时覆盖回原位置。Docker 卷备份：`docker run --rm -v geoloopos-data:/data -v $(pwd):/backup alpine tar czf /backup/data-backup.tar.gz -C /data .`
 

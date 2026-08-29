@@ -29,5 +29,5 @@ observe_ok=$(curl -sf -m 12 https://geoloopos.com/observe/ 2>/dev/null | grep -c
 echo "  来访监测 geoloopos.com/observe : $([ "$observe_ok" -ge 1 ] && echo '✓ 可达' || echo '✗ 不可达')"
 
 line; echo "判读：geoloopos.com = 容器产品（隧道 geoloopos.com → 容器 8788），"
-echo "     含检测/observe/board/llms/robots/sitemap。Cloudflare Pages 项目 geoloopos-com 已停用。"
+echo "     含检测/observe/llms/robots/sitemap。Cloudflare Pages 项目 geoloopos-com 已停用。"
 echo "     observe 数据在容器 data/observations/events.jsonl（cron 每小时重生成 /observe 页）。"; line

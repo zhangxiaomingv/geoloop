@@ -21,7 +21,7 @@ Created by 张晓明 / Xiaoming Zhang, GEOloopOS founder. Product site: https://
 - **Zero-dependency philosophy**: runtime uses only Node built-ins + `dotenv`.
   `tsx` runs TS directly in dev/container. No test framework — verification is
   `tsc --noEmit` + manual smoke.
-- Run: `npm run serve` (dev), `npm run retest -- --dry` (re-test dry-run),
+- Run: `npm run serve` (dev), `npm run effect` (print publishing effect matrix),
   `docker compose up -d --build` (deploy). API keys in `.env`
   (`DEEPSEEK_API_KEY`, `ARK_API_KEY`).
 - Port `8788`. Rate limit: 8/min & 80/day per IP, max 3 concurrent checks.
@@ -33,7 +33,7 @@ config.ts           Provider config (DeepSeek / Doubao, OpenAI-compatible)
 src/check.ts        Detection engine — input classify → questions → scoring → report
 src/providers.ts    API query layer (fetch, 1 retry, 120s timeout)
 src/entity.ts       Unified entity archive — the cognition time-series store
-src/retest.ts       Auto re-test — re-measures archived entities (curve accumulation)
+src/effect.ts       Effect matrix — publishing × channel × AI-citation Bayesian stats
 src/history.ts      Check history — append-only JSONL (data/checks.jsonl)
 src/anchor.ts       Positioning anchor — unified intro versions + site snippet
 src/articles.ts     Article monitoring — are your articles adopted by AI answers
@@ -74,7 +74,7 @@ EntityProfile {
 }
 ```
 
-Convention: **every detection / re-test / competitor check lands into one entity
+Convention: **every detection / competitor check lands into one entity
 archive** via `attachCheck` / `attachSceneShares` / `attachCiteCitation`. This is
 the "enterprise AI cognition map" data foundation. Never break this funnel.
 
@@ -92,7 +92,6 @@ the "enterprise AI cognition map" data foundation. Never break this funnel.
 
 ```bash
 npx tsc --noEmit          # must pass
-npm run retest -- --dry   # optional: confirm entity targeting logic
 ```
 
 Report faithfully: if an API call failed or a test was skipped, say so.

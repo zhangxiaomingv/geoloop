@@ -26,7 +26,6 @@ import { runCompare, runSceneCompare, type SceneCompareReport } from "./compare.
 import { attachCheck, attachCiteCitation, attachSceneShares, entityStats, loadEntities } from "./entity.js";
 import { checkCites, loadCites, saveCites, type CiteSite } from "./cite.js";
 import { buildLeaderboard } from "./leaderboard.js";
-import { listBoards, loadBoard } from "./boards.js";
 import { receiveObserve, detectBot, isObservedSite, appendEvents } from "./observe.js";
 import {
   generatePlan,
@@ -46,6 +45,7 @@ import {
 } from "./softwen-api.js";
 import { selectMedia, renderSelection, type ScoredMedia } from "./media-selector.js";
 import { writeAllArticles, type WriteResult } from "./ai-writer.js";
+import { buildEffectMatrix, recommendForIndustry } from "./effect.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -190,25 +190,6 @@ const server = createServer(async (req, res) => {
   // 可见度公示 · 实体可见度数据（内部聚合，供 hero 榜卡片引用）
   if (req.method === "GET" && url.pathname === "/api/leaderboard") {
     json(res, 200, { ok: true, board: buildLeaderboard() });
-    return;
-  }
-
-  // 行业 AI 可见度榜 · 360 全行业索引（含生成状态，供搜索/列表）
-  if (req.method === "GET" && url.pathname === "/api/boards") {
-    json(res, 200, { ok: true, ...listBoards() });
-    return;
-  }
-
-  // 行业 AI 可见度榜 · 单个行业榜单（/api/boards/{id}）
-  const boardMatch = url.pathname.match(/^\/api\/boards\/(\d{1,3})$/);
-  if (req.method === "GET" && boardMatch) {
-    const id = Number(boardMatch[1]);
-    const board = loadBoard(id);
-    if (!board) {
-      json(res, 404, { ok: false, message: `该行业榜尚未生成（id=${id}）` });
-      return;
-    }
-    json(res, 200, { ok: true, board });
     return;
   }
 
@@ -840,6 +821,7 @@ const server = createServer(async (req, res) => {
       const pubs = orders.map((o) => ({
         title,
         channel: `软文街#${o.resourceId}${o.resourceName ? "·" + o.resourceName : ""}`,
+        supplier: "softwen",
         url: "", // 发布成功由回调回填
         collected: false,
         reads: 0,
@@ -975,27 +957,50 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // ============ 静态资产（observe / board / llms / robots / sitemap / 样式）——容器直接服务 Pages 时代的产物 ============
+  // ============ 发稿效果矩阵（行业 × 渠道 × AI 引用，Beta-Binomial 贝叶斯） ============
+
+  // 效果矩阵页
+  if (req.method === "GET" && url.pathname === "/effect") {
+    res.writeHead(200, htmlHeaders);
+    res.end(readFileSync(path.join(here, "src/web/effect.html"), "utf-8"));
+    return;
+  }
+
+  // 全量矩阵（台账 × 文章监测 × 媒体目录 实时推导）
+  if (req.method === "GET" && url.pathname === "/api/effect/matrix") {
+    try {
+      const matrix = buildEffectMatrix();
+      json(res, 200, { ok: true, ...matrix });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "构建效果矩阵失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // 按行业推荐渠道（后验 5% 低值排序，保守；?industry=X&topN=12&minTrials=2）
+  if (req.method === "GET" && url.pathname === "/api/effect/recommend") {
+    const q = url.searchParams;
+    const industry = String(q.get("industry") ?? "").trim();
+    const topN = Math.min(20, Math.max(1, Number(q.get("topN") || 10)));
+    const minTrials = Math.max(1, Number(q.get("minTrials") || 2));
+    try {
+      const recommendations = industry ? recommendForIndustry(industry, { topN, minTrials }) : [];
+      json(res, 200, { ok: true, industry, recommendations, generatedAt: new Date().toISOString() });
+    } catch (e) {
+      json(res, 500, { ok: false, message: "推荐失败：" + (e as Error).message });
+    }
+    return;
+  }
+
+  // ============ 静态资产（observe / llms / robots / sitemap / 样式）——容器直接服务 Pages 时代的产物 ============
   if (req.method === "GET") {
     const p = url.pathname;
     if (p === "/observe" || p === "/observe/") {
       serveSiteFile(res, "observe/index.html", "text/html; charset=utf-8");
       return;
     }
-    if (p === "/board" || p === "/board/") {
-      serveSiteFile(res, "board/index.html", "text/html; charset=utf-8");
-      return;
-    }
     if (p === "/whitepaper" || p === "/whitepaper/") {
       serveSiteFile(res, "whitepaper.html", "text/html; charset=utf-8");
-      return;
-    }
-    const boardNoExt = p.match(/^\/board\/(\d{1,3})$/);
-    if (boardNoExt && serveSiteFile(res, `board/${boardNoExt[1]}.html`, "text/html; charset=utf-8")) return;
-    const boardWithExt = p.match(/^\/board\/(\d{1,3})\.html$/);
-    if (boardWithExt) {
-      res.writeHead(308, { Location: `/board/${boardWithExt[1]}` });
-      res.end();
       return;
     }
     if (SITE_STATIC[p]) {
@@ -1026,7 +1031,7 @@ function readBody(req: import("node:http").IncomingMessage): Promise<string> {
   });
 }
 
-/** 站点静态资产映射（observe 页 / board SEO 页 / SEO 文件 / 样式） */
+/** 站点静态资产映射（observe 页 / SEO 文件 / 样式） */
 const siteDir = path.join(here, "site");
 const SITE_STATIC: Record<string, string> = {
   "/llms.txt": "text/plain; charset=utf-8",

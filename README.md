@@ -59,10 +59,9 @@ Built by [张晓明 / Xiaoming Zhang](https://zkoner.com), GEO 与 AI 搜索可�
 | **Competitor comparison** | Your brand vs competitors, same-口径 detection → ranking, gap score, insight (who leads and why) |
 | **Knowledge base** | Fill your info once → AI structures it into a standard card (identity / positioning / offerings / facts / sources / FAQ / keywords) + multi-length unified bios + JSON-LD. Then run a **knowledge gap** check: live AI check vs your facts → coverage score, which facts AI never mentions, and "what AI currently thinks you are" — the fill-the-gap punchlist |
 | **Scene intelligence** | Input a real user question (e.g. "深圳推荐一家装修公司") → exposure share per brand + 0-exposure root cause analysis |
-| **360 industry boards** | 360 industries × one scene question ("成都最好的精品酒店有哪些？") asked to both engines → merged AI-recommendation leaderboard per industry, searchable in the homepage popup |
 | **Citation traceability** | In-answer source extraction (prompt-guided) → 3-level trust (AI-cited / AI-mentioned / suspected-fabrication), citation share (Profound formula) and "does AI believe your site?" judgment in every report. Engine-cited mode (Perplexity) ready in config — enable with `PPLX_API_KEY` |
-| **Unified entity archive** | Every check/re-test/competitor run lands in one entity profile (`data/entities.json`) — the cognition time-series foundation for an "enterprise AI cognition map" |
-| **Auto re-test** | Scheduled re-measurement of archived entities → cognition change curves accumulate automatically (the moat: data, not code) |
+| **Unified entity archive** | Every check / competitor run lands in one entity profile (`data/entities.json`) — the cognition time-series foundation for an "enterprise AI cognition map" |
+| **Effect matrix** | Published PR links are re-probed → per industry × channel Bayesian hit-rate matrix (`data/effect-matrix.json`); conservative recommendations ranked by the 5% posterior lower bound |
 | **Private deployment** | Single Node process, zero runtime dependencies, Docker one-command deploy, IP rate limiting — [enterprise customization →](https://geoloopos.com/deploy) |
 
 ---
@@ -101,10 +100,10 @@ npm run serve             # start the product server
 
 Open `http://localhost:8788`, type a brand / domain / question, hit **检测**.
 
-Re-test all archived entities without calling any API:
+Print the current publishing effect matrix:
 
 ```bash
-npm run retest -- --dry
+npm run effect
 ```
 
 ---
@@ -131,6 +130,9 @@ npm run retest -- --dry
 | `/api/kb` | POST | body `{"input":{"name":...,"facts":...,...}}` → AI-structured knowledge card (identity / positioning / offerings / facts / sources / faq / keywords / multi-length versions / JSON-LD) |
 | `/api/kb/gap` | POST | body `{"key":"..."}` → run a live AI check, compare the card's facts against what AI actually says → coverage score + missing/weak facts + AI's current impression |
 | `/deploy` | GET | standalone enterprise private-deployment page (HTML) — value props, customization flow, founder contact |
+| `/effect` | GET | standalone effect-matrix page (HTML) — industry × channel × AI-citation stats |
+| `/api/effect/matrix` | GET | full effect matrix derived live from publish ledger + article monitoring + media catalog |
+| `/api/effect/recommend` | GET | `?industry=X&topN=12&minTrials=2` → channel recommendations for an industry, ranked by the conservative posterior 5% lower bound |
 
 Example — run a check:
 
@@ -170,17 +172,23 @@ host; the repo contains code, not customer data).
 
 ---
 
-## Auto re-test — the cognition curve loop
+## Effect matrix — the publishing ROI loop
+
+Every published soft-wen link is tracked in `data/articles.json`. The matrix is
+derived live from the ledger + article monitoring and written to
+`data/effect-matrix.json`, an **industry × channel** hit-rate matrix using a
+Beta-Binomial Bayesian update (uniform prior; posterior mean + 5%/95% credible
+interval). Recommendations use the conservative 5% lower bound so small lucky
+samples don't rank first.
 
 ```bash
-npm run retest                    # re-measure all archived brand/site entities
-scripts/install-retest-cron.sh    # install weekly cron (Sun 03:30), flock-guarded
+npm run effect                      # print matrix + per-industry recommendations
+GET /api/effect/matrix              # full matrix JSON
+GET /api/effect/recommend?industry=餐饮&topN=12&minTrials=2
 ```
 
-Each run appends a new snapshot to every entity's `checks` series and writes a
-batch log to `data/retest-log.jsonl`. This powers the monthly **AI cognition
-scorecard** workflow: re-test → update scorecard → publish → let AI discover the
-change → re-test again. The moat is the accumulated **data**, not the tool code.
+This is the publishing-side data moat: each new probe adds one more observation
+of "which channel actually gets cited by AI".
 
 ---
 
@@ -190,7 +198,7 @@ change → re-test again. The moat is the accumulated **data**, not the tool cod
 config.ts           Provider config (DeepSeek / Doubao)
 src/check.ts        Detection engine: classify → questions → scoring → report
 src/entity.ts       Unified entity archive: normalization + cognition time-series
-src/retest.ts       Auto re-test: re-measure archived entities, accumulate curves
+src/effect.ts       Effect matrix: publishing × channel × AI-citation Bayesian stats
 src/history.ts      Check history (data/checks.jsonl, zero-dep JSONL)
 src/anchor.ts       Positioning anchor: version generation + site byline
 src/articles.ts     Article monitoring: library + citation judgment
@@ -199,8 +207,8 @@ src/compare.ts      Competitor comparison: ranking + exposure share + insights
 src/kb.ts           Knowledge base: AI-structured card + knowledge-gap analysis (data/kb.jsonl)
 src/server.ts       Product API server (rate limit / concurrency / validation)
 src/providers.ts    API query layer (DeepSeek / Doubao, retry + timeout)
-src/web/            Product front-end (index.html homepage + report.html standalone report page + deploy.html private-deployment page)
-data/               Runtime data (gitignored): checks, entities, anchors, articles, cites
+src/web/            Product front-end (index.html homepage + app.html console + report.html standalone report page + effect.html effect matrix + deploy.html private-deployment page)
+data/               Runtime data (gitignored): checks, entities, anchors, articles, cites, publish ledger, effect snapshots
 ```
 
 ---
@@ -270,9 +278,9 @@ AI engines' API usage.
 
 ## Roadmap & docs
 
-- `ROADMAP.md` — P0 auto re-test + industry templates; P1 public HTTPS/domain,
-  industry benchmarks, brand/domain mapping; P2 accounts, AI cognition map, AI
-  cognition reports.
+- `ROADMAP.md` — P0 publishing-effect loop; P1 public HTTPS/domain, industry
+  benchmarks, brand/domain mapping; P2 accounts, AI cognition map, AI cognition
+  reports.
 - `IDENTITY-ENGINE.md` — product positioning & the "AI identity engine" concept.
 - `VISION.md` — moat strategy (data assets > tool code).
 - `DEPLOY.md` — deployment & operations.

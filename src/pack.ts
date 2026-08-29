@@ -2,10 +2,9 @@
  * 软文需求单（软文街 · 软文宝接入）— 闭环「优化侧 → 发布」的桥接模块
  *
  * A1 方案：geoloopos 不产软文，只产「该写什么」的结构化需求单。
- *   - 读实体档案(entities) + 知识缺口(kb.gap) + 定位锚点(anchor) + 行业问句(boards)
+ *   - 读实体档案(entities) + 知识缺口(kb.gap) + 定位锚点(anchor) + 行业目录(industries)
  *   - 按软文街发稿约束（标题 18-25 字 / 正文 800-1500 字 / 广告占比 <10%）组装多平台写作指令
  *   - 人工把需求单喂给软文街「软文宝」写软文 → 软文街一稿多发 → 收录数据回填台账
- *   - retest 复测验证 → 台账与认知曲线联动，产出软文效果回测
  *
  * 数据流：data/publish.json（台账，每条 = 一份需求单 + 发稿记录）
  * 不调 API：需求单是确定性组装（软件街软文宝负责写作），快、稳、零成本。
@@ -16,7 +15,7 @@ import path from "node:path";
 import { loadEntities, type EntityProfile } from "./entity.js";
 import { getKB, type KnowledgeBase } from "./kb.js";
 import { loadAnchor, type Anchor } from "./anchor.js";
-import { listBoards } from "./boards.js";
+import { INDUSTRIES } from "./industries.js";
 
 /* ---------- 类型 ---------- */
 
@@ -76,7 +75,9 @@ export interface PublishRecord {
     collected: boolean;
     reads: number;
     publishedAt: string;
-    /** 软文街订单 ID（回调按此关联） */
+    /** 供应商（发稿平台）：softwen=软文街；未来 meijiehezi 等。缺省按 channel 前缀推断 */
+    supplier?: string;
+    /** 供应商订单 ID（回调按此关联，软文街=order_id） */
     orderId?: string;
     /** 已纳入引用追踪（发布链接已同步 articles.json） */
     tracked?: boolean;
@@ -157,13 +158,11 @@ function matchEntity(list: EntityProfile[], key: string): EntityProfile | undefi
   return list.find((e) => norm(e.key) === nk) ?? list.find((e) => norm(e.name) === nk) ?? list.find((e) => e.key.toLowerCase().includes(key.toLowerCase()) || (e.name || "").toLowerCase().includes(key.toLowerCase()));
 }
 
-/** 借势行业问句：锚点/实体关键词 与 行业名 子串匹配，命中返回 ask */
+/** 借势行业问句：锚点/实体关键词 与 行业目录子串匹配，命中返回场景问句 */
 function pickScene(keywords: string[], name: string): string {
-  const rows = listBoards().industries ?? [];
-  if (!rows.length) return "";
   const hay = [...keywords, name].filter(Boolean).join(" ");
-  const hit = rows.find((r) => hay.includes(r.name) || r.name.includes(name.slice(0, 2)));
-  return hit ? hit.ask : "";
+  const hit = INDUSTRIES.find((r) => hay.includes(r.name) || r.name.includes(name.slice(0, 2)));
+  return hit ? `成都最好的${hit.name}有哪些？` : "";
 }
 
 /** 组装一份需求单（不调 LLM，确定性生成） */

@@ -22,11 +22,6 @@ export interface Provider {
   apiKeyEnv?: string;
   /** 浏览器专用：{query} 会被替换 */
   urlTemplate?: string;
-  /**
-   * 排除出「行业榜批量采样」（boards.ts 的 generateBoard）。
-   * 置 true 的源（如付费/带引用的 Perplexity）只进产品检测，不拖累 360 行业批量生成。
-   */
-  excludeFromSampling?: boolean;
 }
 
 /**
@@ -60,8 +55,6 @@ export const providers: Provider[] = [
     // 可用环境变量 OPENROUTER_MODEL 覆盖（Ox Alpha 尚未定名，将来可能更名/换模型）
     model: process.env.OPENROUTER_MODEL || "stealth/ox-alpha",
     apiKeyEnv: "OPENROUTER_API_KEY",
-    // 慢（带 thinking）且未来可能收费 → 只进产品检测，不进 360 行业批量采样
-    excludeFromSampling: true,
   },
   // ── 真引用引擎（可选，默认未启用）──────────────────────────────
   // 溯源模块当前走「B 方案」：纯文本抽取 + prompt 引导，仅 DeepSeek/豆包。
@@ -74,6 +67,5 @@ export const providers: Provider[] = [
   //   baseUrl: "https://api.perplexity.ai/chat/completions",
   //   model: process.env.PERPLEXITY_MODEL || "sonar",
   //   apiKeyEnv: "PPLX_API_KEY",
-  //   excludeFromSampling: true,
   // },
 ];

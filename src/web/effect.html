@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" href="/logo.png" />
+<meta name="color-scheme" content="dark" />
+<meta name="robots" content="noindex" />
+<title>发稿效果矩阵 · GEOloopOS</title>
+<style>
+  :root {
+    --bg: #0a0a0b;
+    --surface: #101013;
+    --surface-2: #16161a;
+    --surface-3: #1d1d24;
+    --border: rgba(255, 255, 255, .08);
+    --border-strong: rgba(255, 255, 255, .16);
+    --text: #f5f5f6;
+    --text-muted: #a1a1aa;
+    --text-faint: #76767f;
+    --primary: #4c8dff;
+    --primary-strong: #2563eb;
+    --primary-soft: rgba(76, 141, 255, .13);
+    --success: #34d399;
+    --success-soft: rgba(52, 211, 153, .13);
+    --warning: #fbbf24;
+    --warning-soft: rgba(251, 191, 36, .13);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, .13);
+    --radius: 14px;
+    --radius-sm: 8px;
+    --font-sans: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    color: var(--text); font-family: var(--font-sans); font-size: 14px; line-height: 1.6;
+    min-height: 100vh; -webkit-font-smoothing: antialiased;
+    background: radial-gradient(900px 460px at 50% -180px, rgba(76,141,255,.12), transparent 62%), var(--bg);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 90px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 0 14px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo img { width: 34px; height: 34px; object-fit: contain; }
+  .logo-text { font-weight: 650; font-size: 15px; letter-spacing: -.01em; }
+  .logo-sub { font-size: 11px; color: var(--text-faint); font-family: var(--font-mono); margin-top: 1px; }
+  .gen-at { font-size: 11px; color: var(--text-faint); font-family: var(--font-mono); }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+  .stat .k { font-size: 11px; color: var(--text-faint); }
+  .stat .v { font-size: 22px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .stat .v small { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+  .panel, .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px; }
+  .card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .card-head h3 { font-size: 15px; font-weight: 650; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  select, .btn {
+    background: var(--surface-3); color: var(--text); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px; font-family: var(--font-sans);
+  }
+  select:focus { outline: none; border-color: var(--primary); }
+  .btn { background: var(--primary); color: #fff; border: none; font-weight: 600; cursor: pointer; transition: background .15s; }
+  .btn:hover { background: var(--primary-strong); }
+  .btn.sm { padding: 6px 12px; font-size: 12px; }
+  .btn:disabled { opacity: .5; cursor: wait; }
+  .hint { font-size: 12px; color: var(--text-faint); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--text-faint); font-weight: 600; font-size: 12px; white-space: nowrap; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+  .ind { color: var(--primary); font-weight: 600; white-space: nowrap; }
+  .chan { font-weight: 550; }
+  .muted { color: var(--text-faint); }
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 20px; font-weight: 600; white-space: nowrap; }
+  .b-strong { background: var(--success-soft); color: var(--success); }
+  .b-ok     { background: var(--primary-soft); color: var(--primary); }
+  .b-watch  { background: var(--warning-soft); color: var(--warning); }
+  .b-miss   { background: var(--danger-soft); color: var(--danger); }
+  .b-tiny   { background: var(--surface-3); color: var(--text-faint); }
+  .bar { height: 6px; border-radius: 3px; background: var(--surface-3); overflow: hidden; min-width: 90px; }
+  .bar i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--primary), var(--success)); }
+  .empty { padding: 40px 20px; text-align: center; }
+  .empty .big { font-size: 15px; font-weight: 650; margin-bottom: 8px; }
+  .empty .steps { font-size: 12px; color: var(--text-muted); line-height: 2; text-align: left; max-width: 520px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">
+      <img src="/logo.png" alt="" />
+      <div>
+        <div class="logo-text">发稿效果矩阵</div>
+        <div class="logo-sub">行业 × 渠道 × AI 引用 · Beta-Binomial 贝叶斯</div>
+      </div>
+    </div>
+    <div class="gen-at" id="genAt"></div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div id="empty" class="panel empty" style="display:none">
+    <div class="big">还没有发稿效果数据</div>
+    <div class="steps">
+      产生数据需要两步都满足：<br />
+      ① 台账有「已发布且回调回填了链接」的发稿记录（publish.json）<br />
+      ② 该链接已纳入文章监测并有探测结果（articles.json）——回调 / 软文街 track 会自动纳入<br />
+      → 账号实名认证通过后发稿，闭环即开始自动积累「行业 × 渠道 × 效果」数据。
+    </div>
+  </div>
+
+  <div id="main" style="display:none">
+    <div class="panel">
+      <div class="row">
+        <span class="hint">按行业看推荐渠道</span>
+        <select id="industry"><option value="">（选择行业）</option></select>
+        <button class="btn sm" id="refresh">刷新</button>
+      </div>
+      <div id="recs" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><h3>全量矩阵</h3><span class="hint" id="count"></span></div>
+      <div style="overflow-x:auto"><table id="table"></table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const pct = (x) => (x * 100).toFixed(1) + "%";
+const badge = {
+  "强渠道": `<span class="badge b-strong">强渠道</span>`,
+  "可用": `<span class="badge b-ok">可用</span>`,
+  "待观察": `<span class="badge b-watch">待观察</span>`,
+  "未命中": `<span class="badge b-miss">未命中</span>`,
+  "样本不足": `<span class="badge b-tiny">样本不足</span>`,
+};
+
+let matrix = null;
+
+async function loadMatrix() {
+  const r = await fetch("/api/effect/matrix");
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.message || "加载失败");
+  matrix = j;
+}
+
+function renderStats() {
+  const s = matrix.stats;
+  $("#stats").innerHTML = [
+    ["行业数", s.industries],
+    ["渠道组合", s.channels],
+    ["发稿试次", s.trials],
+    ["文章级被引", s.hits],
+    ["整体命中率", `${s.hitRate}%`],
+    ["站点级被引", s.siteHits],
+    ["有效渠道", s.activeChannels, "被引 &gt; 0"],
+  ].map(([k, v, extra]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}${extra ? `<small> ${extra}</small>` : ""}</div></div>`).join("");
+}
+
+function renderEmpty() {
+  $("#empty").style.display = "";
+  $("#main").style.display = "none";
+}
+
+function renderMain() {
+  $("#empty").style.display = "none";
+  $("#main").style.display = "";
+  $("#genAt").textContent = "生成于 " + matrix.generatedAt.replace("T", " ").slice(0, 16);
+  $("#count").textContent = `${matrix.rows.length} 个行业×渠道组合`;
+
+  const sel = $("#industry");
+  const prev = sel.value;
+  sel.innerHTML = `<option value="">（选择行业）</option>` +
+    matrix.industries.map((i) => `<option ${i === prev ? "selected" : ""}>${i}</option>`).join("");
+
+  const rows = [...matrix.rows].sort((a, b) => a.industry.localeCompare(b.industry, "zh") || b.trials - a.trials);
+  $("#table").innerHTML =
+    `<thead><tr><th>行业</th><th>渠道</th><th>试次</th><th>文章级被引</th><th>站点级</th><th>命中率 5%-95%</th><th>收录</th><th>结论</th></tr></thead>` +
+    rows.map(rowHtml).join("");
+
+  loadRecs(sel.value || matrix.industries[0]);
+}
+
+function rowHtml(r) {
+  const ci = r.posterior;
+  const rate = r.trials ? (r.hits / r.trials) : 0;
+  return `<tr>
+    <td class="ind">${r.industry}</td>
+    <td class="chan">${r.channelName}${r.media?.isZimeiti === 1 ? ' <span class="muted">[自媒体]</span>' : ""}</td>
+    <td class="num">${r.trials}</td>
+    <td class="num">${r.hits}</td>
+    <td class="num">${r.siteHits}</td>
+    <td class="num">${pct(ci.lower)} – ${pct(ci.upper)} <small class="muted">(均值 ${pct(ci.mean)})</small><div class="bar"><i style="width:${Math.round(rate * 100)}%"></i></div></td>
+    <td class="muted">${r.media?.includeType ?? "—"}</td>
+    <td>${badge[r.verdict] ?? r.verdict}</td>
+  </tr>`;
+}
+
+async function loadRecs(industry) {
+  if (!industry) { $("#recs").innerHTML = ""; return; }
+  $("#recs").innerHTML = `<span class="hint">加载「${industry}」推荐渠道…</span>`;
+  try {
+    const r = await fetch(`/api/effect/recommend?industry=${encodeURIComponent(industry)}&topN=12&minTrials=2`);
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.message);
+    if (!j.recommendations.length) {
+      $("#recs").innerHTML = `<span class="hint">该行业还没有 ≥2 次试次的渠道（数据积累中）。</span>`;
+      return;
+    }
+    $("#recs").innerHTML =
+      `<div style="overflow-x:auto"><table><thead><tr><th>#</th><th>渠道</th><th>试次</th><th>被引</th><th>命中率区间</th><th>结论</th></tr></thead>` +
+      j.recommendations.map((r, i) => `<tr>
+        <td class="muted">${i + 1}</td>
+        <td class="chan">${r.channelName}</td>
+        <td class="num">${r.trials}</td>
+        <td class="num">${r.hits}</td>
+        <td class="num">${pct(r.posterior.lower)} – ${pct(r.posterior.upper)}</td>
+        <td>${badge[r.verdict] ?? r.verdict}</td>
+      </tr>`).join("") + `</table></div>`;
+  } catch (e) {
+    $("#recs").innerHTML = `<span class="hint">推荐加载失败：${e.message}</span>`;
+  }
+}
+
+async function init() {
+  try {
+    await loadMatrix();
+    renderStats();
+    if (!matrix.rows.length) renderEmpty();
+    else renderMain();
+  } catch (e) {
+    $("#stats").innerHTML = `<div class="stat"><div class="k">加载失败</div><div class="v">${e.message}</div></div>`;
+  }
+}
+
+$("#refresh").addEventListener("click", init);
+$("#industry").addEventListener("change", (e) => loadRecs(e.target.value));
+init();
+</script>
+</body>
+</html>
