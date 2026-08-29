@@ -46,6 +46,18 @@ import {
 import { selectMedia, renderSelection, type ScoredMedia } from "./media-selector.js";
 import { writeAllArticles, type WriteResult } from "./ai-writer.js";
 import { buildEffectMatrix, recommendForIndustry } from "./effect.js";
+import {
+  verifyLicense,
+  issueLicense,
+  listLicenses,
+  revokeLicense,
+  markUsed,
+  createSession,
+  verifySession,
+  destroySession,
+  parseCookie,
+  safeEqual,
+} from "./license.js";
 
 /**
  * AI 可见度检测 — 公网产品服务端
@@ -111,6 +123,50 @@ function json(res: import("node:http").ServerResponse, code: number, body: unkno
 
 let runningChecks = 0;
 
+/** ============ 控制台付费门禁（方案 A：激活码 + session） ============ */
+const SESSION_COOKIE = "gl_sess";
+const LICENSE_ADMIN_KEY = process.env.LICENSE_ADMIN_KEY || ""; // 生成/管理激活码用
+
+/** 控制台专属 API（需登录）；公网 API 不在此列 */
+function isProtectedPath(p: string): boolean {
+  if (p === "/api/checks") return true; // 检测历史列表（控制台「检测」模块）
+  if (p === "/api/entities" || p === "/api/entities/stats") return true;
+  if (p === "/api/anchor" || p === "/api/kb" || p === "/api/kb/gap" || p === "/api/compare") return true;
+  if (p.startsWith("/api/kb/") || p.startsWith("/api/anchor/")) return true;
+  if (p.startsWith("/api/articles") || p.startsWith("/api/cites")) return true;
+  if (p === "/api/packs" || p === "/api/packs/generate" || p.startsWith("/api/packs/")) return true;
+  // 软文街除 callback 外全部保护（callback 是软文街后台推送，用 key 鉴权）
+  if (p.startsWith("/api/softwen/") && !p.startsWith("/api/softwen/callback")) return true;
+  return false;
+}
+
+/** 从请求里取当前 session（无/失效返回 null） */
+function currentSession(req: import("node:http").IncomingMessage) {
+  const token = parseCookie(req.headers.cookie, SESSION_COOKIE);
+  if (!token) return null;
+  return verifySession(token);
+}
+
+/** 统一鉴权：未登录返回 401 JSON，已登录返回 session */
+function requireAuth(req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse) {
+  const sess = currentSession(req);
+  if (!sess) {
+    json(res, 401, { ok: false, message: "未登录：需要有效激活码" });
+    return null;
+  }
+  return sess;
+}
+
+/** 设登录 cookie */
+function setSessionCookie(res: import("node:http").ServerResponse, token: string): void {
+  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
+}
+
+/** 清登录 cookie */
+function clearSessionCookie(res: import("node:http").ServerResponse): void {
+  res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0`);
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://${req.headers.host ?? "localhost"}`);
 
@@ -137,11 +193,91 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // 控制台页（方案 A：营销官网 / 与产品操作台 /app 分离）
+  // 控制台登录页（方案 A：激活码门禁）
+  if (req.method === "GET" && url.pathname === "/app/login") {
+    res.writeHead(200, htmlHeaders);
+    res.end(readFileSync(path.join(here, "src/web/login.html"), "utf-8"));
+    return;
+  }
+
+  // 控制台页（方案 A：营销官网 / 与产品操作台 /app 分离；付费门禁）
   if (req.method === "GET" && (url.pathname === "/app" || url.pathname === "/app/")) {
+    if (!currentSession(req)) {
+      res.writeHead(302, { Location: "/app/login" });
+      res.end();
+      return;
+    }
     res.writeHead(200, htmlHeaders);
     res.end(readFileSync(appPageFile, "utf-8"));
     return;
+  }
+
+  // ============ 激活码门禁 API（方案 A） ============
+  // 激活登录：POST /api/license/activate { code } → 校验并签发 session cookie
+  if (req.method === "POST" && url.pathname === "/api/license/activate") {
+    let body: { code?: unknown };
+    try { body = JSON.parse(await readBody(req)); } catch { json(res, 400, { ok: false, message: "请求体不是合法 JSON" }); return; }
+    const code = String(body.code ?? "").trim().toUpperCase();
+    const lic = verifyLicense(code);
+    if (!lic) { json(res, 401, { ok: false, message: "激活码无效或已过期" }); return; }
+    markUsed(code);
+    const sess = createSession(code);
+    setSessionCookie(res, sess.token);
+    json(res, 200, { ok: true, expiresAt: lic.expiresAt });
+    return;
+  }
+
+  // 当前登录状态：GET /api/license/status → { loggedIn, expiresAt? }
+  if (req.method === "GET" && url.pathname === "/api/license/status") {
+    const sess = currentSession(req);
+    if (!sess) { json(res, 200, { ok: true, loggedIn: false }); return; }
+    const lic = verifyLicense(sess.code);
+    json(res, 200, { ok: true, loggedIn: true, code: sess.code, expiresAt: lic?.expiresAt ?? null });
+    return;
+  }
+
+  // 退出登录：POST /api/license/logout
+  if (req.method === "POST" && url.pathname === "/api/license/logout") {
+    const token = parseCookie(req.headers.cookie, SESSION_COOKIE);
+    if (token) destroySession(token);
+    clearSessionCookie(res);
+    json(res, 200, { ok: true });
+    return;
+  }
+
+  // 管理：生成激活码 POST /api/license/issue { adminKey, note?, days? }
+  // 管理：激活码列表 POST /api/license/list { adminKey }
+  // 管理：吊销 POST /api/license/revoke { adminKey, code }
+  if (url.pathname.startsWith("/api/license/") && req.method === "POST") {
+    const action = url.pathname.slice("/api/license/".length);
+    if (action !== "issue" && action !== "list" && action !== "revoke") {
+      json(res, 404, { ok: false, message: "未知接口" });
+      return;
+    }
+    if (!LICENSE_ADMIN_KEY) {
+      json(res, 503, { ok: false, message: "服务端未配置 LICENSE_ADMIN_KEY，无法管理激活码" });
+      return;
+    }
+    let body: any;
+    try { body = JSON.parse(await readBody(req)); } catch { json(res, 400, { ok: false, message: "请求体不是合法 JSON" }); return; }
+    if (!safeEqual(String(body.adminKey ?? ""), LICENSE_ADMIN_KEY)) {
+      json(res, 403, { ok: false, message: "管理口令错误" });
+      return;
+    }
+    if (action === "issue") {
+      const lic = issueLicense({ note: String(body.note ?? ""), days: body.days == null ? undefined : Number(body.days) });
+      json(res, 200, { ok: true, license: lic });
+      return;
+    }
+    if (action === "list") {
+      json(res, 200, { ok: true, licenses: listLicenses() });
+      return;
+    }
+    if (action === "revoke") {
+      const ok = revokeLicense(String(body.code ?? ""));
+      json(res, 200, { ok, message: ok ? "已吊销" : "激活码不存在" });
+      return;
+    }
   }
 
   // 独立报告页（/report/{id}，从历史读出）
@@ -316,6 +452,14 @@ const server = createServer(async (req, res) => {
       runningChecks--;
     }
     return;
+  }
+
+  // ============ 控制台专属 API：统一付费门禁 ============
+  // （放行名单在 isProtectedPath：/api/check、/api/checks/{id}、/api/leaderboard、
+  //  /api/audit*、/api/effect/*、/api/observe、/api/softwen/callback 均已排除）
+  if (isProtectedPath(url.pathname)) {
+    const sess = requireAuth(req, res);
+    if (!sess) return;
   }
 
   // ============ 定位锚点 ============
@@ -657,6 +801,11 @@ const server = createServer(async (req, res) => {
 
   // ============ 软文需求单（软文街·软文宝接入） ============
   if (req.method === "GET" && url.pathname === "/packs") {
+    if (!currentSession(req)) {
+      res.writeHead(302, { Location: "/app/login" });
+      res.end();
+      return;
+    }
     res.writeHead(200, htmlHeaders);
     res.end(readFileSync(packPageFile, "utf-8"));
     return;

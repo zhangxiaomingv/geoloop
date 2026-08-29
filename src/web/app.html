@@ -697,6 +697,7 @@
     <div class="side-foot">
       <a href="/">← 官网</a>
       <a href="/observe/">来访监测</a>
+      <a href="#" id="logoutLink" style="color:var(--text-faint);">退出登录</a>
     </div>
   </aside>
 
@@ -1944,6 +1945,17 @@ async function generate() {
 sw$("#gen").addEventListener("click", generate);
 sw$("#entity").addEventListener("keydown", (e) => { if (e.key === "Enter") generate(); });
 refresh();
+
+/* ============ 退出登录（控制台付费门禁） ============ */
+var logoutLink = document.getElementById("logoutLink");
+if (logoutLink) {
+  logoutLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    fetch("/api/license/logout", { method: "POST" })
+      .then(() => { location.href = "/app/login"; })
+      .catch(() => { location.href = "/app/login"; });
+  });
+}
 
 </script>
 </html>

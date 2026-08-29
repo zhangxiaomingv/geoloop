@@ -102,6 +102,9 @@
   .top-nav { display: flex; align-items: center; gap: 16px; font-size: 13px; }
   .top-nav a { color: var(--text-muted); text-decoration: none; transition: color .15s; }
   .top-nav a:hover { color: var(--primary); }
+  /* 顶部右上角「控制台」按钮：与官网底部 CTA 同尺寸（52px / 30px / 15px） */
+  .top-nav .btn-detect { height: 52px; padding: 0 30px; font-size: 15px; color: #fff; text-decoration: none; }
+  .top-nav .btn-detect:hover { color: #fff; }
 
   /* ---------- logo 原图 lightbox ---------- */
   .lb {
@@ -450,7 +453,7 @@
       <span class="logo-text">GEOloopOS</span>
     </div>
     <nav class="top-nav">
-      <a href="/app">控制台</a>
+      <a class="btn-detect" href="/app">控制台</a>
     </nav>
   </header>
 

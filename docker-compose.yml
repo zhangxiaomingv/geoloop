@@ -23,6 +23,8 @@ services:
       SOFTWEN_PASSWORD: "${SOFTWEN_PASSWORD:-}"
       SOFTWEN_API_KEY: "${SOFTWEN_API_KEY:-}"
       SOFTWEN_CALLBACK_KEY: "${SOFTWEN_CALLBACK_KEY:-}"
+      # 控制台付费门禁（方案 A 激活码管理口令）
+      LICENSE_ADMIN_KEY: "${LICENSE_ADMIN_KEY:-}"
     # bind mount 到宿主 ./data：数据连续（迁移历史保留）、透明可备份
     # site/ 也挂进容器：observe/board/llms 等静态页由宿主脚本生成、容器直接服务
     volumes:
